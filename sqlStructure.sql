@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS inventory, rooms, people, hero, objects, items;
 
 create table items(
+	subType string NOT NULL,
 	itemCode int NOT NULL,
 	descrip text NOT NULL,
 	weight int NOT NULL,
@@ -16,22 +17,22 @@ create table inventory(
 	itemCount int NOT NULL,
 );
 
-create table people(
+create table chars(
+	subType string NOT NULL,
 	charCode int NOT NULL,
 	charName text NOT NULL,
 	money float NOT NULL,
 	bac float NOT NULL,--blood alcohol level
-	roomCode int,
 	descrip text NOT NULL,
 	inventoryCode int,
 	primary key(charCode)
 );
 
 create table rooms(
-	roomType string NOT NULL,
+	subType string NOT NULL,
 	roomCode int NOT NULL,
 	neighbors int NOT NULL,--accessible rooms
-	people text,--people in the room, csv string of charCodes
+	chars text,--people in the room, csv string of charCodes
 	descrip text NOT NULL,
 	inventoryCode int,
 	objects text,
@@ -39,6 +40,7 @@ create table rooms(
 );
 
 create table objects(--interactable objects
+	subType string NOT NULL,
 	objCode int NOT NULL,
 	description text NOT NULL,
 	inventoryCode int,

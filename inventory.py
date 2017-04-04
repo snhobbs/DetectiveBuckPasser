@@ -10,10 +10,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		self.table = 'Inventory'
 		self.codeName = 'inventoryCode'
 
-	@property
-	def tableCode(self):
-		return self.inventoryCode
-
 	def addItem(self):
 		pass
 

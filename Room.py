@@ -1,19 +1,30 @@
 from sqlTable import SQLTable
-from inventory import Inventory
-from objects import Objects
+import inventory
+import objects
+import Character
 import csv
+import userInput
 
-def getRoom(db, roomCode):
+roomDict = {
+	'home':0,
+	'b3':1,
+	'murder':2
+}
+
+def roomFactory(db, roomCode):
 	roomBase = Room(db)
 	roomBase.setCode(roomCode)
 	roomBase.readFromDB()
 
-	roomType = roomBase.roomType.value
-	if roomType == 'APT':
+	roomType = roomBase.subType.value
+	if roomType == 'Apartment':
 		room = Apartment(db)
 
-	elif(roomType == 'HOME'):
+	elif(roomType == 'HomeApt'):
 		room = HomeApt(db)
+
+	elif(roomType == 'MurderScene'):
+		room = MurderScene(db)
 
 	else:
 		raise UserWarning("Unknown Room Type")
@@ -30,39 +41,56 @@ class Room(SQLTable):
 		SQLTable.__init__(self, db)
 		self.code = None
 		self.neighbors = self.elementTable.addElement(title = 'Neightboring Rooms', name = 'neighbors', value = None, elementType = 'STRING')
-		self.people = self.elementTable.addElement(title = 'Characters in Room', name = 'people', value = None, elementType = 'STRING')
-		self.description = self.elementTable.addElement(title = 'Room Description', name = 'descrip', value = '', elementType = 'STRING')
+		self.characterCodeString = self.elementTable.addElement(title = 'Characters in Room', name = 'chars', value = None, elementType = 'STRING')
+		self.descrip = self.elementTable.addElement(title = 'Room Description', name = 'descrip', value = '', elementType = 'STRING')
 		self.inventoryCode = self.elementTable.addElement(title = 'Items in Room', name = 'inventoryCode', value = None, elementType = 'INT')
-		self.objects = self.elementTable.addElement(title = 'Interactable Objects', name = 'objects', value = None, elementType = 'STRING')
+		self.objectCodeString = self.elementTable.addElement(title = 'Interactable Objects', name = 'objects', value = None, elementType = 'STRING')
+		self.subType = self.elementTable.addElement(title = 'Room Type', name = 'subType', value = None, elementType = 'STRING')
 
-		self.objectsList = None#array of different interactable objects
-		self.inventory = Inventory(db)
-		self.peopleList = None
+		self.objects = None#array of different interactable objects
+		self.inventory = inventory.Inventory(db)
+		self.characters = None
+
+		self.commands = {
+			'look':userInput.Command(func=self.look)
+			}
 
 		self.table = 'rooms'
 		self.codeName = 'roomCode'
 
 	def parseCSVNumString(self, stringIn):
-		csv_reader = reader(stringIn)
+		if stringIn in [None, '', 'None','NULL','Null','null']:
+			return None
+		csv_reader = csv.reader(stringIn)
 		ret = []
 		for row in csv_reader:
 			ret += [int(entry) for entry in row]
 		return ret
 
-	def loadObjList(self, codeString, classToSet):
-		if self.codeString != None:
+	def loadCharacterList(self, codeString):
+		if codeString != None:
 			codes = self.parseCSVNumString(codeString)
+			if codes is None:
+				return
 			objList = []
 			for code in codes:
-				obj = classToSet(db)
-				obj.setCode(code)
-				objList.append(obj)
-		return objList
+				objList.append(Character.characterFactory(self.db, code))
+			return objList
 
 	def loadRoom(self):
-		self.objectsList = loadObjList()
-		self.peopleList = loadObjList()
-		self.inventory.setCode(int(self.inventoryCode.value))
+		#self.objects = self.loadObjList(codeString = self.objectCodeString.value, classToSet = objects.Objects)
+		#self.inventory.setCode(int(self.inventoryCode.value))
+		self.characters = self.loadCharacterList(codeString = self.characterCodeString.value)
+
+	def look(self):
+		print(self.descrip.value)
+		if self.characters != None:
+			for char in self.characters:
+				print('\n', char.charName.value, char.descrip.value)
+		else:
+			print("\nYou're all alone")
+		#for obj in self.objectsList:
+		#	print(char.descrip.value)
 
 class HomeApt(Room):
 	'''
@@ -70,13 +98,16 @@ class HomeApt(Room):
 	'''
 	def __init__(self, db):
 		Room.__init__(self, db)
-		self.neighbors.value = None
-		self.people.value = None
-		self.description.value = "Its a shit hole"
-		self.inventoryCode.value = None
-		self.objects.value = None
 
-		self.inventory = Inventory(db)
+		self.neighbors.value = '1,2'#apt3b
+		self.characterCodeString.value = None
+		self.descrip.value = "You're in your garbage apartment. Your goldfish tank festers in the corner. Just another damn day."
+		self.inventoryCode.value = '0'
+		self.objectCodeString.value = '0'
+		self.subType.value = 'HomeApt'
+
+		self.code = 0
+		self.inventory = inventory.Inventory(db)
 
 class Apartment(Room):
 	'''
@@ -88,6 +119,19 @@ class Apartment(Room):
 	'''
 	def __init__(self, db):
 		Room.__init__(self, db)
+		self.subType.value = 'Apartment'
+
+class Apartment_3B(Apartment):
+	def __init__(self, db):
+		Apartment.__init__(self, db)
+		self.neighbors.value = '0,2'#next to the homeapt
+		self.characterCodeString.value = '0'#3dollar man
+		self.descrip.value = "Apartment 3B"
+		self.inventoryCode.value = 1
+		self.objectCodeString.value = '0'
+
+		self.code = 1
+		self.inventory = inventory.Inventory(db)
 
 class Hallway(Room):
 	'''
@@ -98,7 +142,7 @@ class Hallway(Room):
 
 class ParkingLot(Room):
 	'''
-
+	This is the home depot parking lot, theres the burnt out pontiac fiero
 	'''
 	def __init__(self, db):
 		Room.__init__(self, db)
@@ -112,7 +156,15 @@ class ChachNot(Room):
 
 class MurderScene(Room):
 	'''
-
+	bear is ffffuuuuccccckkkkkkkeeeddddd
 	'''
 	def __init__(self, db):
-		Room.__init__(self, db)
+		Apartment.__init__(self, db)
+		self.neighbors.value = '0,1'
+		self.characterCodeString.value = '1,0'
+		self.descrip.value = "Greusume murder scene"
+		self.inventoryCode.value = 1
+		self.objectCodeString.value = '0'
+
+		self.code = 2
+		self.inventory = inventory.Inventory(db)

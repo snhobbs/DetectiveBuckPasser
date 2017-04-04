@@ -1,4 +1,16 @@
 #sqlTable.py
+def scrubSql(stringIn):
+	if type(stringIn) == str:
+		return stringIn.replace(';','\v').replace("'",'|').replace('"','|')
+	else:
+		return stringIn
+
+def descrubSql(stringIn):
+	if type(stringIn) == str:
+		return stringIn.replace('\v',';').replace("|","'")
+	else:
+		return str(stringIn)
+
 class sqlInterface(object):
 	def __init__(self,db):
 		self.db = db
@@ -7,7 +19,7 @@ class sqlInterface(object):
 
 	@property
 	def tableCode(self):
-		return self.code
+		return (self.codeName, self.code)
 
 	def assignCode(self):
 		code = self.getMaxInTable(self.codeName)
@@ -26,12 +38,12 @@ class sqlInterface(object):
 		if(type(conditions) in [list, tuple]):
 			if( not type(conditions[0]) in [list, tuple]):
 				conditions = [conditions]
-			condString.append(') = (')
-			condString.append(','.join(["'{}'".format(cond[1]) for cond in conditions]) )
+			arg.append(','.join(["{}".format(cond[0]) for cond in conditions]) )
+			arg.append(') = (')
+			arg.append(','.join(["'{}'".format(cond[1]) for cond in conditions]) )
 			arg.append(')')
 		else:
-			raise UserWarning('Conditional input must be an array or tuple')
-
+			raise UserWarning('Conditional input must be an array or tuple {}'.format(conditions))
 		return ''.join(arg)
 
 	def updateSql(self, inputs, conditions):
@@ -63,6 +75,7 @@ class sqlInterface(object):
 				argString.append(", '{}'".format(inVal[1]))
 		arg.append(''.join(argString).strip(','))
 		arg.append(')')
+
 		dbCursor.execute(''.join(arg))
 
 	def selectSql(self, columnNames = '', conditions=None):
@@ -122,8 +135,8 @@ class SQLTable(sqlInterface):
 		return self.elementTable.getValues
 
 	def writeToDB(self):
-		inserts = [(self.codeName, self.tableCode)]
-		inserts.extend((element.name, element.value) for element in self.elementTable.elements)
+		inserts = [self.tableCode]
+		inserts.extend((element.name, scrubSql(element.value)) for element in self.elementTable.elements)
 		self.insertSql(inputs = inserts)
 
 	def readFromDB(self):
@@ -138,10 +151,14 @@ class SQLTable(sqlInterface):
 			element.value = str(element.value)
 
 	def updateTable(self):
-		updates = [(element.name, element.value) for element in self.elementTable.elements if element.updatable]
+		updates = [(element.name, scrubSql(element.value)) for element in self.elementTable.elements if element.updatable]
 
 		if len(updates) > 0:
 			self.updateSql(inputs = updates, conditions = self.tableCode)
+
+	def formatInput(self, inVals):
+		for element, value in zip(self.elementTable.elements, inVals):
+			element.value = descrubSql(value)
 
 class TableElement(object):
 	elementTypes = ['FILE', 'STRING', 'INT', 'FLOAT', 'BOOLEAN']
