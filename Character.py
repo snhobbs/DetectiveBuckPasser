@@ -8,7 +8,7 @@ def characterFactory(db, code):
 	if subType in ['SixDollarMan']:
 		return SixDollarMan(db)
 	elif subType in ['Bear']:
-		return SixDollarMan(db)
+		return Bear(db)
 
 	raise UserWarning('Unknown Character subType {}'.format(subType))
 

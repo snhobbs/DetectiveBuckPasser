@@ -64,7 +64,7 @@ class Room(SQLTable):
 		csv_reader = csv.reader(stringIn)
 		ret = []
 		for row in csv_reader:
-			ret += [int(entry) for entry in row]
+			ret += [int(entry) for entry in row if entry.isdigit()]
 		return ret
 
 	def loadCharacterList(self, codeString):
@@ -86,7 +86,10 @@ class Room(SQLTable):
 		print(self.descrip.value)
 		if self.characters != None:
 			for char in self.characters:
-				print('\n', char.charName.value, char.descrip.value)
+				print('\n')
+				print(char.charName.value)
+				print('__________________________')
+				print(char.descrip.value)
 		else:
 			print("\nYou're all alone")
 		#for obj in self.objectsList:
@@ -160,7 +163,7 @@ class MurderScene(Room):
 	'''
 	def __init__(self, db):
 		Apartment.__init__(self, db)
-		self.neighbors.value = '0,1'
+		self.neighbors.value = '0'
 		self.characterCodeString.value = '1,0'
 		self.descrip.value = "Greusume murder scene"
 		self.inventoryCode.value = 1
