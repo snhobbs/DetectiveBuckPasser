@@ -80,20 +80,12 @@ class Room(SQLTable):
 	def look(self):
 		print(self.descrip.value)
 		if self.characters != None:
-			for char in self.characters:
-				print('\n')
-				print(char.charName.value)
-				print('__________________________')
-				print(char.descrip.value)
+			print("Characters: \n\t{}".format('\n\t'.join(char.charName.value for char in self.characters)))
 		else:
-			print("\nYou're all alone")
+			print("You're all alone")
 
 		if self.objects != None:
-			for obj in self.objects:
-				print('\n')
-				print(obj.objName.value)
-				print('__________________________')
-				print(obj.descrip.value)
+			print("Shit in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
 
 	def __inspectCharacter(self, characterName = None):
 		if characterName == None:
@@ -165,7 +157,7 @@ class HomeApt(Room):
 		self.characterCodeString.value = None
 		self.descrip.value = "You're in your garbage apartment. Your goldfish tank festers in the corner. Just another damn day."
 		self.inventoryCode.value = '0'
-		self.objectCodeString.value = '0'
+		self.objectCodeString.value = '0,3'
 		self.subType.value = 'HomeApt'
 
 		self.code = 0

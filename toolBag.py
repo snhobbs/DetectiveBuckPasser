@@ -1,6 +1,6 @@
 #toolBag.py
-#import simpleaudio as sa
-import os, pygame
+import simpleaudio as sa
+import os
 import subprocess
 from multiprocessing import Process, Queue
 import click, random
@@ -9,9 +9,6 @@ def playClip(fileIn):
 	playObj = wave_obj.play()
 	playObj.wait_done()
 	click.pause()
-
-def mixer(command):
-	pygame.mixer_music()
 
 def music(dirName = './', mode = 'single', repeat = False):
 	def play(queue, clipList, repeat):

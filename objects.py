@@ -1,7 +1,7 @@
 #objects.py
 from sqlTable import SQLTable
 from inventory import Inventory
-import userInput
+import userInput, os
 
 def objectFactory(db, code):
 	charObj = Objects(db)
@@ -17,6 +17,9 @@ def objectFactory(db, code):
 
 	elif subType in ['Feathers']:
 		obj = Feathers(db)
+
+	elif subType in ['Computer']:
+		obj = Computer(db)
 
 	else:
 		raise UserWarning('Unknown Object subType {}'.format(subType))
@@ -129,3 +132,19 @@ class Feathers(Objects):
 		self.descrip.value = 'A shit ton of feathers'
 		self.inventoryCode.value = 0
 		self.objectCodeString.value = None
+
+class Computer(Objects):
+	def __init__(self, db):
+		Objects.__init__(self, db)
+		self.code = 3
+		self.subType.value = 'Computer'
+		self.objName.value = 'Computer'
+		self.descrip.value = "A beige Dell covered in Cheeto dust. Some Dope website's on the screen"
+		self.inventoryCode.value = 0
+		self.objectCodeString.value = None
+		self.defaultCommands.update({
+			'use':userInput.Command(func=self.website, takesArgs=False, hide = False)
+		})
+	def website(self):
+		fileName = "file:///home/simon/Documents/interests/eatABattery/home.html"
+		os.system("firefox {}".format(fileName))

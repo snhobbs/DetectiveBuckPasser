@@ -5,7 +5,7 @@ import objects
 import userInput
 import sqlite3, os
 import getpass, readline, click, csv, traceback, numpy
-import toolBag
+import toolBag, pygame
 '''
 To do:
 1) need a variable to set for inspect that contains the levels of inspection so you can go up in the order you came in on
@@ -48,6 +48,8 @@ class Game(object):
 		objects.Couch(self.connection).writeToDB()
 		objects.Cushions(self.connection).writeToDB()
 		objects.Feathers(self.connection).writeToDB()
+		objects.Computer(self.connection).writeToDB()
+
 		self.__save()
 		os.system('reset')
 
@@ -102,6 +104,7 @@ class Game(object):
 
 		if str(roomCode) in self.currRoom.neighbors.value.split(','):
 			self.currRoom = Room.roomFactory(self.connection, roomCode)
+			os.system('clear')
 			self.inspection = self.currRoom
 			self.currRoom.look()
 		else:
@@ -120,6 +123,7 @@ class Game(object):
 		self.printCommands()
 
 	def run(self):
+		os.stderr = open('log.log', 'w+')
 		self.connection = sqlite3.connect(self.dbFile)
 		try:
 			self.__setupGame()
