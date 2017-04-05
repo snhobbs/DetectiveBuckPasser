@@ -2,7 +2,6 @@ from sqlTable import SQLTable
 import inventory
 import objects
 import Character
-import csv
 import userInput
 
 roomDict = {
@@ -31,6 +30,7 @@ def roomFactory(db, roomCode):
 
 	room.setCode(roomCode)
 	room.readFromDB()
+	room.loadRoom()
 	return room
 
 class Room(SQLTable):
@@ -51,36 +51,31 @@ class Room(SQLTable):
 		self.inventory = inventory.Inventory(db)
 		self.characters = None
 
-		self.commands = {
-			'look':userInput.Command(func=self.look)
+		self.inspection = None
+
+		self.defaultCommands = {
+			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around the room'),
+			'rooms':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as neighbors and exits', hide = True),
+			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms'),
+			'exits':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as neighbors and rooms', hide = True),
+			'inspect':userInput.Command(func=self.inspect, takesArgs=True, descrip = 'Interact with an object or item'),
+			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Talk to a character')
 			}
+
+		self.commands = self.defaultCommands
 
 		self.table = 'rooms'
 		self.codeName = 'roomCode'
 
-	def parseCSVNumString(self, stringIn):
-		if stringIn in [None, '', 'None','NULL','Null','null']:
-			return None
-		csv_reader = csv.reader(stringIn)
-		ret = []
-		for row in csv_reader:
-			ret += [int(entry) for entry in row if entry.isdigit()]
-		return ret
-
-	def loadCharacterList(self, codeString):
-		if codeString != None:
-			codes = self.parseCSVNumString(codeString)
-			if codes is None:
-				return
-			objList = []
-			for code in codes:
-				objList.append(Character.characterFactory(self.db, code))
-			return objList
-
 	def loadRoom(self):
-		#self.objects = self.loadObjList(codeString = self.objectCodeString.value, classToSet = objects.Objects)
+		self.inspection = self
+		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, factory = objects.objectFactory)
 		#self.inventory.setCode(int(self.inventoryCode.value))
-		self.characters = self.loadCharacterList(codeString = self.characterCodeString.value)
+		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, factory = Character.characterFactory)
+
+	def printNeighbors(self):
+		neighbors = [roomDictKey for roomDictKey in roomDict if roomDict[roomDictKey] in userInput.parseCSVNumString(self.neighbors.value)]
+		print("Neighboring Rooms: \n\t{}".format('\n\t'.join(neighbors)))
 
 	def look(self):
 		print(self.descrip.value)
@@ -92,8 +87,72 @@ class Room(SQLTable):
 				print(char.descrip.value)
 		else:
 			print("\nYou're all alone")
-		#for obj in self.objectsList:
-		#	print(char.descrip.value)
+
+		if self.objects != None:
+			for obj in self.objects:
+				print('\n')
+				print(obj.objName.value)
+				print('__________________________')
+				print(obj.descrip.value)
+
+	def __inspectCharacter(self, characterName = None):
+		if characterName == None:
+			characterName = input('Who do you wanna snoop on? ').strip().lower().replace(' ','')
+		try:
+			self.inspection = [char for char in self.characters if char.charName.value.lower() == characterName][0]
+			self.commands = self.defaultCommands
+			self.commands.update(self.inspection.commands)
+			return True
+		except IndexError:
+			print("I dont know that character %s"%characterName)
+			return False
+
+	def __inspectObject(self, objName = None):
+		if objName == None:
+			objName = input('Inspect what? ').strip().lower().replace(' ','')
+		try:
+			self.inspection = [obj for obj in self.objects if obj.objName.value.lower() == objName][0]
+			self.commands = self.defaultCommands
+			self.commands.update(self.inspection.commands)
+			return True
+		except IndexError:
+			print("I dont know that object %s"%objName)
+			return False
+
+	def inspect(self, inspectionName = None):
+		if inspectionName == None:
+			inspectionName = [input("What do you want to inspect? ")]
+		inspectionName = ' '.join(inspectionName).lower().strip()
+
+		try:
+			if inspectionName in [char.charName.value.lower().strip() for char in self.characters]:
+				self.__inspectCharacter(inspectionName)
+				return
+		except TypeError:
+			pass
+
+		try:
+			if inspectionName in [obj.objName.value.lower().strip() for obj in self.objects]:
+				self.__inspectObject(inspectionName)
+				return
+		except TypeError:
+			pass
+
+		print('What the hell is that mmaaannnn?')
+
+	def talkTo(self, charName = None):
+		if self.characters == None:
+			print("No one is here")
+			return
+		if charName == None:
+			charName = [input("Who do you want to talk to? ")]
+		charName = ' '.join(charName).lower().replace('to', '').replace('with','').strip()
+		if charName in [char.charName.value.lower().strip() for char in self.characters]:
+			if self.__inspectCharacter(charName):
+				self.inspection.talk()
+		else:
+			print(charName)
+			print('What the hell is that mmaaannnn?')
 
 class HomeApt(Room):
 	'''
@@ -164,7 +223,7 @@ class MurderScene(Room):
 	def __init__(self, db):
 		Apartment.__init__(self, db)
 		self.neighbors.value = '0'
-		self.characterCodeString.value = '1,0'
+		self.characterCodeString.value = '0,1'
 		self.descrip.value = "Greusume murder scene"
 		self.inventoryCode.value = 1
 		self.objectCodeString.value = '0'

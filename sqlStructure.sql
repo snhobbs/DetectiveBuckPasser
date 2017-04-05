@@ -39,10 +39,13 @@ create table rooms(
 	primary key(roomCode)
 );
 
-create table objects(--interactable objects
+/**interactable objects**/
+create table objects(
 	subType string NOT NULL,
 	objCode int NOT NULL,
-	description text NOT NULL,
+	objName string NOT NULL,
+	descrip text NOT NULL,
 	inventoryCode int,
+	objects text,
 	primary key(objCode)
 );
