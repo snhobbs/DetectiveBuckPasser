@@ -94,6 +94,7 @@ class Room(SQLTable):
 			self.inspection = [char for char in self.characters if char.charName.value.lower() == characterName][0]
 			self.commands = self.defaultCommands
 			self.commands.update(self.inspection.commands)
+			print("\n{0.charName.value}\n-------------------\n{0.descrip.value}".format(self.inspection))
 			return True
 		except IndexError:
 			print("I dont know that character %s"%characterName)
@@ -106,6 +107,7 @@ class Room(SQLTable):
 			self.inspection = [obj for obj in self.objects if obj.objName.value.lower() == objName][0]
 			self.commands = self.defaultCommands
 			self.commands.update(self.inspection.commands)
+			print("\n{0.objName.value}\n-------------------\n{0.descrip.value}".format(self.inspection))
 			return True
 		except IndexError:
 			print("I dont know that object %s"%objName)
