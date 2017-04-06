@@ -81,6 +81,8 @@ class Game(object):
 				mode = 'single'
 			elif('playlist' in args):
 				mode = 'playlist'
+			else:
+				return
 		else:
 			options = (('Single Song', 'single'), ('Playlist', 'playlist'), ('Shuffle All', 'shuffle'), ('Turn Off', 'mute'))
 			mode = options[toolBag.printSelect(options = [option[0] for option in options], cursor = 'music> ')][1]
