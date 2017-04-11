@@ -23,7 +23,7 @@ class sqlInterface(object):
 
 	def assignCode(self):
 		code = self.getMaxInTable(self.codeName)
-		if code == 0:
+		if code == None:
 			self.setCode(0)
 		else:
 			self.setCode(code + 1)
@@ -161,7 +161,7 @@ class SQLTable(sqlInterface):
 			element.value = descrubSql(value)
 
 class TableElement(object):
-	elementTypes = ['FILE', 'STRING', 'INT', 'FLOAT', 'BOOLEAN']
+	elementTypes = ['FILE', 'STRING', 'INT', 'FLOAT', 'BOOL']
 	def __init__(self, title, name, value, elementType, options):
 		self.title = title
 		self.name = name

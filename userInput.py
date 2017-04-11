@@ -16,7 +16,7 @@ def userInput(commands, userIn):
 	'''
 	take user input, conditions it, returns the command instance
 	'''
-	userIn = userIn.lower().strip().split(' ')
+	userIn = userIn.lower().replace('to','').replace('with','').replace('the','').strip().split(' ')
 	#check inspect commands
 	#check game commands
 	try:

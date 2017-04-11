@@ -1,5 +1,5 @@
 --sqlStructure
-DROP TABLE IF EXISTS inventory, rooms, people, hero, objects, items;
+/**DROP TABLE IF EXISTS inventory, rooms, people, hero, objects, items;**/
 
 create table items(
 	subType string NOT NULL,
@@ -14,7 +14,7 @@ create table items(
 create table inventory(
 	inventoryCode int NOT NULL,
 	itemCode int NOT NULL,
-	itemCount int NOT NULL,
+	amount float NOT NULL
 );
 
 create table chars(
