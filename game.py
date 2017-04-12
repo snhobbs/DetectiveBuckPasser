@@ -43,7 +43,8 @@ class Game(object):
 			'grab':userInput.Command(func=self.grab, takesArgs=True, descrip = 'Take an item', hide = True),
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
 			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
-			'inventory':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'Look at the items you have')
+			'inventory':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'Look at the items you have', hide = True),
+			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something')
 			}
 		self.commands = self.defaultCommands
 
@@ -67,6 +68,7 @@ class Game(object):
 		itemPouch = inventory.Inventory(self.connection)
 		itemPouch.addItem(bottle.subType.value, 3)
 		itemPouch.writeToDB()
+		print(itemPouch, itemPouch.code)
 		self.buckPasser.addInventory(itemPouch)
 		self.__save()
 		#os.system('reset')
@@ -257,7 +259,7 @@ class Game(object):
 
 			lastRoom = self.currRoom
 			investDict = self.commands
-			investDict.update(self.currRoom.commands)
+			#investDict.update()
 
 			while True:
 				try:

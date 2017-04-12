@@ -54,7 +54,7 @@ class Character(SQLTable):
 			print('Nothing found')
 		else:
 			print("Type\t\tAmount\t\tTotal Weight")
-			print('\n\t'.join(["{0.subType.value}\t{1}\t%.3f\nDescription: {0.descrip.value}".format(item[0], item[1])%(float(item[0].weight.value) * float(item[1])) for item in self.inventory.items ]))
+			self.inventory.listItems()
 
 	def search(self):
 		self.listItems()
