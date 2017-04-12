@@ -61,5 +61,5 @@ class Room(SQLTable):
 		neighbors = [roomDictKey for roomDictKey in roomDict if roomDict[roomDictKey] in userInput.parseCSVNumString(self.neighbors.value)]
 		print("Neighboring Rooms: \n\t{}".format('\n\t'.join(neighbors)))
 
-	def search(self, obj):
+	def search(self):
 		pass

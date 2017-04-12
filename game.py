@@ -44,7 +44,11 @@ class Game(object):
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
 			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
 			'inventory':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'Look at the items you have', hide = True),
-			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something')
+			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
+			'kill':userInput.Command(func=self.kill, takesArgs=True, hide = True),
+			'gun':userInput.Command(func=self.kill, takesArgs=True, hide = True),
+			'shoot':userInput.Command(func=self.kill, takesArgs=True, hide = True),
+			'murder':userInput.Command(func=self.kill, takesArgs=True, hide = True)
 			}
 		self.commands = self.defaultCommands
 
@@ -201,7 +205,7 @@ class Game(object):
 			subject = [input('Use What? :  ').strip().lower()]
 		self.__makeCommand(subject = subject, command = 'use', onObject = True, onItem = True)
 
-	def describe(self, subject):
+	def describe(self, subject = None):
 		if subject == None:
 			subject = [input('Describe What? :  ').strip().lower()]
 		self.__makeCommand(subject = subject, command = 'describe', onObject = True, onCharacter = True, onItem = True)
@@ -214,23 +218,28 @@ class Game(object):
 			charName = [input("Who do you want to talk to? ")]
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
 
-	def grab(self, subject):
+	def grab(self, subject = None):
 		if subject == None:
 			subject = [input('Grab What? :  ').strip().lower()]
 		self.__makeCommand(subject = subject, command = 'grab', onItem = True)
 
-	def search(self, subject):
+	def search(self, subject = None):
 		if subject == None:
-			subject = [input("Search what?")]
+			subject = [input("Search what? ")]
 		self.__makeCommand(subject = subject, command = 'search', onCharacter = True)
 
 	def listItems(self):
 		self.buckPasser.listItems()
 
-	def drop(self,subject):
+	def drop(self,subject = None):
 		if subject == None:
-			subject = [input("Drop what?")]
+			subject = [input("Drop what? ")]
 		self.__makeCommand(subject = subject, command = 'drop', args = self.currRoom, onItem = True)
+
+	def kill(self, subject = None):
+		if subject == None:
+			subject = [input("Who's gonna get got? ")]
+		self.__makeCommand(subject = subject, command = 'kill', onCharacter = True)
 
 	def move(self, room = None):
 		'''
@@ -259,7 +268,7 @@ class Game(object):
 
 			lastRoom = self.currRoom
 			investDict = self.commands
-			#investDict.update()
+			investDict.update(self.currRoom.commands)
 
 			while True:
 				try:

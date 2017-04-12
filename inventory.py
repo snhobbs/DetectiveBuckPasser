@@ -66,7 +66,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		self.items = []
 		for itemName, amount in resp:
 			self.addItem(itemName, amount)
-		print(self.items)
 
 	def listItems(self):
 		print('\n\t'.join(["{0.item.subType.value}\t{0.amount}\t%.3f\nDescription: {0.descrip.value}".format(item)%(float(item.item.weight.value) * float(item.amount)) for item in self.items ]))
