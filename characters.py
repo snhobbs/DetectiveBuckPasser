@@ -92,6 +92,9 @@ class HammerGuy(Character):
 		self.descrip.value = "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump."
 
 class GuyFieri(Character):
+	'''
+	you just shoot him when you open the door and his aprtment is no longer accessible
+	'''
 	def __init__(self,db):
 		self.code = 5
 		Character.__init__(self,db, self.code)
@@ -100,3 +103,54 @@ class GuyFieri(Character):
 		self.money.value = 1e5
 		self.bac.value = 0
 		self.descrip.value = "2 options shoot or there must be a better way, then instinct takes over and you shoot him anyway"
+
+class OldLady(Character):
+	def __init__(self,db):
+		self.code = 6
+		Character.__init__(self,db, self.code)
+		self.subType.value = 'OldLady'
+		self.charName.value = 'Susan'
+		self.money.value = 1e5
+		self.bac.value = 0
+		self.descrip.value = "He hs got a boot with a foot in it. SHE'S ALL ABOUT THE BUM"
+
+class Canadian(Character):
+	def __init__(self,db):
+		self.code = 7
+		Character.__init__(self,db, self.code)
+		self.subType.value = 'Canadian'
+		self.charName.value = 'Steve'
+		self.money.value = 1e5
+		self.bac.value = 2
+		self.descrip.value = "Canadian AF. Real shithole you got here. Worse mess than when I saw this biker get in a tiffy with a moose. He's the hints."
+
+class Veterinarian(Character):
+	def __init__(self,db):
+		self.code = 8
+		Character.__init__(self,db, self.code)
+		self.subType.value = 'Veterinarian'
+		self.charName.value = 'Dr. '
+		self.money.value = 1e5
+		self.bac.value = 0
+		self.descrip.value = "Battle fatigued veterinarian. He enjoys putting down animals a bit too much. 'You ever seen what piano wire will do to a pomeranians neck?'"
+
+
+class AASponser(Character):
+	def __init__(self,db):
+		self.code = 9
+		Character.__init__(self,db, self.code)
+		self.subType.value = 'AASponser'
+		self.charName.value = 'Joe'
+		self.money.value = 1e5
+		self.bac.value = 0
+		self.descrip.value = "Bear's AA sponsor, roommates with Simon. Has to constantly deal with bear"
+
+class AASponserRoommate(Character):
+	def __init__(self,db):
+		self.code = 10
+		Character.__init__(self,db, self.code)
+		self.subType.value = 'AASponserRoommate'
+		self.charName.value = 'Simon'
+		self.money.value = 1e5
+		self.bac.value = 0
+		self.descrip.value = "Pep talks Joe as to how to standup to bear, always resorts to camping guides for dealing with bear encounters"
