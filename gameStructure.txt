@@ -1,0 +1,44 @@
+game structure
+
+detective
+- inventory
+
+characters
+- inventory
+
+rooms
+- inventory
+- move -> look through the neighbors and move to the room described
+- Door -> every room has a door which is locked or unlocked, if its locked there is a message with it that so the room can be closed
+
+objects
+- search the object -> takes you to a menu where you can take the items in the object
+- insert -> inserts an item from your inventory into the object
+
+items
+- held in an inventory
+- has size (aka volume), weight, and whether or not the item is critical (critical items cannot be sold or discarded)
+- use method
+- consume amount
+
+inventory
+- Objects, characters, and rooms have an inventory of items
+- contains the item code and amount of the item
+- has a transfer method that moves a specified amount of an object from one inventory to another
+- method 'use (item name)' calls the specified items use method and removes the consume amount of the item from your inventory
+
+Commands
+--------
+1 word command (use, talk, inspect...)
+[possible filler (to, with, at...)]
+subject
+to pass/drop/get an object you need to be 'in scope' with the object, character, or room.
+
+Item Transaction
+----------------
+-> search ___ (room for the current room, object name for the object)
+-> talk ___ person -> option to transfer items
+
+Menus
+-----
+
