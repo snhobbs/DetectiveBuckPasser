@@ -1,23 +1,33 @@
 from sqlTable import SQLTable
 import userInput
 import inventory
-class Character(SQLTable):
+from menus import Menu, MenuOption
+
+class CharacterMenu(Menu):
+	def __init__(self, db):
+		Menu.__init__(self, db, title = self.charName.value, description="Character Menu", cursor = "What do you want to do? ")
+		self.addOption(MenuOption(db = db, title = "Talk", description="Talk to {.charName.value}".format(self), commit = True, clear=True, action = self.talk))
+		self.addOption(MenuOption(db = db, title = "Give/Get Items", description="Transfer items  between you", commit = True, clear=True, action = self.inventory.itemTransfer))
+		self.addOption(MenuOption(db = db, title = "Assault", description="", commit = True, clear=True, action=self.assault))
+
+class Character(SQLTable, CharacterMenu):
 	'''
 	Character is the base class for all characters in the game
 	'''
-	def __init__(self, db, code):
+	def __init__(self, db, code, subType, charName, money, bac, descrip):
 		SQLTable.__init__(self, db)
 		self.code = code
-		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = None, elementType = 'STRING')
-		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = None, elementType = 'STRING')
-		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = None, elementType = 'FLOAT')
-		self.bac = self.elementTable.addElement(title = 'Blood Alcohol Content', name = 'bac', value = 0, elementType = 'FLOAT')
-		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = None, elementType = 'STRING')
+		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = subType, elementType = 'STRING')
+		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = charName, elementType = 'STRING')
+		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = money, elementType = 'FLOAT')
+		self.bac = self.elementTable.addElement(title = 'Blood Alcohol Content', name = 'bac', value = bac, elementType = 'FLOAT')
+		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = descrip, elementType = 'STRING')
 
 		self.table = 'chars'
 		self.codeName = 'charCode'
 		self.inventoryCode = None
 		self.inventory = None
+		self.addInventory(inventory.Inventory(self.db))
 		self.commands = {
 			'kill':userInput.Command(func=self.kill, takesArgs=False, hide = True),
 			'gun':userInput.Command(func=self.kill, takesArgs=False, hide = True),
@@ -28,23 +38,13 @@ class Character(SQLTable):
 			'talk':userInput.Command(func=self.talk, takesArgs=False, hide = True)
 			}
 
+		CharacterMenu.__init__(self, db)
+
 	def kill(self):
 		print("Don't shoot him, what the hell's wrong with you, you gaddamn maniac?")
 
-	def grab(self):
-		pass
-
-	def store(self):
-		pass
-
-	def move(self):
-		pass
-
-	def look(self):
-		pass
-
-	def drink(self):
-		pass
+	def assault(self):
+		print("Don't go fighting")
 
 	def talk(self):
 		print("They wont talk to the cops")

@@ -1,27 +1,33 @@
 game structure
 
-detective
+Detective
+---------
 - inventory
 
-characters
+Characters
+----------
 - inventory
 
-rooms
+Rooms
+-----
 - inventory
 - move -> look through the neighbors and move to the room described
 - Door -> every room has a door which is locked or unlocked, if its locked there is a message with it that so the room can be closed
 
-objects
+Objects
+-------
 - search the object -> takes you to a menu where you can take the items in the object
 - insert -> inserts an item from your inventory into the object
 
-items
+Items
+-----
 - held in an inventory
 - has size (aka volume), weight, and whether or not the item is critical (critical items cannot be sold or discarded)
 - use method
 - consume amount
 
-inventory
+Inventory
+---------
 - Objects, characters, and rooms have an inventory of items
 - contains the item code and amount of the item
 - has a transfer method that moves a specified amount of an object from one inventory to another
@@ -41,4 +47,33 @@ Item Transaction
 
 Menus
 -----
+How to do menus?
+
+Stages
+------
+The game stays static until an 'event' happens. Then their new status needs to be loaded
+Needs a game status option and a 'done talking' option
+
+
+Machinery Needed
+----------------
+1) Menus
+2) Character interactions menus
+3) Loading character state after an event change
+4) How to talk to a character
+
+
+____________________________________________________
+Commands
+
+mute stops all sounds
+unmute unmutes sounds
+start brings up the game menu
+sound brings up the sound menu
+
+when you enter a room is prints the description of the room, who is in it and what objects are there. Items present in the room must be searched for
+move ___(room name) moves you to a new room if it is an available neighbor
+talk ___(character name) brings up a character interaction menu -> then have item options, question, ...
+search ___(room/object) brings up the inventory of them
+inspect ___(person, object, item) gives more information about the subject
 

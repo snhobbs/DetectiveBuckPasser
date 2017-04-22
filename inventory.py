@@ -73,3 +73,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 	def inventoryMenu(self):
 		pass
 
+	def itemTransfer(self):
+		pass
+

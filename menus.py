@@ -8,50 +8,38 @@ class Menu(object):
 	'''
 	Menu is the base class for all menus
 	'''
-	def __init__(self, db, description, cursor):
+	def __init__(self, db, title, description, cursor):
 		self.db = db
 		self.cursor = cursor
-		self.title = ": %s"%(os.environ['dataBase'])
+		self.title = title
 		self.description = description
 		self.MenuOptions = []
-		self.GeneralOptions = []
+		self.addOption(MenuOption(db = db, title = "Leave", description="Exit Menu", commit = True, clear=True, action = self.exitMenu))
 
-		self.SQLOption = self.addGeneralOption(SQLCall(db))
-		self.QuitOption = self.addGeneralOption(Quit(db))
+	def exitMenu(self):
+		raise UserWarning
 
-	def run(self):
-		print self.makeScreen()
+	def runMenu(self):
+		print(self.makeScreen())
 		while True:
-			userInput = raw_input(self.cursor).upper().strip()
-			if(userInput in ['0','Q','QUIT','EXIT']):
-				self.QuitOption.run()
+			userInput = input(self.cursor).upper().strip()
 
-			if(userInput in ['CLEAR', 'C']):
-				os.system('clear')
-				print self.makeScreen()
-
-			elif(userInput in ['H', '?','HELP']):
-				os.system("echo '%s' | less"%(self.helpScreen()))
-
-			elif(userInput.isdigit() and int(userInput) <= len(self.MenuOptions)):
+			if(userInput.isdigit() and int(userInput) <= len(self.MenuOptions)):
 				try:
 					if(self.MenuOptions[int(userInput) -1].clear):
 						os.system('clear')
+						print(self.makeScreen())
 					self.MenuOptions[int(userInput) -1].run()
 					if(self.MenuOptions[int(userInput) -1].commit):
 						self.db.commit()
 				except KeyboardInterrupt:
 					continue
 				except UserWarning as uw:
-					print uw
+					print(uw)
 					continue
 
 	def addOption(self, option):
 		self.MenuOptions.append(option)
-		return option
-
-	def addGeneralOption(self, option):
-		self.GeneralOptions.append(option)
 		return option
 
 	def calcScreen(self):
@@ -89,48 +77,20 @@ class Menu(object):
 
 	def makeScreen(self):
 		screen = self.makeTitle(self.title, self.description)
-
-		screen.extend("%s"%(self.numberedLine(self.MenuOptions[i].title, i + 1)) + '\n' for i in xrange(len(self.MenuOptions)))
-
-		screen.append('\n\n')
-		screen.append(self.borderString())
-		screen.append('\n\n')
-		return ''.join(screen)
-
-	def helpLine(self, columns):
-		for i in xrange(len(self.MenuOptions)):
-			y = ['%d'%(i+1)]
-			y.append( ("%s"%(self.numberedLine(self.MenuOptions[i].title, i + 1))) )
-			y.append('\n')
-			y.append( ("\t   -%s"%('\n'.join(textwrap.wrap(self.MenuOptions[i].description)))) )
-			y.append('\n')
-			for obj in y:
-				yield obj
-
-	def helpScreen(self):
-		rows, columns = self.calcScreen()
-		if columns > 70:
-			helpColumns = 60
-		else:
-			helpColumns = columns-8
-
-		screen = self.makeTitle('Help', 'Help Menu')
-		helpTups = [(option.title.title(), option.description.capitalize()) for option in self.MenuOptions]
-		numedTups = zip(xrange(1, len(helpTups) +1), helpTups)
-		for numedTup in numedTups:
-			screen.append("   %d) %s\n\t%s\n\n"%(numedTup[0], numedTup[1][0], '\n\t'.join(textwrap.wrap(numedTup[1][1], width=helpColumns)) ))
+		screen.extend("%s"%(self.numberedLine(self.MenuOptions[i].title, i + 1)) + '\n' for i in range(len(self.MenuOptions)))
 		screen.append('\n\n')
 		screen.append(self.borderString())
 		screen.append('\n\n')
 		return ''.join(screen)
 
 class MenuOption(object):
-	def __init__(self, db = None, title = None, description = None, commit = False, clear = True):
+	def __init__(self, db = None, title = None, description = None, commit = False, clear = True, action=None):
 		self.db = db
 		self.title = title
 		self.description = description
 		self.commit = commit
 		self.clear = clear
+		self.action = action
 		self.typeCheck()
 
 	def typeCheck(self):
@@ -141,4 +101,15 @@ class MenuOption(object):
 			raise UserWarning('clear must be a boolean')
 
 	def run(self):
-		pass
+		if self.action != None:
+			self.action()
+
+import sqlite3
+import characters
+if __name__ =="__main__":
+	dbFile = 'test.db'
+	os.system('sqlite3 {0} < {1}'.format(dbFile, 'sqlStructure.sql'))
+	db = sqlite3.connect(dbFile)
+	bear = characters.Bear(db)
+	bear.runMenu()
+

@@ -16,28 +16,21 @@ To do:
 3) How do we wanna do the clever dialog? do each room have a string of possible exit strings to play?
 4) How should conversations with the characters go?
 '''
-class Game(object):
+class GameCommands(object):
 	'''
 	self.currRoom is the room the character is in
 	self.inspection is the object, item, room, character that is being looked at. Each of these needs to have a dictionary of possible commands. The games superset of commands always apply.
 	Have the user declare that they're done to either go up a layer of inspection or back to the room
 	'''
-	def __init__(self):
-		self.connection = None
-		self.dbFile = 'gameDB.db'
+	def __init__(self, db):
+		self.db = db
 		self.currRoom = None
-		self.musicProcess = None
 		self.inspection = None
 		self.buckPasser = None
 		self.defaultCommands = {
-			'save':userInput.Command(func=self.__save, takesArgs=False, descrip = 'save game'),
-			'load':userInput.Command(func=self.__load, takesArgs=True, descrip = 'Load game from an existing save file'),
-			'exit':userInput.Command(func=self.__exit, takesArgs=False, descrip = 'Exit game immediately'),
 			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
 			'commands':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'Print the available commands'),
 			'help':userInput.Command(func=self.printHelp, takesArgs=False, descrip = 'No one can save you now'),
-			'music':userInput.Command(func=self.music, takesArgs=True, descrip = 'Choose some sweet sultry tunes'),
-			'mute':userInput.Command(func=self.mute, takesArgs=False, descrip = 'Mute the music', hide = True),
 			'use':userInput.Command(func=self.use, takesArgs=True, descrip = 'Use an item', hide = True),
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing', hide = True),
 			'grab':userInput.Command(func=self.grab, takesArgs=True, descrip = 'Take an item', hide = True),
@@ -51,38 +44,6 @@ class Game(object):
 			'murder':userInput.Command(func=self.kill, takesArgs=True, hide = True)
 			}
 		self.commands = self.defaultCommands
-
-	def __setupGame(self):
-		os.system('sqlite3 {0} < {1}'.format(self.dbFile, 'sqlStructure.sql'))
-		self.buckPasser = hero.Hero(self.connection)
-		characters.SixDollarMan(self.connection).writeToDB()
-		characters.Bear(self.connection).writeToDB()
-
-		Rooms.HomeApt(self.connection).writeToDB()
-		Rooms.Apartment_3B(self.connection).writeToDB()
-		Rooms.MurderScene(self.connection).writeToDB()
-
-		objects.Couch(self.connection).writeToDB()
-		objects.Cushions(self.connection).writeToDB()
-		objects.Feathers(self.connection).writeToDB()
-		objects.Computer(self.connection).writeToDB()
-
-		bottle = items.bottle(self.connection)
-		bottle.writeToDB()
-		itemPouch = inventory.Inventory(self.connection)
-		itemPouch.addItem(bottle.subType.value, 3)
-		itemPouch.writeToDB()
-		print(itemPouch, itemPouch.code)
-		self.buckPasser.addInventory(itemPouch)
-		self.__save()
-		#os.system('reset')
-
-	def __load(self, dbFile):
-		pass
-
-	def __save(self):
-		self.connection.commit()
-		self.currRoom = 0
 
 	def __getObject(self, objName = None):
 		if self.currRoom.objects == None:
@@ -107,7 +68,7 @@ class Game(object):
 	def __getRoom(self, roomName = None):
 		try:
 			roomCode = Room.roomDict[roomName]
-			self.inspection = Rooms.roomFactory(self.connection, roomCode)
+			self.inspection = Rooms.roomFactory(self.db, roomCode)
 		except KeyError:
 			raise UserWarning('No Room Found')
 
@@ -156,37 +117,6 @@ class Game(object):
 		except UserWarning as uw:
 			print(uw)
 			print("I don't know what you're jabbering about you driveling idiot")
-
-	def __exit(self):
-		self.__save()
-		exit(0)
-
-	def mute(self):
-		try:
-			self.musicProcess.terminate()
-		except:
-			pass
-
-	def music(self, args = None):
-		musicDir = 'music'
-		if args != None:
-			if('mute' in args):
-				mode = 'mute'
-			elif('shuffle' in args):
-				mode = 'shuffle'
-			elif('single' in args or 'song' in args):
-				mode = 'single'
-			elif('playlist' in args):
-				mode = 'playlist'
-			else:
-				return
-		else:
-			options = (('Single Song', 'single'), ('Playlist', 'playlist'), ('Shuffle All', 'shuffle'), ('Turn Off', 'mute'))
-			mode = options[toolBag.printSelect(options = [option[0] for option in options], cursor = 'music> ')][1]
-
-		self.mute()
-		if(mode != 'mute'):
-			self.musicProcess = toolBag.music(musicDir, mode = mode)
 
 	def printCommands(self):
 		print("Some of the Avaliable Commands:")
@@ -257,12 +187,95 @@ class Game(object):
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room[0]))
 
+class GameMenu(Menu):
+	def __init__(self, db):
+	Menu.__init__(self, db, title = self.charName.value, description="Game Menu", cursor = " > ")
+	self.addOption(MenuOption(db = db, title = "Exit", description="Exit Game".format(self), commit = True, clear=True, action = self.__exit))
+	self.addOption(MenuOption(db = db, title = "Save", description="", commit = True, clear=True, action = self.__save))
+	self.addOption(MenuOption(db = db, title = "Load", description="Load a previous save", commit = True, clear=True, action=self.__load))
+	self.addOption(MenuOption(db = db, title = "Sound", description="Sound Settings", commit = True, clear=True, action=None))
+
+class Game(GameCommands, GameMenu):
+	def __init__(self):
+		self.db = None
+		self.dbFile = 'gameDB.db'
+		self.gameCommands = None
+		self.musicProcess = None
+				self.menuOptions = {
+			'save':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
+			'load':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
+			'mute':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
+			'music':userInput.Command(func=self.move, takesArgs=True, descrip = 'Choose some sweet sultry tunes'),
+		}
+
+	def __exit(self):
+		self.save()
+		exit(0)
+
+	def __load(self, dbFile):
+		pass
+
+	def __save(self):
+		self.db.commit()
+
+	def mute(self):
+		try:
+			self.musicProcess.terminate()
+		except:
+			pass
+
+	def music(self, args = None):
+		musicDir = 'music'
+		if args != None:
+			if('mute' in args):
+				mode = 'mute'
+			elif('shuffle' in args):
+				mode = 'shuffle'
+			elif('single' in args or 'song' in args):
+				mode = 'single'
+			elif('playlist' in args):
+				mode = 'playlist'
+			else:
+				return
+		else:
+			options = (('Single Song', 'single'), ('Playlist', 'playlist'), ('Shuffle All', 'shuffle'), ('Turn Off', 'mute'))
+			mode = options[toolBag.printSelect(options = [option[0] for option in options], cursor = 'music> ')][1]
+
+		self.mute()
+		if(mode != 'mute'):
+			self.musicProcess = toolBag.music(musicDir, mode = mode)
+
+	def __setupGame(self):
+		os.system('sqlite3 {0} < {1}'.format(self.dbFile, 'sqlStructure.sql'))
+		self.gameCommands.buckPasser = hero.Hero(self.db)
+		characters.SixDollarMan(self.db).writeToDB()
+		characters.Bear(self.db).writeToDB()
+
+		Rooms.HomeApt(self.db).writeToDB()
+		Rooms.Apartment_3B(self.db).writeToDB()
+		Rooms.MurderScene(self.db).writeToDB()
+
+		objects.Couch(self.db).writeToDB()
+		objects.Cushions(self.db).writeToDB()
+		objects.Feathers(self.db).writeToDB()
+		objects.Computer(self.db).writeToDB()
+
+		bottle = items.bottle(self.db)
+		bottle.writeToDB()
+		itemPouch = inventory.Inventory(self.db)
+		itemPouch.addItem(bottle.subType.value, 3)
+		itemPouch.writeToDB()
+		print(itemPouch, itemPouch.code)
+		self.gameCommands.buckPasser.addInventory(itemPouch)
+		self.__save()
+		#os.system('reset')
+
 	def run(self):
 		os.stderr = open('log.log', 'w+')
-		self.connection = sqlite3.connect(self.dbFile)
+		self.db = sqlite3.connect(self.dbFile)
 		try:
 			self.__setupGame()
-			self.currRoom = Rooms.HomeApt(self.connection)
+			self.currRoom = Rooms.HomeApt(self.db)
 			self.currRoom.loadRoom()
 			self.currRoom.look()
 
@@ -284,6 +297,6 @@ class Game(object):
 					exit(0)
 			self.__save()
 		finally:
-			self.connection.close()
+			self.db.close()
 os.system('rm *.db')
 Game().run()
