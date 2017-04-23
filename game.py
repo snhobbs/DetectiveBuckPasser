@@ -1,7 +1,5 @@
-import Character
 import characters
-import Room
-import Rooms
+import Room, Rooms
 import hero
 import objects
 import userInput
@@ -9,6 +7,7 @@ import getpass, readline, click, csv, traceback, numpy, sqlite3, os
 import toolBag
 import items
 import inventory
+from menus import Menu, MenuOption
 '''
 To do:
 1) make a game file directory entry with the current room, etc
@@ -27,23 +26,18 @@ class GameCommands(object):
 		self.currRoom = None
 		self.inspection = None
 		self.buckPasser = None
-		self.defaultCommands = {
-			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
+		self.commands = {
+			'start':userInput.Command(func=self.startMenu, takesArgs=False, descrip = 'Start Menu'),
 			'commands':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'Print the available commands'),
 			'help':userInput.Command(func=self.printHelp, takesArgs=False, descrip = 'No one can save you now'),
-			'use':userInput.Command(func=self.use, takesArgs=True, descrip = 'Use an item', hide = True),
-			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing', hide = True),
-			'grab':userInput.Command(func=self.grab, takesArgs=True, descrip = 'Take an item', hide = True),
+			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound'),
+			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
+			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing'),
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
 			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
-			'inventory':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'Look at the items you have', hide = True),
 			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
-			'kill':userInput.Command(func=self.kill, takesArgs=True, hide = True),
-			'gun':userInput.Command(func=self.kill, takesArgs=True, hide = True),
-			'shoot':userInput.Command(func=self.kill, takesArgs=True, hide = True),
-			'murder':userInput.Command(func=self.kill, takesArgs=True, hide = True)
+			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms')
 			}
-		self.commands = self.defaultCommands
 
 	def __getObject(self, objName = None):
 		if self.currRoom.objects == None:
@@ -66,11 +60,13 @@ class GameCommands(object):
 			raise UserWarning('No Character Found')
 
 	def __getRoom(self, roomName = None):
-		try:
-			roomCode = Room.roomDict[roomName]
-			self.inspection = Rooms.roomFactory(self.db, roomCode)
-		except KeyError:
+		roomObj = Room.Room(self.db)
+		roomObj.roomName.value = roomName
+		resp = roomObj.selectSql(columnNames = [roomObj.tableCode[0]], conditions=(roomObj.roomName.sqlPair))
+		if resp in [None, 'NULL','']:
 			raise UserWarning('No Room Found')
+		self.inspection = Rooms.roomFactory(self.db, resp[0][0])
+
 
 	def __getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
@@ -130,11 +126,6 @@ class GameCommands(object):
 		print('\n\nNo one can help your sorry ass, just go score some blow.\n\n')
 		self.printCommands()
 
-	def use(self, subject = None):
-		if subject == None:
-			subject = [input('Use What? :  ').strip().lower()]
-		self.__makeCommand(subject = subject, command = 'use', onObject = True, onItem = True)
-
 	def describe(self, subject = None):
 		if subject == None:
 			subject = [input('Describe What? :  ').strip().lower()]
@@ -147,11 +138,8 @@ class GameCommands(object):
 		if charName == None:
 			charName = [input("Who do you want to talk to? ")]
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
-
-	def grab(self, subject = None):
-		if subject == None:
-			subject = [input('Grab What? :  ').strip().lower()]
-		self.__makeCommand(subject = subject, command = 'grab', onItem = True)
+		os.system('clear')
+		self.currRoom.look()
 
 	def search(self, subject = None):
 		if subject == None:
@@ -161,15 +149,14 @@ class GameCommands(object):
 	def listItems(self):
 		self.buckPasser.listItems()
 
-	def drop(self,subject = None):
-		if subject == None:
-			subject = [input("Drop what? ")]
-		self.__makeCommand(subject = subject, command = 'drop', args = self.currRoom, onItem = True)
-
-	def kill(self, subject = None):
-		if subject == None:
-			subject = [input("Who's gonna get got? ")]
-		self.__makeCommand(subject = subject, command = 'kill', onCharacter = True)
+	def printNeighbors(self):
+		room = Room.Room(self.db)
+		neighbors = []
+		for code in userInput.parseCSVNumString(self.currRoom.neighbors.value):
+			room.setCode(code)
+			room.readFromDB()
+			neighbors.append(room.roomName.value)
+		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(neighbors)))
 
 	def move(self, room = None):
 		'''
@@ -189,34 +176,34 @@ class GameCommands(object):
 
 class GameMenu(Menu):
 	def __init__(self, db):
-	Menu.__init__(self, db, title = self.charName.value, description="Game Menu", cursor = " > ")
-	self.addOption(MenuOption(db = db, title = "Exit", description="Exit Game".format(self), commit = True, clear=True, action = self.__exit))
-	self.addOption(MenuOption(db = db, title = "Save", description="", commit = True, clear=True, action = self.__save))
-	self.addOption(MenuOption(db = db, title = "Load", description="Load a previous save", commit = True, clear=True, action=self.__load))
-	self.addOption(MenuOption(db = db, title = "Sound", description="Sound Settings", commit = True, clear=True, action=None))
+		Menu.__init__(self, db, title =  'Start Menu', description="", cursor = " Start Menu> ")
+		self.addOption(MenuOption(db = db, title = "Quit Game", description="Exit Game", commit = True, clear=True, action = self._exit))
+		self.addOption(MenuOption(db = db, title = "Save", description="", commit = True, clear=True, action = self._save))
+		self.addOption(MenuOption(db = db, title = "Load", description="Load a previous save", commit = False, clear=True, action=self._load))
+		self.addOption(MenuOption(db = db, title = "Music", description="Play some sultry tunes", commit = False, clear=True, action=self.music))
 
-class Game(GameCommands, GameMenu):
-	def __init__(self):
-		self.db = None
-		self.dbFile = 'gameDB.db'
-		self.gameCommands = None
-		self.musicProcess = None
-				self.menuOptions = {
-			'save':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
-			'load':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
-			'mute':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
-			'music':userInput.Command(func=self.move, takesArgs=True, descrip = 'Choose some sweet sultry tunes'),
-		}
+	def startMenu(self):
+		self.runMenu()
+		os.system('clear')
+		self.currRoom.look()
 
-	def __exit(self):
-		self.save()
-		exit(0)
+class MusicMenu(Menu):
+	musicDir = 'music'
+	def __init__(self, db, musicProcess):
+		Menu.__init__(self, db, title = "Music Menu", description="Sultry Tunes", cursor = " Music> ")
+		self.addOption(MenuOption(db = db, title = "Song", description="Infinite Loop", commit = False, clear=False, action = self.song))
+		self.addOption(MenuOption(db = db, title = "Playlist", description="", commit = False, clear=False, action = self.playlist))
+		self.addOption(MenuOption(db = db, title = "Shuffle", description="", commit = False, clear=False, action = self.shuffle))
+		self.addOption(MenuOption(db = db, title = "Music", description="", commit = False, clear=False, action = self.mute))
 
-	def __load(self, dbFile):
-		pass
+	def song(self):
+		return toolBag.music(self.musicDir, mode = 'single')
 
-	def __save(self):
-		self.db.commit()
+	def playlist(self):
+		return toolBag.music(self.musicDir, mode = 'playlist')
+
+	def shuffle(self):
+		return toolBag.music(self.musicDir, mode = 'shuffle')
 
 	def mute(self):
 		try:
@@ -224,58 +211,52 @@ class Game(GameCommands, GameMenu):
 		except:
 			pass
 
-	def music(self, args = None):
-		musicDir = 'music'
-		if args != None:
-			if('mute' in args):
-				mode = 'mute'
-			elif('shuffle' in args):
-				mode = 'shuffle'
-			elif('single' in args or 'song' in args):
-				mode = 'single'
-			elif('playlist' in args):
-				mode = 'playlist'
-			else:
-				return
-		else:
-			options = (('Single Song', 'single'), ('Playlist', 'playlist'), ('Shuffle All', 'shuffle'), ('Turn Off', 'mute'))
-			mode = options[toolBag.printSelect(options = [option[0] for option in options], cursor = 'music> ')][1]
+class Game(GameCommands, GameMenu):
+	def __init__(self, dbFile):
+		self.dbFile = dbFile
+		os.system('sqlite3 {0} < {1}'.format(self.dbFile, 'sqlStructure.sql'))
+		os.stderr = open('log.log', 'w+')
 
-		self.mute()
-		if(mode != 'mute'):
-			self.musicProcess = toolBag.music(musicDir, mode = mode)
+		self.db = sqlite3.connect(self.dbFile)
+		self.musicProcess = None
+		GameCommands.__init__(self, self.db)
+		GameMenu.__init__(self, self.db)
+
+	def _exit(self):
+		self.__save()
+		exit(0)
+
+	def _load(self):
+		pass
+
+	def _save(self):
+		self.db.commit()
+
+	def _mute(self):
+		try:
+			self.musicProcess.terminate()
+		except:
+			pass
+
+	def music(self, args = None):
+		self.musicProcess = MusicMenu(self.db, self.musicProcess).runMenu()
 
 	def __setupGame(self):
-		os.system('sqlite3 {0} < {1}'.format(self.dbFile, 'sqlStructure.sql'))
-		self.gameCommands.buckPasser = hero.Hero(self.db)
-		characters.SixDollarMan(self.db).writeToDB()
-		characters.Bear(self.db).writeToDB()
-
-		Rooms.HomeApt(self.db).writeToDB()
-		Rooms.Apartment_3B(self.db).writeToDB()
-		Rooms.MurderScene(self.db).writeToDB()
-
-		objects.Couch(self.db).writeToDB()
-		objects.Cushions(self.db).writeToDB()
-		objects.Feathers(self.db).writeToDB()
-		objects.Computer(self.db).writeToDB()
-
-		bottle = items.bottle(self.db)
-		bottle.writeToDB()
+		self.buckPasser = hero.Hero(self.db)
 		itemPouch = inventory.Inventory(self.db)
-		itemPouch.addItem(bottle.subType.value, 3)
+		itemPouch.addItem('bottle', 3)
 		itemPouch.writeToDB()
-		print(itemPouch, itemPouch.code)
-		self.gameCommands.buckPasser.addInventory(itemPouch)
-		self.__save()
+
+		self.buckPasser.addInventory(itemPouch)
+		self._save()
 		#os.system('reset')
 
 	def run(self):
-		os.stderr = open('log.log', 'w+')
-		self.db = sqlite3.connect(self.dbFile)
 		try:
 			self.__setupGame()
-			self.currRoom = Rooms.HomeApt(self.db)
+			self.currRoom = Room.Room(self.db)
+			self.currRoom.setCode(0)
+			self.currRoom.readFromDB()
 			self.currRoom.loadRoom()
 			self.currRoom.look()
 
@@ -289,7 +270,6 @@ class Game(GameCommands, GameMenu):
 						lastRoom = self.currRoom
 						investDict = self.commands
 						investDict.update(self.currRoom.commands)
-
 					userInput.userInput(investDict, input('  > '))
 
 				except:
@@ -299,4 +279,4 @@ class Game(GameCommands, GameMenu):
 		finally:
 			self.db.close()
 os.system('rm *.db')
-Game().run()
+Game('gameDB.db').run()

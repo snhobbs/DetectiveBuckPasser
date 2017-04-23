@@ -76,4 +76,5 @@ move ___(room name) moves you to a new room if it is an available neighbor
 talk ___(character name) brings up a character interaction menu -> then have item options, question, ...
 search ___(room/object) brings up the inventory of them
 inspect ___(person, object, item) gives more information about the subject
+commands/help brings up the possible commands
 

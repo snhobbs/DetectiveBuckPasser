@@ -14,7 +14,7 @@ class Character(SQLTable, CharacterMenu):
 	'''
 	Character is the base class for all characters in the game
 	'''
-	def __init__(self, db, code, subType, charName, money, bac, descrip):
+	def __init__(self, db = None, code = None, subType = None, charName = None, money = None, bac = None, descrip = None):
 		SQLTable.__init__(self, db)
 		self.code = code
 		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = subType, elementType = 'STRING')
@@ -35,7 +35,7 @@ class Character(SQLTable, CharacterMenu):
 			'murder':userInput.Command(func=self.kill, takesArgs=False, hide = True),
 			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True),
 			'search':userInput.Command(func=self.search, takesArgs=False, hide = True),
-			'talk':userInput.Command(func=self.talk, takesArgs=False, hide = True)
+			'talk':userInput.Command(func=self.runMenu, takesArgs=False, hide = True)
 			}
 
 		CharacterMenu.__init__(self, db)
@@ -47,20 +47,19 @@ class Character(SQLTable, CharacterMenu):
 		print("Don't go fighting")
 
 	def talk(self):
-		print("They wont talk to the cops")
+		self.runMenu()
 
 	def listItems(self):
 		if self.inventory == None or len(self.inventory.items) < 0:
 			print('Nothing found')
 		else:
-			print("Type\t\tAmount\t\tTotal Weight")
 			self.inventory.listItems()
 
 	def search(self):
 		self.listItems()
 
 	def describe(self):
-		print("\n{0.objName.value}\n-------------------\n{0.descrip.value}".format(self))
+		print("\n{0.charName.value}\n-------------------\n{0.descrip.value}".format(self))
 
 	def addInventory(self, inventory):
 		self.inventory = inventory

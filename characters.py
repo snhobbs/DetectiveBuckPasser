@@ -6,10 +6,10 @@ def characterFactory(db, code):
 	charObj.readFromDB()
 	subType = charObj.subType.value
 
-	if subType in ['SixDollarMan']:
+	if subType in ['sixdollarman']:
 		character = SixDollarMan(db)
 
-	elif subType in ['Bear']:
+	elif subType in ['bear']:
 		character = Bear(db)
 
 	elif subType in ['JFK']:

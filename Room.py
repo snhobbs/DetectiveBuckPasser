@@ -5,12 +5,6 @@ from characters import characterFactory
 import userInput
 import inventory
 
-roomDict = {
-	'home':0,
-	'b3':1,
-	'murder':2
-}
-
 class Room(SQLTable):
 	'''
 	base for every generalized space in the game, this includes hallways, apartment blocks, etc
@@ -23,6 +17,7 @@ class Room(SQLTable):
 		self.descrip = self.elementTable.addElement(title = 'Room Description', name = 'descrip', value = '', elementType = 'STRING')
 		self.inventoryCode = self.elementTable.addElement(title = 'Items in Room', name = 'inventoryCode', value = None, elementType = 'INT')
 		self.objectCodeString = self.elementTable.addElement(title = 'Interactable Objects', name = 'objects', value = None, elementType = 'STRING')
+		self.roomName = self.elementTable.addElement(title = 'Room Name', name = 'roomName', value = None, elementType = 'STRING')
 		self.subType = self.elementTable.addElement(title = 'Room Type', name = 'subType', value = None, elementType = 'STRING')
 
 		self.objects = None#array of different interactable objects
@@ -30,15 +25,11 @@ class Room(SQLTable):
 		self.characters = None
 		self.inspection = None
 		self.defaultCommands = {
-			'rooms':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as neighbors and exits', hide = True),
-			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms'),
-			'exits':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as neighbors and rooms', hide = True),
 			'search':userInput.Command(func=self.search, takesArgs=False, descrip = 'Search the room'),
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around the room')
 			}
 
 		self.commands = self.defaultCommands
-
 		self.table = 'rooms'
 		self.codeName = 'roomCode'
 
@@ -56,10 +47,6 @@ class Room(SQLTable):
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, factory = objects.objectFactory)
 		#self.inventory.setCode(int(self.inventoryCode.value))
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, factory = characterFactory)
-
-	def printNeighbors(self):
-		neighbors = [roomDictKey for roomDictKey in roomDict if roomDict[roomDictKey] in userInput.parseCSVNumString(self.neighbors.value)]
-		print("Neighboring Rooms: \n\t{}".format('\n\t'.join(neighbors)))
 
 	def search(self):
 		pass
