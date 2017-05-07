@@ -6,30 +6,20 @@ def characterFactory(db, code):
 	charObj.readFromDB()
 	subType = charObj.subType.value
 
-	if subType in ['sixdollarman']:
-		character = SixDollarMan(db)
-
-	elif subType in ['bear']:
-		character = Bear(db)
-
-	elif subType in ['JFK']:
-		character = JFK(db)
-
-	elif subType in ['HammerGuy']:
-		character = HammerGuy(db)
-
-	elif subType in ['GuyFieri']:
-		character = GuyFieri(db)
-
-	elif subType in ['Robot']:
-		character = Robot(db)
-
-	else:
-		raise UserWarning('Unknown Character subType {}'.format(subType))
-
-	character.readFromDB()
-	return character
-
+	charDict = {
+		'sixdollarman':SixDollarMan,
+		'bear':Bear,
+		'jfk':JFK,
+		'hammerguy':HammerGuy,
+		'guyfieri':GuyFieri,
+		'robot':Robot
+	}
+	try:
+		character = charDict[subType](db)
+		character.readFromDB()
+		return character
+	except KeyError:
+		raise UserWarning('Unknown character type {}'.format(subType))
 
 class SixDollarMan(Character):
 	def __init__(self,db):
@@ -152,3 +142,7 @@ class AASponserRoommate(Character):
 		bac = 0
 		descrip = "Pep talks Joe as to how to standup to bear, always resorts to camping guides for dealing with bear encounters"
 		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+
+class Salesman(Character):
+	def __init__(self,db):
+

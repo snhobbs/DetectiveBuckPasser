@@ -1,4 +1,4 @@
-import characters
+import characters, Character
 import Room, Rooms
 import hero
 import objects
@@ -11,7 +11,7 @@ from menus import Menu, MenuOption
 '''
 To do:
 1) make a game file directory entry with the current room, etc
-2) how to do searches and __getItem?
+2) how to do searches and _getItem?
 3) How do we wanna do the clever dialog? do each room have a string of possible exit strings to play?
 4) How should conversations with the characters go?
 '''
@@ -39,7 +39,7 @@ class GameCommands(object):
 			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms')
 			}
 
-	def __getObject(self, objName = None):
+	def _getObject(self, objName = None):
 		if self.currRoom.objects == None:
 			print("There's nothing in here")
 			return
@@ -49,7 +49,7 @@ class GameCommands(object):
 		except IndexError:
 			raise UserWarning('No Object Found')
 
-	def __getCharacter(self, charName = None):
+	def _getCharacter(self, charName = None):
 		if self.currRoom.characters == None:
 			print('You\'re all alone')
 			return
@@ -59,7 +59,7 @@ class GameCommands(object):
 		except IndexError:
 			raise UserWarning('No Character Found')
 
-	def __getRoom(self, roomName = None):
+	def _getRoom(self, roomName = None):
 		roomObj = Room.Room(self.db)
 		roomObj.roomName.value = roomName
 		resp = roomObj.selectSql(columnNames = [roomObj.tableCode[0]], conditions=(roomObj.roomName.sqlPair))
@@ -68,7 +68,7 @@ class GameCommands(object):
 		self.inspection = Rooms.roomFactory(self.db, resp[0][0])
 
 
-	def __getItem(self, itemName = None):
+	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
 			print('You ain\'t got shit')
 			return
@@ -94,19 +94,19 @@ class GameCommands(object):
 			#set the type of items its supposed to search for
 			if onObject:
 				try:
-					self.__getObject(subject)
+					self._getObject(subject)
 					self.__runCommand(command = command, args = args)
 				except UserWarning:
 					pass
 			if onCharacter:
 				try:
-					self.__getCharacter(subject)
+					self._getCharacter(subject)
 					self.__runCommand(command = command, args = args)
 				except UserWarning:
 					pass
 			if onItem:
 				try:
-					self.__getItem(subject)
+					self._getItem(subject)
 					self.__runCommand(command = command, args = args)
 				except UserWarning:
 					pass
@@ -165,7 +165,7 @@ class GameCommands(object):
 		'''
 		if room == None:
 			room = [input('To Where?> ').strip().lower()]
-		self.__getRoom(room[0])
+		self._getRoom(room[0])
 
 		if str(self.inspection.code) in self.currRoom.neighbors.value.split(','):
 			os.system('clear')
@@ -242,22 +242,23 @@ class Game(GameCommands, GameMenu):
 		self.musicProcess = MusicMenu(self.db, self.musicProcess).runMenu()
 
 	def __setupGame(self):
-		self.buckPasser = hero.Hero(self.db)
-		itemPouch = inventory.Inventory(self.db)
-		itemPouch.addItem('bottle', 3)
-		itemPouch.writeToDB()
+		self.currRoom = Room.Room(self.db)
+		self.currRoom.setCode(0)
+		self.currRoom.readFromDB()
+		self.currRoom.loadRoom()
 
+		self.buckPasser = self._getCharacter('Detective Buck Passer')
+		itemPouch = inventory.Inventory(self.db)
+		itemPouch.setCode('0')
+		itemPouch.readFromDB()
 		self.buckPasser.addInventory(itemPouch)
 		self._save()
 		#os.system('reset')
 
 	def run(self):
 		try:
+
 			self.__setupGame()
-			self.currRoom = Room.Room(self.db)
-			self.currRoom.setCode(0)
-			self.currRoom.readFromDB()
-			self.currRoom.loadRoom()
 			self.currRoom.look()
 
 			lastRoom = self.currRoom

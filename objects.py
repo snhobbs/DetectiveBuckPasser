@@ -32,8 +32,8 @@ class Objects(SQLTable):
 		self.objName = self.elementTable.addElement(title = 'Objects Name', name = 'objName', value = None, elementType = 'STRING')
 		self.descrip = self.elementTable.addElement(title = 'Object Description', name = 'descrip', value = None, elementType = 'STRING')
 		self.inventoryCode = self.elementTable.addElement(title = 'Items in Object', name = 'inventoryCode', value = None, elementType = 'INT')
-		self.inventory = None
-		self.addInventory(inventory.Inventory(self.db))
+		self.inventory = Inventory(self.db)
+		self. inventoryCode.value = self.inventory.tableCode[1]
 
 		self.table = 'objects'
 		self.codeName = 'objCode'

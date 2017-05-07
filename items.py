@@ -2,7 +2,7 @@
 from sqlTable import SQLTable
 def itemFactory(db, subType):
 	itemDict = {
-		'bottle':bottle
+		'general':Item
 	}
 	try:
 		return itemDict[subType](db)
@@ -25,14 +25,3 @@ class Item(SQLTable):
 	def loadItem(self, inventoryEntry):
 		item = itemFactory(self.db, inventoryEntry)
 		item.readFromDB()
-
-class bottle(Item):
-	def __init__(self, db):
-		Item.__init__(self, db)
-		self.code = 0
-		self.descrip.value = 'An empty bottle'
-		self.weight.value = 0.1
-		self.itemSize.value = 1
-		self.critical.value = False
-		self.subType.value = 'bottle'
-		self.itemName.value = 'Empty Old Crow Bottle'

@@ -59,6 +59,7 @@ insert into items values(0, 'General', 'bottle', 'An empty bottle, like the one 
 insert into items values(0, "Booze", 'Old Crow Burboun', 'Best burboun in the $5 price range', 0.5, 1, 1);
 
 --characters
+insert into chars values(-1, 'buckPasser', 'Detective Buck Passer', 6, .6, "", 0);
 insert into chars values(0, 'sixdollarman', 'Six Dollar Man', 6, .6, "Randy Savage except with a viciously failed wrestling career following a failed marriage. Weakness are his ex wife Sharron, alimony, and the IRS.", 0);
 insert into chars values(1, 'bear', 'Bear', 1e6, 0, "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear", 0);
 
