@@ -10,7 +10,9 @@ You play as Detective Buck Passer in his first text based adventure game. The de
 
 There has been a murder at an apartment block in the Bowery, it is up to Buck Passer to do what he does best: mess up the crime scene so one of the NYPD special task forces have to do the paper work.
 
-<center><b>Rave Reviews</b>
+<center>
+
+<b>Rave Reviews</b>
 
 "Please stop calling us" - IGM
 
@@ -24,7 +26,10 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 </center>
 
-<center><b>Features</b>
+<center>
+
+<b>Features</b>
+
 Full QWERTY keyboard compatibility!
 
 Breakthrough 1976 technology!
