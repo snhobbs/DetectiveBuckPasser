@@ -18,3 +18,11 @@ What kind of favors?
 items?
 why did hg kill bear?
 what are the special items? keys, coke, favor items
+
+Structure:
+The game stays static in each stage, there is a stage variable that is referenced in the mysql calls that sets this. Within a given stage a character that interacts (i.e. a special event occurs) has a 'completed' state.
+
+As the game loops there needs to be a stage test, which goes through our inventory and decides if the stage has incimented
+When the stage changes all the characters are referenced with that stage which binds their attributes
+
+When you get a critical item or you enter a critical event happens, the stage incriments -> makes the game linear, but whatever
