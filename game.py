@@ -7,6 +7,7 @@ import getpass, readline, click, csv, traceback, numpy, sqlite3, os
 import toolBag
 import items
 import inventory
+import gameEvents
 from menus import Menu, MenuOption
 '''
 To do:
@@ -216,7 +217,7 @@ class Game(GameCommands, GameMenu):
 		self.dbFile = dbFile
 		os.system('sqlite3 {0} < {1}'.format(self.dbFile, 'sqlStructure.sql'))
 		os.stderr = open('log.log', 'w+')
-
+		self.stage = 0
 		self.db = sqlite3.connect(self.dbFile)
 		self.musicProcess = None
 		GameCommands.__init__(self, self.db)
@@ -254,6 +255,13 @@ class Game(GameCommands, GameMenu):
 		self.buckPasser.addInventory(itemPouch)
 		self._save()
 		#os.system('reset')
+	
+	def checkStage(self):
+		'''
+		Here the we look at the position and inventory of the character, if a stage change event has occurred, incriment the stage attribute
+		'''
+		if(gameEvents.checkEvent(self.buckPasser.inventory, self.currRoom)):
+			self.stage += 1
 
 	def run(self):
 		try:
@@ -272,7 +280,7 @@ class Game(GameCommands, GameMenu):
 						investDict = self.commands
 						investDict.update(self.currRoom.commands)
 					userInput.userInput(investDict, input('  > '))
-
+					self.checkStage()#check to see if a game event has occured, make something happen if it has
 				except:
 					print(traceback.format_exc())
 					exit(0)

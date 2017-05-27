@@ -9,3 +9,14 @@ Detective Passer has two goals in his day to day life: don't do any paperwork an
 You play as Detective Buck Passer in this text based adventure game. The developers would like to claim this design choice opens up a more imaginative world. The truth of why there is no animation probably falls closer to these inbreds never being able to colour in the lines.
 
 There has been a murder at an apartment block in the Bowery, it is up to Buck Passer to do what he does best: mess up the crime scene so one of the NYPD special task forces have to do the paper work.
+
+<b>Rave Reviews</b>
+
+"Please stop calling us" - IGM
+
+"Notification: emails flagged as spam" - giantbomb.com
+
+"We're calling security" - Charles the Doorman, Waypoint, Vice Media
+
+"Cease and desist" NYPD's 9th Presinct
+

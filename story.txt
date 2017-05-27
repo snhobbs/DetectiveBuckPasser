@@ -26,3 +26,6 @@ As the game loops there needs to be a stage test, which goes through our invento
 When the stage changes all the characters are referenced with that stage which binds their attributes
 
 When you get a critical item or you enter a critical event happens, the stage incriments -> makes the game linear, but whatever
+
+Game Events:
+1) M
