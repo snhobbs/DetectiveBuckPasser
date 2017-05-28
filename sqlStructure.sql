@@ -51,12 +51,12 @@ create table objects(
 	primary key(objCode)
 );
 --inventory
-insert into inventory values(0, 0, 3)
-insert into inventory values(0, 1, 3.2)
+insert into inventory values(0, 0, 3);
+insert into inventory values(0, 1, 3.2);
 
 --items
 insert into items values(0, 'General', 'bottle', 'An empty bottle, like the one that biker beat you with last week at the End Zone', 0.1, 1, 0);
-insert into items values(0, "Booze", 'Old Crow Burboun', 'Best burboun in the $5 price range', 0.5, 1, 1);
+insert into items values(1, "Booze", 'Old Crow Burboun', 'Best burboun in the $5 price range', 0.5, 1, 1);
 
 --characters
 insert into chars values(-1, 'buckPasser', 'Detective Buck Passer', 6, .6, "", 0);

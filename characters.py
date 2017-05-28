@@ -145,4 +145,4 @@ class AASponserRoommate(Character):
 
 class Salesman(Character):
 	def __init__(self,db):
-
+		pass

@@ -51,9 +51,11 @@ class InventoryEntry(object):
 		self.amount = None
 		self.item = None
 
-	def loadEntry(self, itemName, amount):
+	def loadEntry(self, itemCode, amount):
 		self.amount = amount
-		self.item = items.itemFactory( self.db, itemName.lower() )
+		self.item = items.Item(self.db)
+		self.item.code = itemCode
+		self.item.readFromDB()
 
 class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loop through all the items and their count as its duplicated
 	def __init__(self, db):
@@ -66,11 +68,11 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 
 		self.assignCode()
 
-	def addItem(self, itemName, amount):
+	def addItem(self, itemCode, amount):
 		if self.items is None:
 			self.items = []
 		newItem = InventoryEntry(self.db)
-		newItem.loadEntry(itemName, float(amount))
+		newItem.loadEntry(itemCode, float(amount))
 		self.items.append(newItem)
 
 	def __moveItem(self, itemName, amount):
@@ -103,12 +105,12 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 				self.insertSql(inputs = (self.tableCode, self.amount.sqlPair, self.itemCode.sqlPair))
 
 	def readFromDB(self):
-		resp = self.selectSql(table = self.table, columnNames = self.columnNames, conditions = (self.tableCode))
+		resp = self.selectSql(columnNames = self.columnNames, conditions = (self.tableCode))
 		if(resp is None):
-			raise UserWarning("No inventory for this code code '%s'"%(self.code))
+			raise UserWarning("No inventory for this code '%s'"%(self.code))
 		self.items = []
-		for itemName, amount in resp:
-			self.addItem(itemName, amount)
+		for amount, itemCode in resp:
+			self.addItem(itemCode, amount)
 
 	def listItems(self):
 		inventoryMenu = ListMenu(db = self.db, title = 'Inventory', description = "", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])

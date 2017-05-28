@@ -248,10 +248,11 @@ class Game(GameCommands, GameMenu):
 		self.currRoom.readFromDB()
 		self.currRoom.loadRoom()
 
-		self.buckPasser = self._getCharacter('Detective Buck Passer')
+		self.buckPasser = hero.Hero(self.db)
 		itemPouch = inventory.Inventory(self.db)
 		itemPouch.setCode('0')
 		itemPouch.readFromDB()
+		print(self.buckPasser)
 		self.buckPasser.addInventory(itemPouch)
 		self._save()
 		#os.system('reset')
