@@ -252,7 +252,6 @@ class Game(GameCommands, GameMenu):
 		itemPouch = inventory.Inventory(self.db)
 		itemPouch.setCode('0')
 		itemPouch.readFromDB()
-		print(self.buckPasser)
 		self.buckPasser.addInventory(itemPouch)
 		self._save()
 		#os.system('reset')

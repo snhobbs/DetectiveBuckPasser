@@ -1,0 +1,14 @@
+there are objects, characters, rooms, inventories, and items.
+objects, characters, and rooms each have inventories that contain items
+When an interaction is in progress a menu is pulled up -> character, inventory, room, object, and start menus, submenus exist
+
+Inventories control all item transactions
+-> Drop, give, combine, trade
+
+Objects, Rooms, Characters, and Inventories change based on the game stage
+As a room is loaded each of these looks in the database to see if they have a state for the next stage, otherwise they remain in the current state (this needs to happen only once per stage to maintain inventories)
+
+Once a character has talked or completed something, have a randomly chosen statement from them as you talk to them
+
+Talking is done by option number which are numbered. This is an array of numbered lines that have the possible options in a linked list format.
+So if option 1 is selected then it has a list of the options after it -> say 3,4,7. These 3 options are displayed. Each of these also have the options that they can call until the transaction is over.
