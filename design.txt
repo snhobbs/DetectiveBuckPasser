@@ -16,3 +16,9 @@ So if option 1 is selected then it has a list of the options after it -> say 3,4
 No state is saved inbetween reloads on objects/characters that change due to a stage change.
 
 Each character needs to have a finished variable for when they've already been talked to and a stage variable. When a stage change occurs the game is saved to save all state of nonchanging components
+
+Sql state structure -> have a new subclass for staged data where read from db gets the state closest to the current game stage. Just add a stage value to these, make stage and code the primary key
+
+Conversations -> save as JSON with {starting options: [1,2,3], {1 : text1, next options: [2,3,4]}, {2 : text2, next options : [3,4,5]}}. pull the JSON with json.loads to load into a dictionary
+
+

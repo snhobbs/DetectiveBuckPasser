@@ -37,7 +37,8 @@ class GameCommands(object):
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
 			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
 			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
-			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms')
+			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms'),
+			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around')
 			}
 
 	def _getObject(self, objName = None):
@@ -67,7 +68,7 @@ class GameCommands(object):
 		if resp in [None, 'NULL','']:
 			raise UserWarning('No Room Found')
 		self.inspection = Rooms.roomFactory(self.db, resp[0][0])
-
+		self.inspection.loadRoom(self.stage)
 
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
@@ -139,6 +140,7 @@ class GameCommands(object):
 		if charName == None:
 			charName = [input("Who do you want to talk to? ")]
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
+		input()
 		os.system('clear')
 		self.currRoom.look()
 
@@ -174,6 +176,9 @@ class GameCommands(object):
 			self.currRoom.look()
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room[0]))
+
+	def look(self):
+		self.currRoom.look()
 
 class GameMenu(Menu):
 	def __init__(self, db):
@@ -224,7 +229,7 @@ class Game(GameCommands, GameMenu):
 		self.currRoom = Room.Room(self.db)
 		self.currRoom.setCode(0)
 		self.currRoom.readFromDB()
-		self.currRoom.loadRoom()
+		self.currRoom.loadRoom(self.stage)
 
 		self.buckPasser = hero.Hero(self.db)
 		itemPouch = inventory.Inventory(self.db)
@@ -254,8 +259,9 @@ class Game(GameCommands, GameMenu):
 					if lastRoom != self.currRoom:
 						lastRoom.writeRoom()#saves in nontemporary way (until save)
 						lastRoom = self.currRoom
-					userInput.userInput(self.commands, input('  > '))
 					self.checkStage()#check to see if a game event has occured, make something happen if it has
+					self.stage = 1
+					userInput.userInput(self.commands, input('  > '))
 				except:
 					print(traceback.format_exc())
 					exit(1)

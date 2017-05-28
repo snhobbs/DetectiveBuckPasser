@@ -38,13 +38,13 @@ class Room(SQLTable):
 		if self.objects != None:
 			print("Shit in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
 
-	def loadRoom(self):
+	def loadRoom(self, stage):
 		'''
 		Load objects, inventories, and characters based off of the current game stage
 		'''
-		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, factory = objects.objectFactory)
+		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		#self.inventory.setCode(int(self.inventoryCode.value))
-		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, factory = characterFactory)
+		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = characterFactory)
 
 	def search(self):
 		'''
@@ -53,6 +53,13 @@ class Room(SQLTable):
 		pass
 
 	def writeRoom(self):
-		for obj, character in zip(self.objects, self.characters):
-			obj.writeToDB()
-			character.writeToDB()
+		try:
+			for obj in self.objects:
+				obj.updateTable()
+		except TypeError: #will fail if no objects
+			pass
+		try:
+			for character in self.characters:
+				character.updateTable()
+		except TypeError:
+			pass

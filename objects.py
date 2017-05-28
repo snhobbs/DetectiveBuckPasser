@@ -3,7 +3,7 @@ from sqlTable import SQLTable
 from inventory import Inventory
 import userInput, os
 
-def objectFactory(db, code):
+def objectFactory(db, code, stage):
 	baseObj = Objects(db)
 	baseObj.setCode(code)
 	baseObj.readFromDB()

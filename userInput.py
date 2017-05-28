@@ -41,14 +41,14 @@ def parseCSVNumString(stringIn):
 		ret += [int(entry) for entry in row if entry.isdigit()]
 	return ret
 
-def loadObjList(db, codeString, factory):
+def loadObjList(db, codeString, stage, factory):
 	if codeString != None:
 		codes = parseCSVNumString(codeString)
 		if codes is None:
 			return
 		objList = []
 		for code in codes:
-			objList.append(factory(db, code))
+			objList.append(factory(db, code, stage))
 		return objList
 
 def printSelect(options = None, cursor = ''):

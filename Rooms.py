@@ -21,7 +21,7 @@ def roomFactory(db, roomCode):
 
 	room.setCode(roomCode)
 	room.readFromDB()
-	room.loadRoom()
+	#room.loadRoom()
 	return room
 
 class HomeApt(Room):

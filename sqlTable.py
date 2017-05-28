@@ -32,15 +32,19 @@ class sqlInterface(object):
 		self.code = code
 
 	def conditionalStatement(self,conditions):
+		'''
+		sqllite3 has different conditional syntax from mysql/mariadb
+		'''
 		if(conditions is None):
 			return ''
 		arg = ['WHERE (']
 		if(type(conditions) in [list, tuple]):
 			if( not type(conditions[0]) in [list, tuple]):
 				conditions = [conditions]
-			arg.append(','.join(["{}".format(cond[0]) for cond in conditions]) )
-			arg.append(') = (')
-			arg.append(','.join(["'{}'".format(cond[1]) for cond in conditions]) )
+			arg.append(' AND '.join(['{0[0]} = "{0[1]}"'.format(cond) for cond in conditions]))
+			#arg.append(','.join(["{}".format(cond[0]) for cond in conditions]) )
+			#arg.append(') = (')
+			#arg.append(','.join(["'{}'".format(cond[1]) for cond in conditions]) )
 			arg.append(')')
 		else:
 			raise UserWarning('Conditional input must be an array or tuple {}'.format(conditions))
@@ -54,10 +58,10 @@ class sqlInterface(object):
 		argString = []
 		for inVal in inputs:
 			if(str(inVal[1]).upper() == 'NULL'):
-				argString(", %s = NULL "%(inVal[0] ))
+				argStr.append(", {0[0]} = NULL ".format(inVal))
 			else:
-				argString(", %s = '%s' "%(inVal[0], inVal[1] ))
-		arg.append(''.join(argString.strip(',')))
+				argString.append(", {0[0]} = '{0[1]}' ".format(inVal))
+		arg.append(''.join(argString).strip(','))
 		arg.append(self.conditionalStatement(conditions))
 		dbCursor.execute(''.join(arg))
 
@@ -72,7 +76,7 @@ class sqlInterface(object):
 			if(str(inVal[1]).upper() == 'NULL'):
 				argString.append(", NULL")
 			else:
-				argString.append(", '{}'".format(inVal[1]))
+				argString.append(", '{0[1]}'".format(inVal))
 		arg.append(''.join(argString).strip(','))
 		arg.append(')')
 
@@ -142,7 +146,7 @@ class SQLTable(sqlInterface):
 	def readFromDB(self):
 		resp = self.selectSql(columnNames = self.columnNames, conditions = self.tableCode)
 		if(resp is None):
-			raise UserWarning("No information for this %s = %s in table %s"%(self.tableCode[0], self.tableCode[1], self.table))
+			raise UserWarning("No information for this {0.tableCode[0]} = {0.tableCode[1]} in table {0.table}".format(self))
 		self.formatInput(resp[0])#returns a tuple of ((),)
 
 		for element in self.elementTable.elements:
@@ -162,13 +166,13 @@ class SQLTable(sqlInterface):
 
 class TableElement(object):
 	elementTypes = ['FILE', 'STRING', 'INT', 'FLOAT', 'BOOL']
-	def __init__(self, title, name, value, elementType, options):
+	def __init__(self, title, name, value, elementType, options, updatable=True):
 		self.title = title
 		self.name = name
 		self.value = value
 		self.elementType = elementType#for the UI
 		self.options = options
-
+		self.updatable = updatable
 		self.typeCheck()
 	@property
 	def sqlPair(self):
@@ -209,3 +213,33 @@ class TableDataElements(object):
 		self._titles.append(element.title)
 		self._values.append(element.value)
 		return element
+
+class StagedSqlTable(SQLTable):
+	'''
+	Loads sql data based off of a stage value. The highest stage less than or equal to the current game stage is loaded
+	'''
+	def __init__(self, db):
+		SQLTable.__init__(self, db)
+
+	def getCurrentStage(self, stage):
+		dbCursor = self.db.cursor()
+		arg = 'SELECT MAX(stage) from {0.table} where stage between "0" and "{1}" and {2[0]} = {2[1]}'.format(self, stage, self.tableCode)
+		dbCursor.execute(arg)
+		resp = dbCursor.fetchall()
+		print(resp)
+		if(len(resp) == 0 or resp[0] is None):
+			return None
+		else:
+			return resp[0][0]
+
+	def readFromDB(self, stage):
+		self.stage.value = self.getCurrentStage(stage)
+		resp = self.selectSql(columnNames = self.columnNames, conditions = (self.stage.sqlPair, self.tableCode))
+		if(resp is None):
+			raise UserWarning("No information for this {0.tableCode[0]} = {0.tableCode[1]} in table {0.table}".format(self))
+		self.formatInput(resp[0])#returns a tuple of ((),)
+
+		for element in self.elementTable.elements:
+			if(element.value is None):
+				element.value = ''
+			element.value = str(element.value)

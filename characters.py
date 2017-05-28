@@ -1,11 +1,11 @@
 #characters.py
 from Character import Character
+import traceback
 
-def characterFactory(db, code):
+def characterFactory(db, code, stage):
 	charObj = Character(db = db, code = code)
-	charObj.readFromDB()
+	charObj.readFromDB(stage)
 	subType = charObj.subType.value
-
 	charDict = {
 		'sixdollarman':SixDollarMan,
 		'bear':Bear,
@@ -16,10 +16,10 @@ def characterFactory(db, code):
 	}
 	try:
 		character = charDict[subType](db)
-		character.readFromDB()
+		character.readFromDB(stage)
 		return character
 	except KeyError:
-		raise UserWarning('Unknown character type {}'.format(subType))
+		raise UserWarning('Unknown character type {}\n{}'.format(subType, traceback.format_exc(limit=5)))
 
 class SixDollarMan(Character):
 	def __init__(self,db):
@@ -28,7 +28,7 @@ class SixDollarMan(Character):
 		charName = 'Six Dollar Man'
 		money = 6
 		descrip = "Randy Savage except with a viciously failed wrestling career following a failed marriage. Weakness are his ex wife Sharron, alimony, and the IRS."
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 	def talk(self):
 		print("Six Dollar Man: Brother, I got no time for this, you seen Sharron?")
 
@@ -42,7 +42,7 @@ class Bear(Character):
 		charName = 'Bear'
 		money = float('inf')
 		descrip = "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear"
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 	def talk(self):
 		print("Six Dollar Man: He Dead Brotherrr")
 
@@ -64,7 +64,7 @@ class JFK(Character):
 		self.charName = 'John F. Kennedy'
 		self.money = 4e7
 		descrip = "35th president of the United State of America, you know the guy. The way they reattached the bits of his head they managed to scrape off Jackie were unfortunately put together like a muppet. He now runs Chach Naught, a novelty store in north Any Town, USA. He's a moon landing 'truther' just like Charlie Rose... the schmuck."
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class HammerGuy(Character):
 	def __init__(self,db):
@@ -73,7 +73,7 @@ class HammerGuy(Character):
 		charName = 'Hammer'
 		money = 0
 		descrip = "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump."
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class GuyFieri(Character):
 	'''
@@ -85,7 +85,7 @@ class GuyFieri(Character):
 		charName = 'Guy Fieri'
 		money = 1e5
 		descrip = "2 options shoot or there must be a better way, then instinct takes over and you shoot him anyway"
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class OldLady(Character):
 	def __init__(self,db):
@@ -94,7 +94,7 @@ class OldLady(Character):
 		charName = 'Susan'
 		money = 1e5
 		descrip = "He hs got a boot with a foot in it. SHE'S ALL ABOUT THE BUM"
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class Canadian(Character):
 	def __init__(self,db):
@@ -103,7 +103,7 @@ class Canadian(Character):
 		charName = 'Steve'
 		money = 1e5
 		descrip = "Canadian AF. Real shithole you got here. Worse mess than when I saw this biker get in a tiffy with a moose. He's the hints."
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class Veterinarian(Character):
 	def __init__(self,db):
@@ -112,7 +112,7 @@ class Veterinarian(Character):
 		charName = 'Dr. '
 		money = 1e5
 		descrip = "Battle fatigued veterinarian. He enjoys putting down animals a bit too much. 'You ever seen what piano wire will do to a pomeranians neck?'"
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class AASponser(Character):
 	def __init__(self,db):
@@ -121,7 +121,7 @@ class AASponser(Character):
 		charName = 'Joe'
 		money = 1e5
 		descrip = "Bear's AA sponsor, roommates with Simon. Has to constantly deal with bear"
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class AASponserRoommate(Character):
 	def __init__(self,db):
@@ -130,7 +130,7 @@ class AASponserRoommate(Character):
 		charName = 'Simon'
 		money = 1e5
 		descrip = "Pep talks Joe as to how to standup to bear, always resorts to camping guides for dealing with bear encounters"
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money,descrip)
 
 class Salesman(Character):
 	def __init__(self,db):

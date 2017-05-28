@@ -1,4 +1,4 @@
-from sqlTable import SQLTable
+from sqlTable import SQLTable, StagedSqlTable
 import userInput
 import inventory
 from menus import Menu, MenuOption
@@ -6,17 +6,18 @@ from menus import Menu, MenuOption
 class CharacterMenu(Menu):
 	def __init__(self, db):
 		Menu.__init__(self, db, title = self.charName.value, description="Character Menu", cursor = "What do you want to do? ")
-		self.addOption(MenuOption(db = db, title = "Talk", description="Talk to {.charName.value}".format(self), commit = True, clear=True, action = self.talk))
+		self.addOption(MenuOption(db = db, title = "Talk", description="Talk to {0.charName.value}".format(self), commit = True, clear=True, action = self.talk))
 		self.addOption(MenuOption(db = db, title = "Give/Get Items", description="Transfer items  between you", commit = True, clear=True, action = self.inventory.itemTransfer))
 		self.addOption(MenuOption(db = db, title = "Assault", description="", commit = True, clear=True, action=self.assault))
 
-class Character(SQLTable, CharacterMenu):
+class Character(StagedSqlTable, CharacterMenu):
 	'''
 	Character is the base class for all characters in the game
 	'''
 	def __init__(self, db = None, code = None, subType = None, charName = None, money = None, bac = None, descrip = None):
 		SQLTable.__init__(self, db)
 		self.code = code
+		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = 0, elementType = 'INT')
 		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = subType, elementType = 'STRING')
 		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = charName, elementType = 'STRING')
 		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = money, elementType = 'FLOAT')
@@ -36,7 +37,9 @@ class Character(SQLTable, CharacterMenu):
 		print("Don't go fighting")
 
 	def talk(self):
+		input()
 		self.runMenu()
+		input()
 
 	def listItems(self):
 		if self.inventory == None or len(self.inventory.items) < 0:
