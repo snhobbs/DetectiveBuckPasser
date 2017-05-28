@@ -21,4 +21,3 @@ Sql state structure -> have a new subclass for staged data where read from db ge
 
 Conversations -> save as JSON with {starting options: [1,2,3], {1 : text1, next options: [2,3,4]}, {2 : text2, next options : [3,4,5]}}. pull the JSON with json.loads to load into a dictionary
 
-

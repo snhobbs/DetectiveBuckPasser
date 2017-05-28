@@ -11,10 +11,9 @@ from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 '''
 To do:
-1) make a game file directory entry with the current room, etc
-2) how to do searches and _getItem?
-3) How do we wanna do the clever dialog? do each room have a string of possible exit strings to play?
-4) How should conversations with the characters go?
+1) Item transfers
+2) Conversations
+3) Events and game stages
 '''
 class GameCommands(object):
 	'''
@@ -53,7 +52,7 @@ class GameCommands(object):
 
 	def _getCharacter(self, charName = None):
 		if self.currRoom.characters == None:
-			print('You\'re all alone')
+			#print('You\'re all alone')
 			return
 		try:
 			self.inspection = [character for character in self.currRoom.characters if character.charName.value.lower() == charName][0]
@@ -72,7 +71,7 @@ class GameCommands(object):
 
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
-			print('You ain\'t got shit')
+			#print('You ain\'t got shit')
 			return
 		try:
 			self.inspection = [item for item in self.buckPasser.inventory.items if item.item.subType.value.lower() == itemName][0]
@@ -117,7 +116,7 @@ class GameCommands(object):
 			print("I don't know what you're jabbering about you driveling idiot")
 
 	def printCommands(self):
-		print("Some of the Avaliable Commands:")
+		print("Some of the Available Commands:")
 
 		maxLen = int(max(numpy.array([len(command) for command in self.commands if not self.commands[command].hide])))
 		for command in self.commands:
@@ -140,9 +139,8 @@ class GameCommands(object):
 		if charName == None:
 			charName = [input("Who do you want to talk to? ")]
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
-		input()
-		os.system('clear')
-		self.currRoom.look()
+		#os.system('clear')
+		#self.currRoom.look()
 
 	def search(self, subject = None):
 		if subject == None:

@@ -30,16 +30,17 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.addInventory(inventory.Inventory(self.db))
 		CharacterMenu.__init__(self, db)
 
+		self.commands = {
+			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True),
+			'search':userInput.Command(func=self.search, takesArgs=False, hide = True),
+			'talk':userInput.Command(func=self.runMenu, takesArgs=False, hide = True)
+			}
+
 	def kill(self):
 		print("Don't shoot him, what the hell's wrong with you, you gaddamn maniac?")
 
 	def assault(self):
 		print("Don't go fighting")
-
-	def talk(self):
-		input()
-		self.runMenu()
-		input()
 
 	def listItems(self):
 		if self.inventory == None or len(self.inventory.items) < 0:

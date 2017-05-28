@@ -24,6 +24,10 @@ class Room(SQLTable):
 		self.inventory = inventory.Inventory(db)
 		self.characters = None
 		self.inspection = None
+		self.commands = {
+			'search':userInput.Command(func=self.search, takesArgs=False, descrip = 'Search the room'),
+			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around the room')
+			}
 
 		self.table = 'rooms'
 		self.codeName = 'roomCode'
