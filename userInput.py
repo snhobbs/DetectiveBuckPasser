@@ -50,3 +50,18 @@ def loadObjList(db, codeString, factory):
 		for code in codes:
 			objList.append(factory(db, code))
 		return objList
+
+def printSelect(options = None, cursor = ''):
+	#options are an array of strings
+	uniqueOptions = set(options)
+	if(len(uniqueOptions) != len(options)):
+		print(uniqueOptions, options)
+		raise UserWarning("None unique options")
+
+	for i in range(len(options)):
+		print("\t%d) %s"%(i, options[i]))
+
+	while True:
+		resp = input(cursor)
+		if(resp.isdigit() and int(resp) < len(uniqueOptions) and int(resp) >= 0):
+			return int(resp)

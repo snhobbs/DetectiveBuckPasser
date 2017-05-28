@@ -20,7 +20,6 @@ class Character(SQLTable, CharacterMenu):
 		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = subType, elementType = 'STRING')
 		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = charName, elementType = 'STRING')
 		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = money, elementType = 'FLOAT')
-		self.bac = self.elementTable.addElement(title = 'Blood Alcohol Content', name = 'bac', value = bac, elementType = 'FLOAT')
 		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = descrip, elementType = 'STRING')
 
 		self.table = 'chars'
@@ -28,16 +27,6 @@ class Character(SQLTable, CharacterMenu):
 		self.inventoryCode = None
 		self.inventory = None
 		self.addInventory(inventory.Inventory(self.db))
-		self.commands = {
-			'kill':userInput.Command(func=self.kill, takesArgs=False, hide = True),
-			'gun':userInput.Command(func=self.kill, takesArgs=False, hide = True),
-			'shoot':userInput.Command(func=self.kill, takesArgs=False, hide = True),
-			'murder':userInput.Command(func=self.kill, takesArgs=False, hide = True),
-			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True),
-			'search':userInput.Command(func=self.search, takesArgs=False, hide = True),
-			'talk':userInput.Command(func=self.runMenu, takesArgs=False, hide = True)
-			}
-
 		CharacterMenu.__init__(self, db)
 
 	def kill(self):

@@ -12,3 +12,7 @@ Once a character has talked or completed something, have a randomly chosen state
 
 Talking is done by option number which are numbered. This is an array of numbered lines that have the possible options in a linked list format.
 So if option 1 is selected then it has a list of the options after it -> say 3,4,7. These 3 options are displayed. Each of these also have the options that they can call until the transaction is over.
+
+No state is saved inbetween reloads on objects/characters that change due to a stage change.
+
+Each character needs to have a finished variable for when they've already been talked to and a stage variable. When a stage change occurs the game is saved to save all state of nonchanging components

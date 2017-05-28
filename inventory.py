@@ -59,6 +59,7 @@ class InventoryEntry(object):
 
 class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loop through all the items and their count as its duplicated
 	def __init__(self, db):
+		InventoryMenu.__init__(self, db)
 		SQLTable.__init__(self, db)
 		self.table = 'inventory'
 		self.codeName = 'inventoryCode'

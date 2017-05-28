@@ -24,12 +24,7 @@ class Room(SQLTable):
 		self.inventory = inventory.Inventory(db)
 		self.characters = None
 		self.inspection = None
-		self.defaultCommands = {
-			'search':userInput.Command(func=self.search, takesArgs=False, descrip = 'Search the room'),
-			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around the room')
-			}
 
-		self.commands = self.defaultCommands
 		self.table = 'rooms'
 		self.codeName = 'roomCode'
 
@@ -44,9 +39,20 @@ class Room(SQLTable):
 			print("Shit in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
 
 	def loadRoom(self):
+		'''
+		Load objects, inventories, and characters based off of the current game stage
+		'''
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, factory = objects.objectFactory)
 		#self.inventory.setCode(int(self.inventoryCode.value))
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, factory = characterFactory)
 
 	def search(self):
+		'''
+		brings up the rooms inventory
+		'''
 		pass
+
+	def writeRoom(self):
+		for obj, character in zip(self.objects, self.characters):
+			obj.writeToDB()
+			character.writeToDB()
