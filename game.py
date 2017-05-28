@@ -4,10 +4,10 @@ import hero
 import objects
 import userInput
 import getpass, readline, click, csv, traceback, numpy, sqlite3, os
-import toolBag
 import items
 import inventory
 import gameEvents
+from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 '''
 To do:
@@ -188,30 +188,6 @@ class GameMenu(Menu):
 		os.system('clear')
 		self.currRoom.look()
 
-class MusicMenu(Menu):
-	musicDir = 'music'
-	def __init__(self, db, musicProcess):
-		Menu.__init__(self, db, title = "Music Menu", description="Sultry Tunes", cursor = " Music> ")
-		self.addOption(MenuOption(db = db, title = "Song", description="Infinite Loop", commit = False, clear=False, action = self.song))
-		self.addOption(MenuOption(db = db, title = "Playlist", description="", commit = False, clear=False, action = self.playlist))
-		self.addOption(MenuOption(db = db, title = "Shuffle", description="", commit = False, clear=False, action = self.shuffle))
-		self.addOption(MenuOption(db = db, title = "Music", description="", commit = False, clear=False, action = self.mute))
-
-	def song(self):
-		return toolBag.music(self.musicDir, mode = 'single')
-
-	def playlist(self):
-		return toolBag.music(self.musicDir, mode = 'playlist')
-
-	def shuffle(self):
-		return toolBag.music(self.musicDir, mode = 'shuffle')
-
-	def mute(self):
-		try:
-			self.musicProcess.terminate()
-		except:
-			pass
-
 class Game(GameCommands, GameMenu):
 	def __init__(self, dbFile):
 		self.dbFile = dbFile
@@ -222,9 +198,11 @@ class Game(GameCommands, GameMenu):
 		self.musicProcess = None
 		GameCommands.__init__(self, self.db)
 		GameMenu.__init__(self, self.db)
+		self.musicMenu = MusicMenu(self.db, self.musicProcess)
 
 	def _exit(self):
-		self.__save()
+		self._save()
+		self._mute()
 		exit(0)
 
 	def _load(self):
@@ -235,12 +213,12 @@ class Game(GameCommands, GameMenu):
 
 	def _mute(self):
 		try:
-			self.musicProcess.terminate()
+			self.musicMenu.musicProcess.terminate()
 		except:
 			pass
 
 	def music(self, args = None):
-		self.musicProcess = MusicMenu(self.db, self.musicProcess).runMenu()
+		self.musicMenu.runMenu()
 
 	def __setupGame(self):
 		self.currRoom = Room.Room(self.db)
@@ -255,13 +233,14 @@ class Game(GameCommands, GameMenu):
 		self.buckPasser.addInventory(itemPouch)
 		self._save()
 		#os.system('reset')
-	
+
 	def checkStage(self):
 		'''
 		Here the we look at the position and inventory of the character, if a stage change event has occurred, incriment the stage attribute
 		'''
 		if(gameEvents.checkEvent(self.buckPasser.inventory, self.currRoom)):
 			self.stage += 1
+			self._save()
 
 	def run(self):
 		try:
@@ -270,21 +249,16 @@ class Game(GameCommands, GameMenu):
 			self.currRoom.look()
 
 			lastRoom = self.currRoom
-			investDict = self.commands
-			investDict.update(self.currRoom.commands)
-
 			while True:
 				try:
 					if lastRoom != self.currRoom:
+						lastRoom.writeRoom()#saves in nontemporary way (until save)
 						lastRoom = self.currRoom
-						investDict = self.commands
-						investDict.update(self.currRoom.commands)
-					userInput.userInput(investDict, input('  > '))
+					userInput.userInput(self.commands, input('  > '))
 					self.checkStage()#check to see if a game event has occured, make something happen if it has
 				except:
 					print(traceback.format_exc())
-					exit(0)
-			self.__save()
+					exit(1)
 		finally:
 			self.db.close()
 os.system('rm *.db')
