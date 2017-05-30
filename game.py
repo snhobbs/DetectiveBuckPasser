@@ -66,7 +66,7 @@ class GameCommands(object):
 		resp = roomObj.selectSql(columnNames = [roomObj.tableCode[0]], conditions=(roomObj.roomName.sqlPair))
 		if resp in [None, 'NULL','']:
 			raise UserWarning('No Room Found')
-		self.inspection = Rooms.roomFactory(self.db, resp[0][0])
+		self.inspection = Rooms.roomFactory(self.db, resp[0][0], self.stage)
 		self.inspection.loadRoom(self.stage)
 
 	def _getItem(self, itemName = None):
@@ -155,7 +155,7 @@ class GameCommands(object):
 		neighbors = []
 		for code in userInput.parseCSVNumString(self.currRoom.neighbors.value):
 			room.setCode(code)
-			room.readFromDB()
+			room.readFromDB(self.stage)
 			neighbors.append(room.roomName.value)
 		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(neighbors)))
 
@@ -166,6 +166,7 @@ class GameCommands(object):
 		'''
 		if room == None:
 			room = [input('To Where?> ').strip().lower()]
+		self.currRoom.writeRoom()
 		self._getRoom(room[0])
 
 		if str(self.inspection.code) in self.currRoom.neighbors.value.split(','):
@@ -193,10 +194,14 @@ class GameMenu(Menu):
 
 class Game(GameCommands, GameMenu):
 	def __init__(self, dbFile):
-		self.dbFile = dbFile
-		os.system('sqlite3 {0} < {1}'.format(self.dbFile, 'sqlStructure.sql'))
-		os.stderr = open('log.log', 'w+')
+		import glob
 		self.stage = 0
+		self.dbFile = dbFile
+		sqlFiles = ['sqlStructure.sql', 'items.sql'] + glob.glob('stage*.sql')
+		for sqlFile in sqlFiles:
+			os.system('sqlite3 {0} < {1}'.format(self.dbFile, sqlFile))
+
+		os.stderr = open('log.log', 'w+')
 		self.db = sqlite3.connect(self.dbFile)
 		self.musicProcess = None
 		GameCommands.__init__(self, self.db)
@@ -209,7 +214,7 @@ class Game(GameCommands, GameMenu):
 		exit(0)
 
 	def _load(self):
-		pass
+		print("Not Implimented")
 
 	def _save(self):
 		self.db.commit()
@@ -226,7 +231,7 @@ class Game(GameCommands, GameMenu):
 	def __setupGame(self):
 		self.currRoom = Room.Room(self.db)
 		self.currRoom.setCode(0)
-		self.currRoom.readFromDB()
+		self.currRoom.readFromDB(self.stage)
 		self.currRoom.loadRoom(self.stage)
 
 		self.buckPasser = hero.Hero(self.db)

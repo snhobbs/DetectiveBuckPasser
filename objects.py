@@ -1,12 +1,12 @@
 #objects.py
-from sqlTable import SQLTable
+from sqlTable import SQLTable, StagedSqlTable
 from inventory import Inventory
 import userInput, os
 
 def objectFactory(db, code, stage):
 	baseObj = Objects(db)
 	baseObj.setCode(code)
-	baseObj.readFromDB()
+	baseObj.readFromDB(stage)
 	subType = baseObj.subType.value
 
 	if subType in ['couch']:
@@ -18,31 +18,31 @@ def objectFactory(db, code, stage):
 	else:
 		raise UserWarning('Unknown Object subType {}'.format(subType))
 	obj.setCode(code)
-	obj.readFromDB()
+	obj.readFromDB(stage)
 	return obj
 
-class Objects(SQLTable):
+class Objects(StagedSqlTable):
 	'''
 	Objects is the base class for all interactable objects in the game
 	'''
 	def __init__(self, db):
-		SQLTable.__init__(self, db)
+		StagedSqlTable.__init__(self, db)
 		self.code = None
-		self.subType = self.elementTable.addElement(title = 'Object Type', name = 'subType', value = None, elementType = 'STRING')
-		self.objName = self.elementTable.addElement(title = 'Objects Name', name = 'objName', value = None, elementType = 'STRING')
-		self.descrip = self.elementTable.addElement(title = 'Object Description', name = 'descrip', value = None, elementType = 'STRING')
+		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = None, elementType = 'INT')
+		self.subType = self.elementTable.addElement(title = 'Object Type', name = 'subType', value = None, elementType = 'STRING', updatable = False)
+		self.objName = self.elementTable.addElement(title = 'Objects Name', name = 'objName', value = None, elementType = 'STRING', updatable = False)
+		self.descrip = self.elementTable.addElement(title = 'Object Description', name = 'descrip', value = None, elementType = 'STRING', updatable = False)
 		self.inventoryCode = self.elementTable.addElement(title = 'Items in Object', name = 'inventoryCode', value = None, elementType = 'INT')
 		self.inventory = Inventory(self.db)
 		self. inventoryCode.value = self.inventory.tableCode[1]
 
 		self.table = 'objects'
 		self.codeName = 'objCode'
-		self.defaultCommands = {
+		self.commands = {
 			'search':userInput.Command(func=self.search, takesArgs=False, hide = False),
 			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = False),
 			'use':userInput.Command(func=self.use, takesArgs=False, hide = False)
 			}
-		self.commands = self.defaultCommands
 
 	def search(self):
 		self.listItems()

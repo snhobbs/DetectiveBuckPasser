@@ -1,5 +1,5 @@
 #inventory.py
-from sqlTable import SQLTable
+from sqlTable import SQLTable, StagedSqlTable
 import items
 from menus import *
 class InventoryMenu(Menu):
@@ -13,36 +13,35 @@ class InventoryMenu(Menu):
 	def __init__(self, db):
 		Menu.__init__(self, db, title = "Inventory", description="Item Menu", cursor = "What do you want to do? ")
 		self.addOption(MenuOption(db = db, title = "List Items", description="List the items in this inventory", commit = True, clear=True, action=self.put))
+
 		self.addOption(MenuOption(db = db, title = "Put", description="Move an item to this inventory", commit = True, clear=True, action=self.put))
 		self.addOption(MenuOption(db = db, title = "Take", description="Take an item", commit = True, clear=True, action=self.take))
 		self.addOption(MenuOption(db = db, title = "Drop", description="Drop an item on the floor", commit = True, clear=True, action=self.drop))
 		self.addOption(MenuOption(db = db, title = "Combine", description="Combine Items", commit = True, clear=True, action=self.combine))
 
-
-
 	def put(self):
 		'''
 		move an item from the users inventory to an inventory in scope
 		'''
-		pass
+		print("Not Implimented")
 
 	def take(self):
 		'''
 		move an item from an inventory in scope to the users inventory
 		'''
-		pass
+		print("Not Implimented")
 
 	def drop(self):
 		'''
 		move an item from the users inventory to the inventory of the current room
 		'''
-		pass
+		print("Not Implimented")
 
 	def combine(self):
 		'''
 		takes a list of item codes and checks to see if this is an item in a sql table combinedItems
 		'''
-		pass
+		print("Not Implimented")
 
 class InventoryEntry(object):
 	def __init__(self, db):
@@ -119,7 +118,17 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 		for item in self.items:
 			weight = float(item.item.weight.value) * float(item.amount)
 			inventoryMenu.addListItem([item.item.itemName.value, item.amount, "%.3f"%weight])
+
+#		inventoryMenu.commands.update({
+#			'help2':userInput.Command(func=self.test, takesArgs=False, descrip = 'No one can save you now'),
+#			'help4':userInput.Command(func=self.test, takesArgs=False, descrip = 'No one can save you now'),
+#			'help5':userInput.Command(func=self.test, takesArgs=False, descrip = 'No one can save you now')
+#		})
+
 		inventoryMenu.runMenu()
+
+	def test(self):
+		print("yeah")
 
 	def inventoryMenu(self):
 		self.runMenu()

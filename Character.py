@@ -14,14 +14,17 @@ class Character(StagedSqlTable, CharacterMenu):
 	'''
 	Character is the base class for all characters in the game
 	'''
-	def __init__(self, db = None, code = None, subType = None, charName = None, money = None, bac = None, descrip = None):
-		SQLTable.__init__(self, db)
+	def __init__(self, db, code = None):
+		StagedSqlTable.__init__(self, db)
 		self.code = code
 		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = 0, elementType = 'INT')
-		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = subType, elementType = 'STRING')
-		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = charName, elementType = 'STRING')
-		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = money, elementType = 'FLOAT')
-		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = descrip, elementType = 'STRING')
+		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = 'standard', elementType = 'STRING', updatable = False)
+		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = None, elementType = 'STRING', updatable = False)
+		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = None, elementType = 'FLOAT')
+		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = None, elementType = 'STRING', updatable = False)
+		self.jsonConv = self.elementTable.addElement(title = 'Conversation Object', name = 'conv', value = None, elementType = 'STRING', updatable = False)
+		self.defaultJsonConv = self.elementTable.addElement(title = 'Conversation Object After Interaction', name = 'defaultConv', value = None, elementType = 'STRING', updatable = False)
+		self.interactedFlag = self.elementTable.addElement(title = 'Stage Interaction Flag', name = 'interactedFlag', value = None, elementType = 'BOOL')
 
 		self.table = 'chars'
 		self.codeName = 'charCode'
@@ -33,14 +36,39 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.commands = {
 			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True),
 			'search':userInput.Command(func=self.search, takesArgs=False, hide = True),
-			'talk':userInput.Command(func=self.runMenu, takesArgs=False, hide = True)
+			'talk':userInput.Command(func=self.runCharMenu, takesArgs=False, hide = True)
 			}
 
-	def kill(self):
-		print("Don't shoot him, what the hell's wrong with you, you gaddamn maniac?")
+	def runCharMenu(self):
+		self.title = self.charName.value
+		self.runMenu()
 
 	def assault(self):
-		print("Don't go fighting")
+		print("That's just more paper work")
+
+	def talk(self):
+		'''
+		Pass JSON conversation to self.conversation
+		'''
+		import json
+		if(self.interactedFlag.value in [True, 'True', '1', 1] or self.jsonConv.value is None):
+			conv = json.loads(self.defaultJsonConv.value)
+		else:
+			conv = json.loads(self.jsonConv.value)
+			self.interactedFlag.value = True
+		self.conversation(conv)
+
+	def conversation(self, conv):
+		#FIXME add this conversation format to characters
+		#print the conversation in an enumerated list
+		nextOpts = conv['startOpts']
+
+		while(len(nextOpts) > 0):
+			selection = userInput.printSelect(options = [conv['options'][opt]['text'] for opt in nextOpts], cursor = 'Say Something> ')
+			try:
+				nextOpts = conv['options'][nextOpts[selection]]['nextOpts']
+			except TypeError:
+				break
 
 	def listItems(self):
 		if self.inventory == None or len(self.inventory.items) < 0:
@@ -58,3 +86,11 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.inventory = inventory
 		self.inventoryCode = self.inventory.code
 		self.inventory.writeToDB()
+
+
+if __name__ == "__main__":
+	conv = '''{"startOpts" : ["opt1","opt2"], "options" : {"opt1" : {"text" : "Option 1", "nextOpts" : ["opt2","opt3"]}, "opt2" : {"text" : "Option 2", "nextOpts" : ["opt1","opt3"]}, "opt3" : {"text" : "Option 3", "nextOpts" : []}}}
+			'''
+	import json
+	conv = json.loads(conv)
+	conversation(conv)

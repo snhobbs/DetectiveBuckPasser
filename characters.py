@@ -5,21 +5,8 @@ import traceback
 def characterFactory(db, code, stage):
 	charObj = Character(db = db, code = code)
 	charObj.readFromDB(stage)
-	subType = charObj.subType.value
-	charDict = {
-		'sixdollarman':SixDollarMan,
-		'bear':Bear,
-		'jfk':JFK,
-		'hammerguy':HammerGuy,
-		'guyfieri':GuyFieri,
-		'robot':Robot
-	}
-	try:
-		character = charDict[subType](db)
-		character.readFromDB(stage)
-		return character
-	except KeyError:
-		raise UserWarning('Unknown character type {}\n{}'.format(subType, traceback.format_exc(limit=5)))
+
+	return charObj
 
 class SixDollarMan(Character):
 	def __init__(self,db):
@@ -29,8 +16,8 @@ class SixDollarMan(Character):
 		money = 6
 		descrip = "Randy Savage except with a viciously failed wrestling career following a failed marriage. Weakness are his ex wife Sharron, alimony, and the IRS."
 		Character.__init__(self,db, self.code, subType,charName,money,descrip)
-	def talk(self):
-		print("Six Dollar Man: Brother, I got no time for this, you seen Sharron?")
+	#def talk(self):
+	#	print("Six Dollar Man: Brother, I got no time for this, you seen Sharron?")
 
 	def kill(self):
 		print("As you unholster the greasy tarnished M1911 you see the look of exceptance in Six Dollar's eyes. He embraces the sweet release of death, you reholster your gun, who are you to give such satisfaction?")
@@ -43,8 +30,8 @@ class Bear(Character):
 		money = float('inf')
 		descrip = "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear"
 		Character.__init__(self,db, self.code, subType,charName,money,descrip)
-	def talk(self):
-		print("Six Dollar Man: He Dead Brotherrr")
+	#def talk(self):
+	#	print("Six Dollar Man: He Dead Brotherrr")
 
 
 class Robot(Character):
@@ -54,7 +41,7 @@ class Robot(Character):
 		charName = 'Robot'
 		money = 0
 		descrip = "Early Yahoo AI experiment. After learning everything it knows from the combined knowledge of Geocities, Myspace, tomagachis, and The Charlie Rose Show... the putz, he has been left unplugged and abandoned. The net of his knowledge has left him with the operating IQ of a mid 2000's Crunk rapper. Due a Nas CD left in his drive when unplugged he claims to understand 'the struggle' and knows 'the Bridge'. Thinks OE in plastic is bullshit, coincidentaly Charlie Roses favorite beverage, the narc."
-		Character.__init__(self,db, self.code, subType,charName,money, bac, descrip)
+		Character.__init__(self,db, self.code, subType,charName,money, descrip)
 
 class JFK(Character):
 	def __init__(self,db):

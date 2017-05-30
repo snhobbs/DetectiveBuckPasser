@@ -1,17 +1,18 @@
-from sqlTable import SQLTable
+from sqlTable import SQLTable, StagedSqlTable
 import objects
 import Character
 from characters import characterFactory
 import userInput
 import inventory
 
-class Room(SQLTable):
+class Room(StagedSqlTable):
 	'''
 	base for every generalized space in the game, this includes hallways, apartment blocks, etc
 	'''
 	def __init__(self, db):
-		SQLTable.__init__(self, db)
+		StagedSqlTable.__init__(self, db)
 		self.code = None
+		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = 0, elementType = 'INT')
 		self.neighbors = self.elementTable.addElement(title = 'Neightboring Rooms', name = 'neighbors', value = None, elementType = 'STRING')
 		self.characterCodeString = self.elementTable.addElement(title = 'Characters in Room', name = 'chars', value = None, elementType = 'STRING')
 		self.descrip = self.elementTable.addElement(title = 'Room Description', name = 'descrip', value = '', elementType = 'STRING')
@@ -54,16 +55,24 @@ class Room(SQLTable):
 		'''
 		brings up the rooms inventory
 		'''
-		pass
+		print("Not Implimented")
 
 	def writeRoom(self):
 		try:
+			self.inventory.updateTable()
+		except TypeError:
+			pass
+
+		try:
 			for obj in self.objects:
 				obj.updateTable()
+				obj.inventory.updateTable()
 		except TypeError: #will fail if no objects
 			pass
 		try:
 			for character in self.characters:
 				character.updateTable()
-		except TypeError:
+				character.inventory.updateTable()
+		except TypeError as te:
 			pass
+		self.db.commit()

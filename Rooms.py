@@ -1,10 +1,10 @@
 #Rooms.py
 from Room import Room
 
-def roomFactory(db, roomCode):
+def roomFactory(db, roomCode, stage):
 	roomBase = Room(db)
 	roomBase.setCode(roomCode)
-	roomBase.readFromDB()
+	roomBase.readFromDB(stage)
 
 	roomType = roomBase.subType.value
 	if roomType == 'apartment':
@@ -20,7 +20,7 @@ def roomFactory(db, roomCode):
 		raise UserWarning("Unknown Room Type")
 
 	room.setCode(roomCode)
-	room.readFromDB()
+	room.readFromDB(stage)
 	#room.loadRoom()
 	return room
 

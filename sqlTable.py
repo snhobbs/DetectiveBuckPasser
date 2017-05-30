@@ -206,8 +206,8 @@ class TableDataElements(object):
 	def getTitles(self):
 		return self._titles
 
-	def addElement(self, title = None, name = None, value = '', elementType = 'STRING', options = None):
-		element = TableElement(title=title, name=name, value=value, elementType=elementType, options = options)
+	def addElement(self, title = None, name = None, value = '', elementType = 'STRING', options = None, updatable=True):
+		element = TableElement(title=title, name=name, value=value, elementType=elementType, options = options, updatable=updatable)
 		self.elements.append(element)
 		self._names.append(element.name)
 		self._titles.append(element.title)
@@ -226,7 +226,6 @@ class StagedSqlTable(SQLTable):
 		arg = 'SELECT MAX(stage) from {0.table} where stage between "0" and "{1}" and {2[0]} = {2[1]}'.format(self, stage, self.tableCode)
 		dbCursor.execute(arg)
 		resp = dbCursor.fetchall()
-		print(resp)
 		if(len(resp) == 0 or resp[0] is None):
 			return None
 		else:
@@ -243,3 +242,12 @@ class StagedSqlTable(SQLTable):
 			if(element.value is None):
 				element.value = ''
 			element.value = str(element.value)
+
+	def updateTable(self):
+		'''
+		same as update table in SQLTable except the conditional has the stage added
+		'''
+		updates = [(element.name, scrubSql(element.value)) for element in self.elementTable.elements if element.updatable]
+
+		if len(updates) > 0:
+			self.updateSql(inputs = updates, conditions = (self.tableCode, self.stage.sqlPair))
