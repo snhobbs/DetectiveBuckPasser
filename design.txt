@@ -8,7 +8,7 @@ Inventories control all item transactions
 Objects, Rooms, Characters, and Inventories change based on the game stage
 As a room is loaded each of these looks in the database to see if they have a state for the next stage, otherwise they remain in the current state (this needs to happen only once per stage to maintain inventories)
 
-Once a character has talked or completed something, have a randomly chosen statement from them as you talk to them
+Once a character has talked or completed something, they have a default conversation loaded
 
 Talking is done by option number which are numbered. This is an array of numbered lines that have the possible options in a linked list format.
 So if option 1 is selected then it has a list of the options after it -> say 3,4,7. These 3 options are displayed. Each of these also have the options that they can call until the transaction is over.
@@ -20,4 +20,26 @@ Each character needs to have a finished variable for when they've already been t
 Sql state structure -> have a new subclass for staged data where read from db gets the state closest to the current game stage. Just add a stage value to these, make stage and code the primary key
 
 Conversations -> save as JSON with {starting options: [1,2,3], {1 : text1, next options: [2,3,4]}, {2 : text2, next options : [3,4,5]}}. pull the JSON with json.loads to load into a dictionary
+
+Items -> Uses:	Can be combined in an inventory, used on the player, used on an object or character
+		 Transacted: dropped, given, recieved, picked up
+
+		How to display transaction, how to get the current rooms inventory, combinatory logic
+
+
+Character Inventory
+	-> Combine
+	-> Use/Consume
+	-> Use on
+	-> Drop
+
+Room/Object Inventory (Passive Inventory)
+	-> Take
+	-> Put
+
+Character Inventory
+	-> Trade -> Give/Buy/Sell/Exchange/Take (Active Inventory)
+
+
+
 

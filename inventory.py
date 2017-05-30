@@ -56,6 +56,11 @@ class InventoryEntry(object):
 		self.item.code = itemCode
 		self.item.readFromDB()
 
+class PassiveInventory(Inventory):
+	def __init__(self, db):
+		Inventory.__init__(self, db)
+
+
 class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loop through all the items and their count as its duplicated
 	def __init__(self, db):
 		InventoryMenu.__init__(self, db)
@@ -71,21 +76,34 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 	def addItem(self, itemCode, amount):
 		if self.items is None:
 			self.items = []
-		newItem = InventoryEntry(self.db)
-		newItem.loadEntry(itemCode, float(amount))
-		self.items.append(newItem)
+		for inventEntry in self.items:
+			if int(inventEntry.item.code) == int(itemCode):
+				inventEntry.amount += float(amount)
+				self.amount.value = item.amount
+				self.itemCode = inventEntry.item.code
+				self.updateTable()
+				return #update amount in db and exit
+
+		#this item doesn't exist in this inventory, add the item and write it to the database
+		newEntry = InventoryEntry(self.db)
+		newEntry.loadEntry(itemCode, float(amount))
+		self.items.append(newEntry)
+		self.amount.value = newEntry.amount
+		self.itemCode.value = itemCode
+		self.writeToDB()
 
 	def __moveItem(self, itemName, amount):
-		for item in self.items:
-			if item.item.subType == itemName:
-				if(float(amount) > float(item.amount)):
+		for inventEntry in self.items:
+			if inventEntry.item.subType == itemName:
+				if(float(amount) > float(inventEntry.amount)):
 					UserWarning("You don't have enough to do that")
-				remaining = float(item.amount) - float(amount)
+				remaining = float(inventEntry.amount) - float(amount)
 				if remaining < 1e-3:
-					self.items.pop(self.items.index(item))
+					self.items.pop(self.items.index(inventEntry))
+					self.deleteSql(inventEntry.item.itemName.sqlPair)#delete item from inventory
 				else:
-					item.amount = remaining
-				return (item.item.copy(), amount)
+					inventEntry.amount = remaining
+				return (inventEntry.item.copy(), amount)
 
 	def placeItem(self, inventory, itemName, amount):
 		'''
@@ -99,10 +117,11 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 
 	def writeToDB(self):
 		if(self.items != None):
-			for item in self.items:
-				self.amount.value = item.amount
-				self.itemCode.value = item.item.code
-				self.insertSql(inputs = (self.tableCode, self.amount.sqlPair, self.itemCode.sqlPair))
+			for inventEntry in self.items:
+				self.amount.value = inventEntry.amount
+				self.itemCode.value = inventEntry.item.code
+				super().writeToDB()
+				#self.insertSql(inputs = (self.tableCode, self.amount.sqlPair, self.itemCode.sqlPair))
 
 	def readFromDB(self):
 		resp = self.selectSql(columnNames = self.columnNames, conditions = (self.tableCode))
@@ -115,9 +134,9 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 	def listItems(self):
 		inventoryMenu = ListMenu(db = self.db, title = 'Inventory', description = "", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
 		inventoryMenu.addListItem(['Name', 'Amount', 'Total Weight'])
-		for item in self.items:
-			weight = float(item.item.weight.value) * float(item.amount)
-			inventoryMenu.addListItem([item.item.itemName.value, item.amount, "%.3f"%weight])
+		for inventEntry in self.items:
+			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
+			inventoryMenu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
 
 #		inventoryMenu.commands.update({
 #			'help2':userInput.Command(func=self.test, takesArgs=False, descrip = 'No one can save you now'),
@@ -127,8 +146,8 @@ class Inventory(SQLTable, InventoryMenu):#when interfacing w/ the db need to loo
 
 		inventoryMenu.runMenu()
 
-	def test(self):
-		print("yeah")
+#	def test(self):
+#		print("yeah")
 
 	def inventoryMenu(self):
 		self.runMenu()

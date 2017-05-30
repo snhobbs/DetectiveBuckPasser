@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import characters, Character
 import Room, Rooms
 import hero
@@ -11,8 +12,8 @@ from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 '''
 To do:
-1) Item transfers
-2) remove simpleaudio if possible
+1) Item transfers, special items, linking inventorys
+2) remove simpleaudio if possible with wav
 '''
 class GameCommands(object):
 	'''

@@ -35,3 +35,9 @@ Full QWERTY keyboard compatibility!
 Breakthrough 1976 technology!
 
 </center>
+
+
+<b>Dependencies</b>
+System			 | Not Windows
+Programs 		 | Python3, sqlite3
+Python3 Packages | sqlite3 

@@ -1,10 +1,10 @@
 #musicPlayer.py
-
 import simpleaudio as sa
 from multiprocessing import Process, Queue
 import os
 import random
 from menus import Menu, MenuOption
+from userInput import printSelect
 
 def playClip(fileIn):
 	wave_obj = sa.WaveObject.from_wave_file(fileIn)
