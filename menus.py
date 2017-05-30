@@ -1,7 +1,7 @@
 '''
 menu classes
 '''
-import subprocess, readline, os, textwrap, userInput, numpy
+import subprocess, readline, os, textwrap, userInput
 global linePad
 linePad = 50
 
@@ -133,7 +133,7 @@ class ListMenu(BaseMenu):
 	def printCommands(self):
 		print("Some of the Avaliable Commands:")
 
-		maxLen = int(max(numpy.array([len(command) for command in self.commands if not self.commands[command].hide])))
+		maxLen = max([len(command) for command in self.commands if not self.commands[command].hide])
 		for command in self.commands:
 			if not self.commands[command].hide:
 				print('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))

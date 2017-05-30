@@ -3,7 +3,7 @@ import Room, Rooms
 import hero
 import objects
 import userInput
-import getpass, readline, csv, traceback, numpy, sqlite3, os
+import getpass, readline, csv, traceback, sqlite3, os
 import items
 import inventory
 import gameEvents
@@ -12,8 +12,7 @@ from menus import Menu, MenuOption
 '''
 To do:
 1) Item transfers
-2) Conversations
-3) Events and game stages
+2) remove simpleaudio if possible
 '''
 class GameCommands(object):
 	'''
@@ -118,7 +117,7 @@ class GameCommands(object):
 	def printCommands(self):
 		print("Some of the Available Commands:")
 
-		maxLen = int(max(numpy.array([len(command) for command in self.commands if not self.commands[command].hide])))
+		maxLen = max([len(command) for command in self.commands if not self.commands[command].hide])
 		for command in self.commands:
 			if not self.commands[command].hide:
 				print('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
