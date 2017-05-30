@@ -3,7 +3,7 @@ import Room, Rooms
 import hero
 import objects
 import userInput
-import getpass, readline, click, csv, traceback, numpy, sqlite3, os
+import getpass, readline, csv, traceback, numpy, sqlite3, os
 import items
 import inventory
 import gameEvents

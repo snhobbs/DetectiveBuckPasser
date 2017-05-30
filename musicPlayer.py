@@ -3,14 +3,14 @@
 import simpleaudio as sa
 from multiprocessing import Process, Queue
 import os
-import click, random
+import random
 from menus import Menu, MenuOption
 
 def playClip(fileIn):
 	wave_obj = sa.WaveObject.from_wave_file(fileIn)
 	playObj = wave_obj.play()
 	playObj.wait_done()
-	click.pause()
+	input()
 
 def music(dirName = './', mode = 'single', repeat = False):
 	def play(queue, clipList, repeat):
