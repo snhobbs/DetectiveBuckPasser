@@ -98,7 +98,9 @@ class sqlInterface(object):
 
 	def deleteSql(self, conditions):
 		dbCursor = self.db.cursor()
-		arg = 'DELETE FROM {0.table} {0.conditionalStatement(conditions)};'.format(self)
+
+		arg = 'DELETE FROM {0.table} {1} AND {0.tableCode[0]} = "{0.tableCode[1]}";'.format(self, self.conditionalStatement(conditions))
+
 		dbCursor.execute(arg)
 
 	def getMaxInTable(self, columnName = '', conditions = None):
