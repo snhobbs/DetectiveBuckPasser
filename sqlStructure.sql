@@ -1,6 +1,15 @@
 /**sqlStructure**/
 /**DROP TABLE IF EXISTS inventory, rooms, people, hero, objects, items;**/
 
+create table events(
+	stage int NOT NULL,
+	itemCode int,
+	amount float,
+	charCode int,
+	eventDescrip string,
+	primary key(stage)
+);
+
 create table items(
 	itemCode int NOT NULL,
 	subType string NOT NULL,
