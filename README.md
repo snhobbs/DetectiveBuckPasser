@@ -6,7 +6,7 @@ Detective Buck Passer is the assistant director of the homicide department for t
 
 Detective Passer has two goals in his day to day life: don't do any paperwork and have enough change in his pocket lint to pickup a sixer of Shaefer from the bodega down the street on his way to his apartment by the train.
 
-You play as Detective Buck Passer in his first text based adventure game. The developers would like to claim this design choice opens up a more imaginative world. The truth of why there is no animation probably falls closer to these inbreds never being able to colour in the lines.
+You play as Detective Buck Passer in his first text based adventure game. The developers would like to claim this design choice opens up a more imaginative world. The truth of why there is no animation probably falls closer to these inbreds never being able to color in the lines.
 
 There has been a murder at an apartment block in the Bowery, it is up to Buck Passer to do what he does best: mess up the crime scene so one of the NYPD special task forces have to do the paper work.
 
@@ -14,9 +14,9 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 <b>Rave Reviews</b>
 
-"Please stop calling us" - IGM
+"Please stop calling us" - IGN
 
-"Notification: emails flagged as spam" - giantbomb.com
+"Notification: emails flagged as spam" - Giantbomb.com
 
 "We're calling security" - Charles the Doorman, Waypoint, Vice Media
 
