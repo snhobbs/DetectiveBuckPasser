@@ -40,5 +40,7 @@ Breakthrough 1976 technology!
 <b>Dependencies</b>
 
 System			 | Not Windows
+
 Programs 		 | Python3, sqlite3, pip3, libasound2-dev
+
 Python3 Packages | simpleaudio>=1.0.1
