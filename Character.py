@@ -3,6 +3,11 @@ import userInput
 import inventory
 from menus import Menu, MenuOption
 
+def characterFactory(db, code, stage):
+	charObj = Character(db = db, code = code)
+	charObj.readFromDB(stage)
+
+	return charObj
 
 class CharacterMenu(Menu):
 	def __init__(self, db):
