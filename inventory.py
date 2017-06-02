@@ -14,7 +14,6 @@ inventory commands:
 
 class InventoryEntry(object):
 	def __init__(self, db):
-		items.Item.__init__(self, db)
 		self.db = db
 		self.amount = None
 		self.item = None

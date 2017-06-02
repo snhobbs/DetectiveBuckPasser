@@ -1,0 +1,32 @@
+gameWorld.txt
+
+Rooms:
+	- Home (home) -> 0
+	- Tchotch-Naughts (store) -> 1
+	- Apartment Foyer (apartments) -> 2
+	- Apartments:
+		- Bear's Apartment (murder) -> 5
+		- 1 for each of the characters (<1-3><A-Z>) -> 9 - n
+		- Apartment bathrooms (bathroom) -> n - (2n -9)
+	- 1st, 2nd, 3rd floor Hallways (second floor) -> 6, 7, 8
+	- Home depot parking lot (Home depot) -> 3
+	- HG's car (pontiac fiero) -> 4
+
+Characters:
+	- HG -> 0
+	- Bear -> 1
+	- Six Dollar Man -> 2
+	- Old Lady -> 3
+	- Canadian -> 4
+	- JFK -> 5
+	- Robot -> 6
+	- AA Sponser -> 7
+	- AA Sponsers roommate -> 8
+	- Guy Fieri -> 9
+	- Veterinarian -> 10
+	- Salesman -> 11
+
+items:
+
+
+objects:

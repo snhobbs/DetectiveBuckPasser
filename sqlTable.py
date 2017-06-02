@@ -16,6 +16,7 @@ class sqlInterface(object):
 		self.db = db
 		self.table = None
 		self.codeName = None
+		self.code = None
 
 	@property
 	def tableCode(self):

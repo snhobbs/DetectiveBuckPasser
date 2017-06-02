@@ -21,6 +21,12 @@ insert into objects values(0,0, 'couch', 'Your shitty beige couch', 'It looks li
 insert into objects values(0,1, 'computer', 'Computer', "A beige Dell covered in Cheeto dust. Some Dope website's on the screen", 1);
 
 /**Rooms**/
-insert into rooms values(0,0,'home', 'home', '1,2', NULL, "You're in your garbage apartment. Your goldfish tank festers in the corner. Just another damn day.", 0,'0,1');
-insert into rooms values(0,1,'apartment', 'b3', '0,2', '0', "Apartment B3.", 0,'0,1');
-insert into rooms values(0,2,'murder', 'murder', '0,1', '0,1', "Gruesome murder scene", 0,'0,1');
+insert into rooms values(0,0,'home', 'Home', '0,1,2,3', NULL, "You're in your garbage apartment. Your goldfish tank festers in the corner. Just another damn day.", 0,NULL);
+insert into rooms values(0,1, 'shop', 'Tchotch-Naughts','0,1,2,3', NULL, "A bodega that appears to be run by a reincarnated JFK", 0,NULL);
+insert into rooms values(0,2, 'floor', 'Apartments','0,1,2,3', NULL, "Apartment building foyer", 0,NULL);
+insert into rooms values(0,3, 'general', 'Home Depot','0,1,2,3,4', NULL, "Home depot parking lot", 0,NULL);
+insert into rooms values(0,4, 'car', 'Pontiac Fiero','0,1,2,3,4', NULL, "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 0,NULL);
+insert into rooms values(0,5, 'apartment','Murder Scene', '2,6,5', NULL, "Gruesome murder scene", 0,NULL);
+insert into rooms values(0,6, 'floor', 'First Floor','2,5,6,7,8', NULL, "First Floor", 0,NULL);
+insert into rooms values(0,7, 'floor', 'Second Floor','6,7,8', NULL, "Second Floor", 0,NULL);
+insert into rooms values(0,8, 'floor', 'Third Floor','6,7,8', NULL, "Third Floor", 0,NULL);

@@ -24,3 +24,51 @@ class Event(SQLTable):
 
 		self.table = 'events'
 		self.codeName = 'stage'
+
+		self.nextEvent = None
+
+
+class EventManager(object):
+	def __init__(self, db):
+		self.event = Event(db)
+		self.nextEvent = 1
+		self.stage = 0#FIXME change this for loading in previous saves
+
+	def getNextEvent(self):
+		'''
+		Load the next event requirements into self.nextEvent
+		'''
+		if(self.event.code == self.nextEvent):
+			return
+		self.event.code = self.nextEvent
+		self.event.readFromDB()
+
+	def checkEvent(self, inventory, room):
+		#get event type
+		if self.event.charCode.value not in [None, 'None','', 'NULL']:
+			try:
+				for character in room.characters:
+					if(int(character.code) == int(self.event.charCode.value)):
+						if(int(character.interactedFlag.value)):
+							return True
+						else:
+							return False
+			except TypeError:#no characters in room
+				pass
+
+		elif self.event.itemCode.value not in [None, 'None', '', 'NULL']:
+			entry =	inventory.getItemEntry(self.events.itemCode.value)
+			if entry is None:
+				return False
+			elif float(entry.amount) >= float(self.events.amount.value):
+				return True
+			else:
+				return False
+		else:
+			raise Exception("Event {} has bad values".format(self.event.code))
+
+	def checkGameEvent(self, inventory, room):
+		self.getNextEvent()
+		if self.checkEvent(inventory, room):
+			self.stage += 1
+			return self.stage

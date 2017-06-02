@@ -1,7 +1,7 @@
 '''
 menu classes
 '''
-import subprocess, readline, userInput
+import subprocess, readline, userInput, os
 
 
 class BaseMenu(object):
@@ -70,7 +70,7 @@ class Menu(BaseMenu):
 			if(varIn.isdigit() and int(varIn) <= len(self.MenuOptions)):
 				try:
 					if(self.MenuOptions[int(varIn) -1].clear):
-						subprocess.call(['cls','||','clear'])
+						os.system('clear')
 						print(self.makeScreen())
 					self.MenuOptions[int(varIn) -1].run()
 					if(self.MenuOptions[int(varIn) -1].commit):

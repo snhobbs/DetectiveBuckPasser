@@ -7,7 +7,7 @@ import userInput
 import getpass, readline, csv, traceback, sqlite3, os
 import items
 import inventory
-import gameEvents
+from gameEvents import EventManager
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 import subprocess
@@ -168,7 +168,7 @@ class GameCommands(object):
 		self._getRoom(room[0])
 
 		if str(self.inspection.code) in self.currRoom.neighbors.value.split(','):
-			subprocess.call(['cls','||','clear'])
+			os.system('clear')
 			self.currRoom = self.inspection
 			self.currRoom.look()
 			self.buckPasser.roomInventory = self.currRoom.inventory
@@ -189,7 +189,7 @@ class GameMenu(Menu):
 
 	def startMenu(self):
 		self.runMenu()
-		subprocess.call(['cls','||','clear'])
+		os.system('clear')
 		self.currRoom.look()
 
 class Game(GameCommands, GameMenu):
@@ -208,6 +208,7 @@ class Game(GameCommands, GameMenu):
 		GameCommands.__init__(self, self.db)
 		GameMenu.__init__(self, self.db)
 		self.musicMenu = MusicMenu(self.db, self.musicProcess)
+		self.eventManager = EventManager(self.db)
 
 	def _exit(self):
 		self._save()
@@ -249,9 +250,10 @@ class Game(GameCommands, GameMenu):
 		'''
 		Here the we look at the position and inventory of the character, if a stage change event has occurred, incriment the stage attribute
 		'''
-		if(gameEvents.checkEvent(self.buckPasser.inventory, self.currRoom)):
-			self.stage += 1
-			self._save()
+		stageCheck = self.eventManager.checkGameEvent(self.buckPasser.inventory, self.currRoom)
+		if(stageCheck is not None):
+			self.stage = stageCheck
+		self._save()
 
 	def run(self):
 		try:
@@ -266,7 +268,6 @@ class Game(GameCommands, GameMenu):
 						lastRoom.writeRoom()#saves in nontemporary way (until save)
 						lastRoom = self.currRoom
 					self.checkStage()#check to see if a game event has occured, make something happen if it has
-					self.stage = 1
 					userInput.userInput(self.commands, input('  > '))
 				except:
 					print(traceback.format_exc())
