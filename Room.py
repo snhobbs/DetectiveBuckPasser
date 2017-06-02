@@ -1,7 +1,6 @@
 from sqlTable import SQLTable, StagedSqlTable
 import objects
 import Character
-from characters import characterFactory
 import userInput
 import inventory
 
@@ -19,7 +18,6 @@ class Room(StagedSqlTable):
 		self.inventoryCode = self.elementTable.addElement(title = 'Items in Room', name = 'inventoryCode', value = None, elementType = 'INT')
 		self.objectCodeString = self.elementTable.addElement(title = 'Interactable Objects', name = 'objects', value = None, elementType = 'STRING')
 		self.roomName = self.elementTable.addElement(title = 'Room Name', name = 'roomName', value = None, elementType = 'STRING')
-		self.subType = self.elementTable.addElement(title = 'Room Type', name = 'subType', value = None, elementType = 'STRING')
 
 		self.objects = None#array of different interactable objects
 		self.inventory = inventory.PassiveInventory(db, title = "Room Items", charInventory = None)
@@ -47,15 +45,25 @@ class Room(StagedSqlTable):
 		'''
 		Load objects, inventories, and characters based off of the current game stage
 		'''
+		self.readFromDB(stage)
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		#self.inventory.setCode(int(self.inventoryCode.value))
-		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = characterFactory)
+		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
 
 	def search(self):
 		'''
 		brings up the rooms inventory
 		'''
 		self.inventory.menu.runMenu()
+
+	def getRoomByName(self, roomName):
+		self.roomName.value = roomName.title()#change to title case
+		resp = self.selectSql(columnNames = [self.tableCode[0]], conditions=(self.roomName.sqlPair))
+		if resp in [None, 'NULL','']:
+			raise UserWarning('No Room Found')
+
+		self.setCode(resp[0][0])
+		self.loadRoom(self.stage)
 
 	def writeRoom(self):
 		try:
