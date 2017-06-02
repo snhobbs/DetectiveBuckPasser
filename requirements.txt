@@ -1,0 +1,2 @@
+#requirements.txt
+simpleaudio>=1.0.1
