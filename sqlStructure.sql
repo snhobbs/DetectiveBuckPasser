@@ -44,7 +44,6 @@ create table chars(
 create table rooms(
 	stage int NOT NULL,
 	roomCode int NOT NULL,
-	subType string NOT NULL,
 	roomName string NOT NULL,
 	neighbors string NOT NULL,--accessible rooms
 	chars text,--people in the room, csv string of charCodes
