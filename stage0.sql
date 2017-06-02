@@ -21,12 +21,30 @@ insert into objects values(0,0, 'couch', 'Your shitty beige couch', 'It looks li
 insert into objects values(0,1, 'computer', 'Computer', "A beige Dell covered in Cheeto dust. Some Dope website's on the screen", 1);
 
 /**Rooms**/
-insert into rooms values(0,0,'home', 'Home', '0,1,2,3', NULL, "You're in your garbage apartment. Your goldfish tank festers in the corner. Just another damn day.", 0,NULL);
-insert into rooms values(0,1, 'shop', 'Tchotch-Naughts','0,1,2,3', NULL, "A bodega that appears to be run by a reincarnated JFK", 0,NULL);
-insert into rooms values(0,2, 'floor', 'Apartments','0,1,2,3', NULL, "Apartment building foyer", 0,NULL);
-insert into rooms values(0,3, 'general', 'Home Depot','0,1,2,3,4', NULL, "Home depot parking lot", 0,NULL);
-insert into rooms values(0,4, 'car', 'Pontiac Fiero','0,1,2,3,4', NULL, "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 0,NULL);
-insert into rooms values(0,5, 'apartment','Murder Scene', '2,6,5', NULL, "Gruesome murder scene", 0,NULL);
-insert into rooms values(0,6, 'floor', 'First Floor','2,5,6,7,8', NULL, "First Floor", 0,NULL);
-insert into rooms values(0,7, 'floor', 'Second Floor','6,7,8', NULL, "Second Floor", 0,NULL);
-insert into rooms values(0,8, 'floor', 'Third Floor','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,0,'Home', '0,1,2,3', NULL, "You're in your garbage apartment. Your goldfish tank festers in the corner. Just another damn day.", 0,NULL);
+insert into rooms values(0,1,'Tchotch Naughts','0,1,2,3', NULL, "A bodega that appears to be run by a reincarnated JFK", 0,NULL);
+insert into rooms values(0,2,'Apartments','0,1,2,3,6', NULL, "Apartment building foyer", 0,NULL);
+insert into rooms values(0,3,'Home Depot','0,1,2,3,4', NULL, "Home depot parking lot", 0,NULL);
+insert into rooms values(0,4,'Pontiac Fiero','0,1,2,3,4', NULL, "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 0,NULL);
+insert into rooms values(0,5,'Murder Scene', '2,6,5', NULL, "Gruesome murder scene", 0,NULL);
+
+insert into rooms values(0,6,'First Floor','2,5,6,7,8,9,10,11', NULL, "First Floor", 0,NULL);
+insert into rooms values(0,7,'Second Floor','6,7,8,12,13,14', NULL, "Second Floor", 0,NULL);
+insert into rooms values(0,8,'Third Floor','6,7,8,15,16,17', NULL, "Third Floor", 0,NULL);
+
+--
+insert into rooms values(0,9,'1 A','6,7,8,18', NULL, "Apartment 1A", 0,NULL);
+insert into rooms values(0,10,'1 B','6,7,8,19', NULL, "Apartment 1B", 0,NULL);
+insert into rooms values(0,11,'1 C','6,7,8,20', NULL, "Third Floor", 0,NULL);
+
+insert into rooms values(0,12,'2 A','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,13,'2 B','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,14,'2 C','6,7,8', NULL, "Third Floor", 0,NULL);
+
+insert into rooms values(0,15,'3 A','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,16,'3 B','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,17,'3 C','6,7,8', NULL, "Third Floor", 0,NULL);
+
+insert into rooms values(0,18,'Bathroom','9', NULL, "On suite bathroom for 1A", 0,NULL);
+insert into rooms values(0,19,'Bathroom','10', NULL, "On suite bathroom for 1B", 0,NULL);
+insert into rooms values(0,20,'Bathroom','11', NULL, "On suite bathroom for 1C", 0,NULL);
