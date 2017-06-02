@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import characters, Character
-import Room, Rooms
+import Room
 import hero
 import objects
 import userInput
@@ -41,6 +41,8 @@ class GameCommands(object):
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around')
 			}
 
+		self.neighbors = None
+
 	def _getObject(self, objName = None):
 		if self.currRoom.objects == None:
 			print("There's nothing in here")
@@ -62,13 +64,8 @@ class GameCommands(object):
 			raise UserWarning('No Character Found')
 
 	def _getRoom(self, roomName = None):
-		roomObj = Room.Room(self.db)
-		roomObj.roomName.value = roomName
-		resp = roomObj.selectSql(columnNames = [roomObj.tableCode[0]], conditions=(roomObj.roomName.sqlPair))
-		if resp in [None, 'NULL','']:
-			raise UserWarning('No Room Found')
-		self.inspection = Rooms.roomFactory(self.db, resp[0][0], self.stage)
-		self.inspection.loadRoom(self.stage)
+		self.inspection = Room.Room(self.db)
+		self.inspection.getRoomByName(roomName)
 
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
@@ -138,7 +135,7 @@ class GameCommands(object):
 			print("No one is here")
 			return
 		if charName == None:
-			charName = [input("Who do you want to talk to? ")]
+			charName = [input("Who do you want to talk to? ").strip()]
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
 		#self.currRoom.look()
 
@@ -148,14 +145,16 @@ class GameCommands(object):
 	def listItems(self):
 		self.buckPasser.listItems()
 
-	def printNeighbors(self):
+	def getRoomNeighbors(self):
 		room = Room.Room(self.db)
-		neighbors = []
+		self.neighbors = {}
 		for code in userInput.parseCSVNumString(self.currRoom.neighbors.value):
 			room.setCode(code)
 			room.readFromDB(self.stage)
-			neighbors.append(room.roomName.value)
-		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(neighbors)))
+			self.neighbors.update({room.roomName.value : int(code)})
+
+	def printNeighbors(self):
+		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(key for key in self.neighbors.keys())))
 
 	def move(self, room = None):
 		'''
@@ -163,18 +162,24 @@ class GameCommands(object):
 		if the room code is a valid room, change the currRoom object to the corresponding room and print the room description
 		'''
 		if room == None:
-			room = [input('To Where?> ').strip().lower()]
-		self.currRoom.writeRoom()
-		self._getRoom(room[0])
+			room = [input('To Where?> ').strip()]
+		try:
+			room = ' '.join(room).title()
+		except AttributeError:
+			return
 
-		if str(self.inspection.code) in self.currRoom.neighbors.value.split(','):
-			os.system('clear')
+		if room in self.neighbors.keys():
+			self.currRoom.writeRoom()
+			self._getRoom(room)
+
 			self.currRoom = self.inspection
 			self.currRoom.look()
+			self.getRoomNeighbors()
+
 			self.buckPasser.roomInventory = self.currRoom.inventory
 			self.currRoom.inventory.charInventory = self.buckPasser.inventory
 		else:
-			raise UserWarning("{} is not a valid neighbor".format(room[0]))
+			raise UserWarning("{} is not a valid neighbor".format(room))
 
 	def look(self):
 		self.currRoom.look()
@@ -234,8 +239,8 @@ class Game(GameCommands, GameMenu):
 	def __setupGame(self):
 		self.currRoom = Room.Room(self.db)
 		self.currRoom.setCode(0)
-		self.currRoom.readFromDB(self.stage)
 		self.currRoom.loadRoom(self.stage)
+		self.getRoomNeighbors()
 
 		self.buckPasser = hero.Hero(self.db)
 		self.buckPasser.inventory = inventory.HeroInventory(self.db)
@@ -257,7 +262,6 @@ class Game(GameCommands, GameMenu):
 
 	def run(self):
 		try:
-
 			self.__setupGame()
 			self.currRoom.look()
 
