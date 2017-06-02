@@ -10,6 +10,7 @@ import inventory
 import gameEvents
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
+import subprocess
 '''
 To do:
 1) Item transfers, special items, linking inventorys
@@ -139,7 +140,6 @@ class GameCommands(object):
 		if charName == None:
 			charName = [input("Who do you want to talk to? ")]
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
-		#os.system('clear')
 		#self.currRoom.look()
 
 	def search(self, subject = None):
@@ -168,7 +168,7 @@ class GameCommands(object):
 		self._getRoom(room[0])
 
 		if str(self.inspection.code) in self.currRoom.neighbors.value.split(','):
-			os.system('clear')
+			subprocess.call(['cls','||','clear'])
 			self.currRoom = self.inspection
 			self.currRoom.look()
 			self.buckPasser.roomInventory = self.currRoom.inventory
@@ -189,7 +189,7 @@ class GameMenu(Menu):
 
 	def startMenu(self):
 		self.runMenu()
-		os.system('clear')
+		subprocess.call(['cls','||','clear'])
 		self.currRoom.look()
 
 class Game(GameCommands, GameMenu):
@@ -199,7 +199,8 @@ class Game(GameCommands, GameMenu):
 		self.dbFile = dbFile
 		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql'] + glob.glob('stage*.sql')
 		for sqlFile in sqlFiles:
-			os.system('sqlite3 {0} < {1}'.format(self.dbFile, sqlFile))
+			#subprocess.call(['sqlite3', self.dbFile, '<', sqlFile])
+			os.system("sqlite3 {0} < {1}".format(self.dbFile, sqlFile))#FIXME this is not cross platform
 
 		os.stderr = open('log.log', 'w+')
 		self.db = sqlite3.connect(self.dbFile)
@@ -217,6 +218,7 @@ class Game(GameCommands, GameMenu):
 		print("Not Implimented")
 
 	def _save(self):
+		self.buckPasser.inventory.updateTable()
 		self.db.commit()
 
 	def _mute(self):
@@ -242,7 +244,6 @@ class Game(GameCommands, GameMenu):
 		self.buckPasser.inventory.roomInventory = self.currRoom.inventory
 		self.buckPasser.inventory.refreshList()
 		self._save()
-		#os.system('reset')
 
 	def checkStage(self):
 		'''
@@ -272,5 +273,11 @@ class Game(GameCommands, GameMenu):
 					exit(1)
 		finally:
 			self.db.close()
-os.system('rm *.db')
-Game('gameDB.db').run()
+dataBaseFile = 'gameDB.db'
+
+try:
+	os.remove(dataBaseFile)#remove any previous file
+except FileNotFoundError:
+	pass
+
+Game(dataBaseFile).run()

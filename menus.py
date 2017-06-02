@@ -1,9 +1,8 @@
 '''
 menu classes
 '''
-import subprocess, readline, os, textwrap, userInput
-global linePad
-linePad = 50
+import subprocess, readline, userInput
+
 
 class BaseMenu(object):
 	def __init__(self, db, title, description):
@@ -18,7 +17,7 @@ class BaseMenu(object):
 		try:
 			rows, columns = subprocess.check_output(['stty', 'size']).split()
 		except:
-			rows, columns = [100, linePad]
+			rows, columns = [100, self.linePad]
 		return [int(rows), int(columns)]
 
 	def borderString(self):
@@ -53,6 +52,7 @@ class Menu(BaseMenu):
 	'''
 	Menu is the base class for all numberical selection menus
 	'''
+	linePad = 50
 	def __init__(self, db, title, description, cursor):
 		BaseMenu.__init__(self, db, title, description)
 		self.cursor = cursor
@@ -65,15 +65,15 @@ class Menu(BaseMenu):
 	def runMenu(self):
 		print(self.makeScreen())
 		while True:
-			userInput = input(self.cursor).upper().strip()
+			varIn = input(self.cursor).upper().strip()
 
-			if(userInput.isdigit() and int(userInput) <= len(self.MenuOptions)):
+			if(varIn.isdigit() and int(varIn) <= len(self.MenuOptions)):
 				try:
-					if(self.MenuOptions[int(userInput) -1].clear):
-						os.system('clear')
+					if(self.MenuOptions[int(varIn) -1].clear):
+						subprocess.call(['cls','||','clear'])
 						print(self.makeScreen())
-					self.MenuOptions[int(userInput) -1].run()
-					if(self.MenuOptions[int(userInput) -1].commit):
+					self.MenuOptions[int(varIn) -1].run()
+					if(self.MenuOptions[int(varIn) -1].commit):
 						self.db.commit()
 					break
 				except KeyboardInterrupt:
@@ -88,7 +88,7 @@ class Menu(BaseMenu):
 
 	def numberedLine(self, text, count):
 		rows, columns = self.calcScreen()
-		return ("\t\t%d)  %s"%(count, text)).ljust(linePad, ' ').center(columns).title()
+		return ("\t\t%d)  %s"%(count, text)).ljust(self.linePad, ' ').center(columns).title()
 
 	def makeScreenLines(self):
 		return ("%s"%(self.numberedLine(self.MenuOptions[i].title, i + 1)) + '\r' for i in range(len(self.MenuOptions)))
@@ -146,10 +146,10 @@ class ListMenu(BaseMenu):
 	def runMenu(self):
 		print(self.makeScreen())
 		while True:
-			userInput = input(self.cursor).lower().strip()
+			varIn = input(self.cursor).lower().strip()
 			self.clearLines(2)
 			try:
-				arrayIn = userInput.split(' ')
+				arrayIn = varIn.split(' ')
 				command = self.commands[arrayIn[0]]
 				if command.takesArgs == True:
 					command.func(arrayIn[1:])
@@ -190,7 +190,7 @@ class ListMenu(BaseMenu):
 
 if __name__ =="__main__":
 	import sqlite3
-	import characters
+	import characters, os
 	dbFile = 'test.db'
 	os.system('sqlite3 {0} < {1}'.format(dbFile, 'sqlStructure.sql'))
 	db = sqlite3.connect(dbFile)
