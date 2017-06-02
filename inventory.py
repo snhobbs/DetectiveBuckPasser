@@ -3,40 +3,14 @@ from sqlTable import SQLTable, StagedSqlTable
 import items
 from menus import *
 import userInput
-class InventoryMenu(Menu):
-	'''
-	inventory commands:
-		-> put bottle 3
-		-> take bottle 3 or take 3 bottles
-		-> drop 3 bottles
-		-> combine bottle, rag, gasoline -> replace these with moltov
-	'''
-	def __init__(self, db):
-		Menu.__init__(self, db, title = "Inventory", description="Item Menu", cursor = "What do you want to do? ")
-		self.addOption(MenuOption(db = db, title = "List Items", description="List the items in this inventory", commit = True, clear=True, action=self.put))
 
-		self.addOption(MenuOption(db = db, title = "Put", description="Move an item to this inventory", commit = True, clear=True, action=self.put))
-		self.addOption(MenuOption(db = db, title = "Take", description="Take an item", commit = True, clear=True, action=self.take))
-		self.addOption(MenuOption(db = db, title = "Drop", description="Drop an item on the floor", commit = True, clear=True, action=self.drop))
-		self.addOption(MenuOption(db = db, title = "Combine", description="Combine Items", commit = True, clear=True, action=self.combine))
-
-	def put(self):
-		'''
-		move an item from the users inventory to an inventory in scope
-		'''
-		print("Not Implimented")
-
-	def drop(self):
-		'''
-		move an item from the users inventory to the inventory of the current room
-		'''
-		print("Not Implimented")
-
-	def combine(self):
-		'''
-		takes a list of item codes and checks to see if this is an item in a sql table combinedItems
-		'''
-		print("Not Implimented")
+'''
+inventory commands:
+	-> put bottle 3
+	-> take bottle 3 or take 3 bottles
+	-> drop 3 bottles
+	-> combine bottle, rag, gasoline -> replace these with moltov
+'''
 
 class InventoryEntry(object):
 	def __init__(self, db):
@@ -65,38 +39,85 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 
 		self.assignCode()
 
-	def addItem(self, itemCode, amount):
-		if self.items is None:
-			self.items = []
+	def addAmount(self, itemCode, amount):
+		'''
+		If the item already is in the items, combine amounts
+		'''
 		for inventEntry in self.items:
 			if int(inventEntry.item.code) == int(itemCode):
 				inventEntry.amount += float(amount)
 				self.amount.value = inventEntry.amount
 				self.itemCode.value = inventEntry.item.code
-				self.updateTable()
-				return #update amount in db and exit
+				break#update amount in db and exit
 
-		#this item doesn't exist in this inventory, add the item and write it to the database
+	def addNewItem(self, itemCode, amount):
+		'''
+		No entry of this item exists, so add it
+		'''
 		newEntry = InventoryEntry(self.db)
 		newEntry.loadEntry(itemCode, float(amount))
 		self.items.append(newEntry)
 		self.amount.value = newEntry.amount
 		self.itemCode.value = itemCode
-		super().writeToDB()
 
-	def _moveItem(self, itemName, amount):
+	def addItem(self, itemCode, amount):
+		'''
+		Loads in an inventory entry and writes change to database
+		'''
+		if self.items is None:
+			self.items = []
+
+		if self.itemInInventory(itemCode):
+			self.addAmount(itemCode, amount)
+			self.updateTable()
+		else:
+			#this item doesn't exist in this inventory, add the item and write it to the database
+			self.addNewItem(itemCode, amount)
+			self.writeToDB()
+
+	def loadItem(self, itemCode, amount):
+		'''
+		Loads in an inventory entry but does not write to database
+		'''
+		if self.items is None:
+			self.items = []
+
+		if self.itemInInventory(itemCode):
+			self.addAmount(itemCode, amount)
+		else:
+			#this item doesn't exist in this inventory, add the item and write it to the database
+			self.addNewItem(itemCode, amount)
+
+	def getItemEntryByName(self, itemName):
 		for inventEntry in self.items:
 			if inventEntry.item.itemName.value == itemName:
-				if(float(amount) > float(inventEntry.amount)):
-					UserWarning("You don't have enough to do that")
-				remaining = float(inventEntry.amount) - float(amount)
-				if remaining < 1e-3:
-					self.items.pop(self.items.index(inventEntry))
-					self.deleteSql(inventEntry.item.itemName.sqlPair)#delete item from inventory
-				else:
-					inventEntry.amount = remaining
-				return (inventEntry.item.code, amount)
-		raise UserWarning("Item doesn't exist")
+				return inventEntry
+		return None #item not in inventory
+
+	def getItemEntry(self, itemCode):
+		for inventEntry in self.items:
+			if inventEntry.item.code == itemCode:
+				return inventEntry
+		return None #item not in inventory
+
+	def _moveItem(self, itemName, amount):
+		inventEntry = self.getItemEntryByName(itemName)
+		if inventEntry is None:
+			raise UserWarning("Item {} doesn't exist".format(itemName))
+
+		if(float(amount) <= 0):
+			raise UserWarning("You can't move an amount <= 0 you clot")
+
+		if(float(amount) > float(inventEntry.amount)):
+			raise UserWarning("You don't have enough to do that")
+		remaining = float(inventEntry.amount) - float(amount)
+
+		if remaining < 1e-3:#FIXME this is gross
+			self.items.pop(self.items.index(inventEntry))
+			self.deleteSql(inventEntry.item.tableCode)#delete item from inventory
+		else:
+			inventEntry.amount = remaining
+		return (inventEntry.item.code, amount)
 
 	def placeItem(self, inventory, itemName, amount):
 		'''
@@ -111,36 +132,86 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		except UserWarning as uw:
 			print(uw)
 
-	def writeToDB(self):
-		if(self.items != None):
-			for inventEntry in self.items:
-				self.amount.value = inventEntry.amount
-				self.itemCode.value = inventEntry.item.code
-				super().writeToDB()
-				#self.insertSql(inputs = (self.tableCode, self.amount.sqlPair, self.itemCode.sqlPair))
-
 	def readFromDB(self):
 		resp = self.selectSql(columnNames = self.columnNames, conditions = (self.tableCode))
 		if(resp is None):
 			raise UserWarning("No inventory for this code '%s'"%(self.code))
-		print(resp)
-		self.items = []
+		self.items = None
 		for amount, itemCode in resp:
-			self.addItem(itemCode, amount)
+			self.loadItem(itemCode, amount)
 
-	def itemInInventory(self, itemName):
-		itemName = itemName.lower().strip()
+	def itemInInventory(self, itemCode):
+		try:
+			itemCode = int(itemCode)
+		except (ValueError, TypeError):
+			raise UserWarning("Item code {} is not a number".format(itemCode))
 
-		for entry in self.items:
-			if itemName == entry.item.itemName.value:
-				return True
-		return False
+		if self.checkEntryLength() == 0:
+			return False
+		else:
+			for entry in self.items:
+				if itemCode == int(entry.item.code):
+					return True
+			return False
+
+	def itemInInventoryByName(self, itemName):
+		if self.checkEntryLength() == 0:
+			return False
+		else:
+			for entry in self.items:
+				if itemName == (entry.item.itemName.value):
+					return True
+			return False
+
+	def checkEntryLength(self):
+		if type(self.items) not in [list, tuple]:
+			return 0
+		else:
+			return len(self.items)
 
 	def checkItemAmount(self, itemCode):
-		for entry in self.items:
-			if int(itemCode) == entry.item.itemCode:
-				return float(entry.amount)
-		raise Exception("Unknown item code {}".format(itemCode))
+		entry = self.getItemEntry(itemCode)
+		if int(itemCode) == entry.item.itemCode:
+			return float(entry.amount)
+
+	def refreshList(self):
+		if not self.checkEntryLength():
+			return
+		self.menu.listItems = []
+		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])
+		for inventEntry in self.items:
+			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
+			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
+
+	def parseTransaction(self, inventory, args):
+		'''
+		Takes an inventory and an aray of args. Tests to see if either the first or 2nd arg is a known item, if it is the other (first or 2nd) is taken as the amount to be passed to put or take, returns the item name and amount. Otherwise raises a user warning.
+		'''
+		amount = None
+		if(inventory.itemInInventoryByName(args[0])):
+			itemName = args[0]
+			if len(args) >= 2:
+				amount = args[1]
+
+		elif(inventory.itemInInventoryByName(args[1])):
+			itemName = args[1]
+			if len(args) >= 2:
+				amount = args[0]
+
+		else:
+			raise UserWarning("Unknown arguments {}".format(args))
+
+		try:
+			float(amount)
+		except (ValueError, TypeError):
+			amount = None
+
+		if amount is None:
+			try:
+				amount = float(input('Amount?> '))
+			except ValueError:
+				print("What?")
+		return(itemName, amount)
 
 class CharacterInventory(Inventory):
 	def __init__(self, db):
@@ -162,31 +233,6 @@ class PassiveInventory(Inventory):
 
 		self.charInventory = charInventory
 
-	def parseTransaction(self, inventory, args):
-		amount = None
-		if(inventory.itemInInventory(args[0])):
-			itemName = args[0]
-			if len(args) >= 2:
-				amount = args[1]
-
-		elif(inventory.itemInInventory(args[1])):
-			itemName = args[1]
-			if len(args) >= 2:
-				amount = args[0]
-
-		try:
-			float(amount)
-		except (ValueError, TypeError):
-			amount = None
-
-		if amount is None:
-			try:
-				amount = float(input('Amount?> '))
-			except ValueError:
-				print("What?")
-
-		return(itemName, amount)
-
 	def put(self, args):
 		'''
 		Add an item to this inventory from charInventory
@@ -195,9 +241,10 @@ class PassiveInventory(Inventory):
 			itemName, amount = self.parseTransaction(self.charInventory, args)
 		except UserWarning:
 			print("Item doesn't exist")
+			return
 
 		try:
-			self.charInventory.placeItem(self, itemName, amount)
+			self.charInventory.placeItem(itemName, amount)
 			self.refreshList()
 		except UserWarning:
 			print("Item doesn't exist or insufficient quantities for transaction")
@@ -214,61 +261,36 @@ class PassiveInventory(Inventory):
 		except UserWarning:
 			print("Item doesn't exist or insufficient quantities for transaction")
 
-	def refreshList(self):
-		self.menu.listItems = []
-		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])
-		for inventEntry in self.items:
-			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
-			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
-		print(self.menu.makeScreen())
-
 	def runMenu(self):
 		self.refreshList()
-		super().runMenu()
+		self.menu.runMenu()
 
 class HeroInventory(Inventory):
-	def __init__(self, db):
+	'''
+	The players inventory, allows dropping items to the current room, and combining items
+	'''
+	def __init__(self, db, roomInventory = None):
 		Inventory.__init__(self, db)
+		title = "Inventory"
 
-if __name__ == "__main__":
-	import sqlite3, glob
-	dbFile = 'gameDB.db'
-	os.system('rm {}'.format(dbFile))
-	sqlFiles = ['sqlStructure.sql', 'items.sql'] + glob.glob('stage*.sql')
-	for sqlFile in sqlFiles:
-		os.system('sqlite3 {0} < {1}'.format(dbFile, sqlFile))
+		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
+		self.menuCommands = {
+		'drop':userInput.Command(func=self.drop, takesArgs=True, descrip = 'Drop an item on the floor')
+		}
+		self.menu.commands.update(self.menuCommands)
 
-	db = sqlite3.connect(dbFile)
+		self.roomInventory = roomInventory
 
-	hi = PassiveInventory(db, title = "Hi Inventory", charInventory = None)
-	hi.assignCode()
-	db.commit()
+	def drop(self, args):
+		try:
+			itemName, amount = self.parseTransaction(self, args)
+		except UserWarning:
+			print("Item doesn't exist {}".format(args))
+			return
 
-	hi.addItem('0','300')
-	hi.addItem('1','300')
-	pi = PassiveInventory(db, title = "Pi Inventory", charInventory = hi)
-	pi.assignCode()
-	db.commit()
-	hi.charInventory = pi
-	pi.addItem('0','100')
-	pi.addItem('0','100')
-	pi.addItem('0','100')
-	pi.addItem('0','100')
-	pi.addItem('1','100')
+		try:
+			self.placeItem(self.roomInventory, itemName, amount)
+			self.refreshList()
+		except UserWarning:
+			print("Item doesn't exist or insufficient quantities for transaction")
 
-
-	pi.code = '5'
-	db.commit()
-	pi.take(['bottle',10])
-	pi.put(['bottle',100])
-
-	hi.take(['bottle',50])
-	hi.put(['bottle',5])
-
-	db.commit()
-
-	#pi.readFromDB()
-	#pi.menu.runMenu()
-	#hi.readFromDB()
-	#hi.menu.runMenu()
-	#db.commit()

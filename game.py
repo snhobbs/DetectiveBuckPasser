@@ -143,9 +143,7 @@ class GameCommands(object):
 		#self.currRoom.look()
 
 	def search(self, subject = None):
-		if subject == None:
-			subject = [input("Search what? ")]
-		self.__makeCommand(subject = subject, command = 'search', onCharacter = True)
+		self.currRoom.commands['search'].run()
 
 	def listItems(self):
 		self.buckPasser.listItems()
@@ -173,6 +171,8 @@ class GameCommands(object):
 			os.system('clear')
 			self.currRoom = self.inspection
 			self.currRoom.look()
+			self.buckPasser.roomInventory = self.currRoom.inventory
+			self.currRoom.inventory.charInventory = self.buckPasser.inventory
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room[0]))
 
@@ -197,7 +197,7 @@ class Game(GameCommands, GameMenu):
 		import glob
 		self.stage = 0
 		self.dbFile = dbFile
-		sqlFiles = ['sqlStructure.sql', 'items.sql'] + glob.glob('stage*.sql')
+		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql'] + glob.glob('stage*.sql')
 		for sqlFile in sqlFiles:
 			os.system('sqlite3 {0} < {1}'.format(self.dbFile, sqlFile))
 
@@ -235,10 +235,12 @@ class Game(GameCommands, GameMenu):
 		self.currRoom.loadRoom(self.stage)
 
 		self.buckPasser = hero.Hero(self.db)
-		itemPouch = inventory.Inventory(self.db)
-		itemPouch.setCode('0')
-		itemPouch.readFromDB()
-		self.buckPasser.addInventory(itemPouch)
+		self.buckPasser.inventory = inventory.HeroInventory(self.db)
+		self.buckPasser.inventory.setCode(0)
+		self.buckPasser.inventory.readFromDB()
+
+		self.buckPasser.inventory.roomInventory = self.currRoom.inventory
+		self.buckPasser.inventory.refreshList()
 		self._save()
 		#os.system('reset')
 

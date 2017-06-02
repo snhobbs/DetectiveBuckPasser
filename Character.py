@@ -7,7 +7,7 @@ class CharacterMenu(Menu):
 	def __init__(self, db):
 		Menu.__init__(self, db, title = self.charName.value, description="Character Menu", cursor = "What do you want to do? ")
 		self.addOption(MenuOption(db = db, title = "Talk", description="Talk to {0.charName.value}".format(self), commit = True, clear=True, action = self.talk))
-		self.addOption(MenuOption(db = db, title = "Give/Get Items", description="Transfer items  between you", commit = True, clear=True, action = self.inventory.itemTransfer))
+		#self.addOption(MenuOption(db = db, title = "Give/Get Items", description="Transfer items  between you", commit = True, clear=True, action = self.inventory.itemTransfer))
 		self.addOption(MenuOption(db = db, title = "Assault", description="", commit = True, clear=True, action=self.assault))
 
 class Character(StagedSqlTable, CharacterMenu):
@@ -74,7 +74,7 @@ class Character(StagedSqlTable, CharacterMenu):
 		if self.inventory == None or len(self.inventory.items) < 0:
 			print('Nothing found')
 		else:
-			self.inventory.listItems()
+			self.inventory.menu.runMenu()
 
 	def search(self):
 		self.listItems()

@@ -27,5 +27,28 @@ When the stage changes all the characters are referenced with that stage which b
 
 When you get a critical item or you enter a critical event happens, the stage incriments -> makes the game linear, but whatever
 
-Game Events:
-1) M
+-> Go to murder
+-> Talk to Canadian
+-> go to all apartments asking questions, make it clear this is going through the motions
+-> go to HG, try and get coke. Need $4
+-> find $4 in the couch cusions in all the apartments -> the canadian always has the tips for the current stage
+-> go back to HG, car has been towed. Need stuff to bust the car out
+-> Have to get a steak, pipe wrench, blow torch, and a homemade zip gun	-> Go get the other 4 dollars from 6 dollar man 
+	You get the information on six dollar man from computer.
+-> Chach-Naughts is a bodega -> what do we get from that bodega?
+-> get the stuff (put this chain together)
+-> Go back to HG -> for now just have the story of them busting in to get the car, maybe include later
+-> They get the car, get the coke, its under bears head, end of game
+
+Questions
+	-> How does the bodega fit in?
+	-> Do we do the revolver or whiskey?
+	-> Can we break up the break in, coke scene anymore?	
+
+Important Objects:
+	-> Telephones w/ messages from bear
+	-> Bears corpse (object or character?)
+
+Events
+	-> Items
+	-> conversations	

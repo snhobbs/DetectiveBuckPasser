@@ -22,7 +22,7 @@ class Room(StagedSqlTable):
 		self.subType = self.elementTable.addElement(title = 'Room Type', name = 'subType', value = None, elementType = 'STRING')
 
 		self.objects = None#array of different interactable objects
-		self.inventory = inventory.Inventory(db)
+		self.inventory = inventory.PassiveInventory(db, title = "Room Items", charInventory = None)
 		self.characters = None
 		self.inspection = None
 		self.commands = {
@@ -55,7 +55,7 @@ class Room(StagedSqlTable):
 		'''
 		brings up the rooms inventory
 		'''
-		print("Not Implimented")
+		self.inventory.menu.runMenu()
 
 	def writeRoom(self):
 		try:
