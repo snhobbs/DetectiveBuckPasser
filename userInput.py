@@ -16,7 +16,7 @@ def userInput(commands, userIn):
 	'''
 	take user input, conditions it, returns the command instance
 	'''
-	userIn = userIn.lower().replace('to','').replace('with','').replace('the','').strip().split(' ')
+	userIn = userIn.replace('to ','').replace('with ','').replace('the ','').strip().split(' ')
 	#check inspect commands
 	#check game commands
 	try:
@@ -31,14 +31,15 @@ def userInput(commands, userIn):
 	except KeyError:
 		return False
 
-import csv
 def parseCSVNumString(stringIn):
 	if stringIn in [None, '', 'None','NULL','Null','null']:
 		return None
-	csv_reader = csv.reader(stringIn)
 	ret = []
-	for row in csv_reader:
-		ret += [int(entry) for entry in row if entry.isdigit()]
+	for entry in stringIn.strip().split(','):
+		try:
+			ret.append(int(entry))
+		except ValueError:
+			raise UserWarning("CSV number String passed to parseCSVNumString is not just numbers ", stringIn)
 	return ret
 
 def loadObjList(db, codeString, stage, factory):
