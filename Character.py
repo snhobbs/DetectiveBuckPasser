@@ -65,14 +65,22 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.conversation(conv)
 
 	def conversation(self, conv):
-		#FIXME add this conversation format to characters
+		def printResp(charName, resp):
+			print("{}: {}".format(charName, resp))
 		#print the conversation in an enumerated list
 		nextOpts = conv['startOpts']
 
 		while(len(nextOpts) > 0):
-			selection = userInput.printSelect(options = [conv['options'][opt]['text'] for opt in nextOpts], cursor = 'Say Something> ')
+			optionZero = conv['options'][nextOpts[0]]
+			if (optionZero['ques']) is None:#skip selection if there is no 'ques'
+				selection = 0
+			else:
+				selection = userInput.printSelect(options = [conv['options'][opt]['ques'] for opt in nextOpts], cursor = 'Say Something> ')
+
 			try:
-				nextOpts = conv['options'][nextOpts[selection]]['nextOpts']
+				opt = conv['options'][nextOpts[selection]]
+				printResp(self.charName.value, opt['resp'])
+				nextOpts = opt['nextOpts']
 			except TypeError:
 				break
 
@@ -92,11 +100,3 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.inventory = inventory
 		self.inventoryCode = self.inventory.code
 		self.inventory.writeToDB()
-
-
-if __name__ == "__main__":
-	conv = '''{"startOpts" : ["opt1","opt2"], "options" : {"opt1" : {"text" : "Option 1", "nextOpts" : ["opt2","opt3"]}, "opt2" : {"text" : "Option 2", "nextOpts" : ["opt1","opt3"]}, "opt3" : {"text" : "Option 3", "nextOpts" : []}}}
-			'''
-	import json
-	conv = json.loads(conv)
-	conversation(conv)

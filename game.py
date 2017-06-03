@@ -20,7 +20,6 @@ class GameCommands(object):
 	'''
 	self.currRoom is the room the character is in
 	self.inspection is the object, item, room, character that is being looked at. Each of these needs to have a dictionary of possible commands. The games superset of commands always apply.
-	Have the user declare that they're done to either go up a layer of inspection or back to the room
 	'''
 	def __init__(self, db):
 		self.db = db
