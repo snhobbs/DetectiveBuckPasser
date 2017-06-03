@@ -53,27 +53,26 @@ class MusicMenu(Menu):
 	def __init__(self, db, musicProcess):
 		Menu.__init__(self, db, title = "Music Menu", description="Sultry Tunes", cursor = " Music> ")
 		self.addOption(MenuOption(db = db, title = "Song", description="Infinite Loop", commit = False, clear=False, action = self.song))
-		self.addOption(MenuOption(db = db, title = "Playlist", description="", commit = False, clear=False, action = self.playlist))
+		#self.addOption(MenuOption(db = db, title = "Playlist", description="", commit = False, clear=False, action = self.playlist))
 		self.addOption(MenuOption(db = db, title = "Shuffle", description="", commit = False, clear=False, action = self.shuffle))
 		self.addOption(MenuOption(db = db, title = "Mute", description="", commit = False, clear=False, action = self.mute))
 		self.musicProcess = musicProcess
 
 	def song(self):
+		self.mute()
 		self.musicProcess = music(self.musicDir, mode = 'single')
 
 	def playlist(self):
+		self.mute()
 		self.musicProcess = music(self.musicDir, mode = 'playlist')
 
 	def shuffle(self):
+		self.mute()
 		self.musicProcess = music(self.musicDir, mode = 'shuffle')
 
 	def mute(self):
 		try:
 			self.musicProcess.terminate()
 		except:
-			print("Cant mute")
+			#print("Cant mute")
 			pass
-
-if __name__ == '__main__':
-	music('./music', mode='shuffle', repeat = False)
-	#playClip('music/Will_Smith_Switch.wav')
