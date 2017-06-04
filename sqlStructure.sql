@@ -15,7 +15,7 @@ create table items(
 	itemName text NOT NULL,
 	descrip text NOT NULL,
 	weight int NOT NULL,
-	discrete bool NOT NULL,
+	smallestUnit float NOT NULL,
 	primary key(itemCode)
 );
 
