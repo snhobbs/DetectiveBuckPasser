@@ -15,6 +15,7 @@ import subprocess
 To do:
 1) Bathroom takes you to the home bathroom, fix
 2) remove simpleaudio if possible with wav
+3) Fix inventory updating and room inventories arent reading
 '''
 class GameCommands(object):
 	'''
@@ -28,7 +29,6 @@ class GameCommands(object):
 		self.buckPasser = None
 		self.commands = {
 			'start':userInput.Command(func=self.startMenu, takesArgs=False, descrip = 'Start Menu'),
-			'commands':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'Print the available commands'),
 			'help':userInput.Command(func=self.printHelp, takesArgs=False, descrip = 'No one can save you now'),
 			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound'),
 			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
@@ -36,7 +36,6 @@ class GameCommands(object):
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
 			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
 			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
-			'neighbors':userInput.Command(func=self.printNeighbors, takesArgs=False, descrip = 'Lists available rooms, same as exits and rooms'),
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around')
 			}
 
@@ -153,16 +152,19 @@ class GameCommands(object):
 			self.neighbors.update({room.roomName.value : int(code)})
 
 	def printNeighbors(self):
-		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(key for key in self.neighbors.keys())))
+		print(sorted(self.neighbors.keys())[::-1])
+		print(self.neighbors.keys())
+		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(key for key in sorted(self.neighbors.keys())[::-1])))#prints the lowest room code first
 
 	def move(self, room = None):
 		'''
 		change current room to an available neighbor.
 		if the room code is a valid room, change the currRoom object to the corresponding room and print the room description
 		'''
+		from operator import itemgetter
 		if room == None:
 			options = ['Exit']
-			options += self.neighbors.keys()
+			options.extend(room[0] for room in sorted(self.neighbors.items(), key=itemgetter(1)))#print with lowest room code first
 			selection = userInput.printSelect(options = options, cursor = 'To Where?> ')
 			if(selection == 0):
 				return
