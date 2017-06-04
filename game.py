@@ -1,16 +1,9 @@
 #!/usr/bin/python3
-import characters, Character
-import Room
-import hero
-import objects
-import userInput
-import getpass, readline, csv, traceback, sqlite3, os
-import items
-import inventory
+import Room, hero, Character, objects, inventory, userInput
+import readline, traceback, sqlite3, os
 from gameEvents import EventManager
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
-import subprocess
 '''
 To do:
 1) remove simpleaudio if possible with wav
@@ -202,7 +195,6 @@ class Game(GameCommands, GameMenu):
 		self.dbFile = dbFile
 		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql'] + glob.glob('stage*.sql')
 		for sqlFile in sqlFiles:
-			#subprocess.call(['sqlite3', self.dbFile, '<', sqlFile])
 			os.system("sqlite3 {0} < {1}".format(self.dbFile, sqlFile))#FIXME this is not cross platform
 
 		os.stderr = open('log.log', 'w+')
