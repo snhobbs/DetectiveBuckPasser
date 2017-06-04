@@ -13,9 +13,7 @@ from menus import Menu, MenuOption
 import subprocess
 '''
 To do:
-1) Bathroom takes you to the home bathroom, fix
-2) remove simpleaudio if possible with wav
-3) Fix inventory updating and room inventories arent reading
+1) remove simpleaudio if possible with wav
 '''
 
 
@@ -64,8 +62,13 @@ class GameCommands(object):
 			raise UserWarning('No Character Found')
 
 	def _getRoom(self, roomName = None):
+		try:
+			code = self.neighbors[roomName.title()]
+		except KeyError:
+			return
 		self.inspection = Room.Room(self.db)
-		self.inspection.getRoomByName(roomName)
+		self.inspection.setCode(code)
+		self.inspection.loadRoom(self.stage)
 
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:

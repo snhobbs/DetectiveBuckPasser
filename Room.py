@@ -24,7 +24,7 @@ class Room(StagedSqlTable):
 		self.characters = None
 		self.inspection = None
 		self.commands = {
-			'search':userInput.Command(func=self.search, takesArgs=False, descrip = 'Search the room'),
+			'search':userInput.Command(func=self.inventory.runMenu, takesArgs=False, descrip = 'Search the room'),
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around the room')
 			}
 
@@ -49,21 +49,6 @@ class Room(StagedSqlTable):
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		#self.inventory.setCode(int(self.inventoryCode.value))
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
-
-	def search(self):
-		'''
-		brings up the rooms inventory
-		'''
-		self.inventory.runMenu()
-
-	def getRoomByName(self, roomName):
-		self.roomName.value = roomName.title()#change to title case
-		resp = self.selectSql(columnNames = [self.tableCode[0]], conditions=(self.roomName.sqlPair))
-		if resp in [None, 'NULL','']:
-			raise UserWarning('No Room Found')
-
-		self.setCode(resp[0][0])
-		self.loadRoom(self.stage)
 
 	def writeRoom(self):
 		try:
