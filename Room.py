@@ -32,14 +32,14 @@ class Room(StagedSqlTable):
 		self.codeName = 'roomCode'
 
 	def look(self):
-		print(self.descrip.value)
+		userInput.printToScreen(self.descrip.value)
 		if self.characters != None:
-			print("Characters: \n\t{}".format('\n\t'.join(char.charName.value for char in self.characters)))
+			userInput.printToScreen("Characters: \n\t{}".format('\n\t'.join(char.charName.value for char in self.characters)))
 		else:
-			print("You're all alone")
+			userInput.printToScreen("You're all alone")
 
 		if self.objects != None:
-			print("Shit in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
+			userInput.printToScreen("Shit in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
 
 	def loadRoom(self, stage):
 		'''

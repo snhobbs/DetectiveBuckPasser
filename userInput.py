@@ -66,3 +66,7 @@ def printSelect(options = None, cursor = ''):
 		resp = input(cursor)
 		if(resp.isdigit() and int(resp) < len(uniqueOptions) and int(resp) >= 0):
 			return int(resp)
+
+def printToScreen(text):
+	import textwrap
+	print('\n'.join(textwrap.wrap(text, width=90)))

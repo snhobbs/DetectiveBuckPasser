@@ -17,6 +17,8 @@ To do:
 2) remove simpleaudio if possible with wav
 3) Fix inventory updating and room inventories arent reading
 '''
+
+
 class GameCommands(object):
 	'''
 	self.currRoom is the room the character is in
@@ -43,7 +45,7 @@ class GameCommands(object):
 
 	def _getObject(self, objName = None):
 		if self.currRoom.objects == None:
-			print("There's nothing in here")
+			userInput.printToScreen("There's nothing in here")
 			return
 		try:
 			self.inspection = [obj for obj in self.currRoom.objects if obj.objName.value.lower() == objName][0]
@@ -109,18 +111,18 @@ class GameCommands(object):
 					pass
 		except UserWarning as uw:
 			print(uw)
-			print("I don't know what you're jabbering about you driveling idiot")
+			userInput.printToScreen("I don't know what you're jabbering about you driveling idiot")
 
 	def printCommands(self):
-		print("Some of the Available Commands:")
+		userInput.printToScreen("Some of the Available Commands:")
 
 		maxLen = max([len(command) for command in self.commands if not self.commands[command].hide])
 		for command in self.commands:
 			if not self.commands[command].hide:
-				print('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
+				userInput.printToScreen('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
 
 	def printHelp(self):
-		print('\n\nNo one can help your sorry ass, just go score some blow.\n\n')
+		userInput.printToScreen('\n\nNo one can help your sorry ass, just go score some blow.\n\n')
 		self.printCommands()
 
 	def describe(self, subject = None):
@@ -130,7 +132,7 @@ class GameCommands(object):
 
 	def talkTo(self, charName = None):
 		if self.currRoom.characters == None:
-			print("No one is here")
+			userInput.printToScreen("No one is here")
 			return
 		if charName == None:
 			charName = [input("Who do you want to talk to? ").strip()]
@@ -152,9 +154,7 @@ class GameCommands(object):
 			self.neighbors.update({room.roomName.value : int(code)})
 
 	def printNeighbors(self):
-		print(sorted(self.neighbors.keys())[::-1])
-		print(self.neighbors.keys())
-		print("Neighboring Rooms:\n\t{}".format('\n\t'.join(key for key in sorted(self.neighbors.keys())[::-1])))#prints the lowest room code first
+		userInput.printToScreen("Neighboring Rooms:\n\t{}".format('\n\t'.join(key for key in sorted(self.neighbors.keys())[::-1])))#prints the lowest room code first
 
 	def move(self, room = None):
 		'''

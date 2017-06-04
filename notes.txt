@@ -1,4 +1,1 @@
-ounck, kick, slap, cockslap, pinch, poke stomp, garrot, strangle, elbow, strike, bludgeon, cudgle, knife, stab, bat, smack
-
-remove the inspection from rooms
-have universal commands that take the object, person, or item using the inspect object... functions from game
+-> Beefarino, for the man that's given up (Marketing poster for inspecting beefarino)
