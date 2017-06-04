@@ -36,7 +36,7 @@ class GameCommands(object):
 	def _getObject(self, objName = None):
 		if self.currRoom.objects == None:
 			userInput.printToScreen("There's nothing in here")
-			return
+			return False
 		try:
 			self.inspection = [obj for obj in self.currRoom.objects if obj.objName.value.lower() == objName][0]
 			return True
@@ -46,7 +46,7 @@ class GameCommands(object):
 	def _getCharacter(self, charName = None):
 		if self.currRoom.characters == None:
 			#print('You\'re all alone')
-			return
+			return False
 		try:
 			self.inspection = [character for character in self.currRoom.characters if character.charName.value.lower() == charName][0]
 			return True
@@ -57,7 +57,7 @@ class GameCommands(object):
 		try:
 			code = self.neighbors[roomName.title()]
 		except KeyError:
-			return
+			return False
 		self.inspection = Room.Room(self.db)
 		self.inspection.setCode(code)
 		self.inspection.loadRoom(self.stage)
@@ -65,7 +65,7 @@ class GameCommands(object):
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
 			#print('You ain\'t got shit')
-			return
+			return False
 		try:
 			self.inspection = [item for item in self.buckPasser.inventory.items if item.item.subType.value.lower() == itemName][0]
 			return True
@@ -88,22 +88,17 @@ class GameCommands(object):
 			#set the type of items its supposed to search for
 			if onObject:
 				try:
-					self._getObject(subject)
-					self.__runCommand(command = command, args = args)
+					if self._getObject(subject):
+						self.__runCommand(command = command, args = args)
 				except UserWarning:
 					pass
 			if onCharacter:
 				try:
-					self._getCharacter(subject)
-					self.__runCommand(command = command, args = args)
+					if self._getCharacter(subject):
+						self.__runCommand(command = command, args = args)
 				except UserWarning:
 					pass
-			if onItem:
-				try:
-					self._getItem(subject)
-					self.__runCommand(command = command, args = args)
-				except UserWarning:
-					pass
+
 		except UserWarning as uw:
 			print(uw)
 			userInput.printToScreen("I don't know what you're jabbering about you driveling idiot")
@@ -157,7 +152,7 @@ class GameCommands(object):
 		'''
 		from operator import itemgetter
 		if room == None:
-			options = ['Exit']
+			options = ['Stay Put']
 			options.extend(room[0] for room in sorted(self.neighbors.items(), key=itemgetter(1)))#print with lowest room code first
 			selection = userInput.printSelect(options = options, cursor = 'To Where?> ')
 			if(selection == 0):

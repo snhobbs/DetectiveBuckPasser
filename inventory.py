@@ -36,12 +36,18 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		self.itemCode = self.elementTable.addElement(title = 'Item Code', name = 'itemCode', value = None, elementType = 'INT')
 		self.items = None
 
+		self.menuCommands = {
+			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Describe an item')
+		}
 		self.assignCode()
 
 	def addAmount(self, itemCode, amount):
 		'''
 		If the item already is in the items, combine amounts
 		'''
+		if self.isEmpty():
+			return
+
 		for inventEntry in self.items:
 			if int(inventEntry.item.code) == int(itemCode):
 				inventEntry.amount += float(amount)
@@ -221,6 +227,30 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 				userInput.printToScreen("What?")
 		return(itemName, amount)
 
+	def isEmpty(self):
+		'''
+		Test if inventory is empty
+		'''
+		try:
+			self.items[0]
+			return False
+		except:
+			return True
+
+	def describe(self, itemsName = None):
+		if self.isEmpty():
+			return
+
+		if itemsName in [None, [], '']:
+			options = ['Nothing']
+			options.extend(entry.item.itemName.value for entry in self.items)
+			selection = userInput.printSelect(options = options, cursor = 'Describe What?> ')
+			if(selection == 0):
+				return
+			else:
+				itemsName = [options[selection]]
+		userInput.printToScreen(self.getItemEntryByName(itemsName[0].title()).item.descrip.value)
+
 class CharacterInventory(Inventory):
 	def __init__(self, db):
 		Inventory.__init__(self, db)
@@ -233,10 +263,10 @@ class PassiveInventory(Inventory):
 		Inventory.__init__(self, db)
 
 		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
-		self.menuCommands = {
+		self.menuCommands.update({
 		'put':userInput.Command(func=self.put, takesArgs=True, descrip = 'Move an item to this inventory'),
 		'take':userInput.Command(func=self.take, takesArgs=True, descrip = 'Take an item')
-		}
+		})
 		self.menu.commands.update(self.menuCommands)
 
 		self.charInventory = charInventory
@@ -282,9 +312,9 @@ class HeroInventory(Inventory):
 		title = "Inventory"
 
 		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
-		self.menuCommands = {
+		self.menuCommands.update({
 		'drop':userInput.Command(func=self.drop, takesArgs=True, descrip = 'Drop an item on the floor')
-		}
+		})
 		self.menu.commands.update(self.menuCommands)
 
 		self.roomInventory = roomInventory
