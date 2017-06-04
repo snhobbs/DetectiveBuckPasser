@@ -88,8 +88,9 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			self.addNewItem(itemCode, amount)
 
 	def getItemEntryByName(self, itemName):
+		itemName = itemName.title()
 		for inventEntry in self.items:
-			if inventEntry.item.itemName.value == itemName:
+			if inventEntry.item.itemName.value.title() == itemName:
 				return inventEntry
 		return None #item not in inventory
 
@@ -122,7 +123,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		'''
 		moves an item from this inventory to that of another inventory
 		'''
-
 		assert(isinstance(inventory, Inventory))
 		try:
 			itemCode, itemAmount = self._moveItem(itemName, amount)
@@ -154,11 +154,16 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			return False
 
 	def itemInInventoryByName(self, itemName):
-		if self.checkEntryLength() == 0:
+		try:
+			itemName = itemName.title()
+		except AttributeError:#not a string
+			return False
+
+		if self.checkEntryLength() == 0:#no items
 			return False
 		else:
 			for entry in self.items:
-				if itemName == (entry.item.itemName.value):
+				if itemName == (entry.item.itemName.value).title():
 					return True
 			return False
 
@@ -248,7 +253,7 @@ class PassiveInventory(Inventory):
 
 		try:
 			self.charInventory.placeItem(itemName, amount)
-			self.refreshList()
+			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
@@ -260,7 +265,7 @@ class PassiveInventory(Inventory):
 		itemName, amount = self.parseTransaction(self, args)
 		try:
 			self.placeItem(self.charInventory, itemName, amount)
-			self.refreshList()
+			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
@@ -295,4 +300,3 @@ class HeroInventory(Inventory):
 			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
-

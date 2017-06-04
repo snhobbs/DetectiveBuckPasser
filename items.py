@@ -16,9 +16,8 @@ class Item(SQLTable):
 		self.descrip = self.elementTable.addElement(title = 'Description', name = 'descrip', value = None, elementType = 'STRING')
 		self.itemName = self.elementTable.addElement(title = 'Item Name', name = 'itemName', value = '', elementType = 'STRING')
 		self.weight = self.elementTable.addElement(title = 'Item Weight', name = 'weight', value = 0, elementType = 'FLOAT')
-		self.itemSize = self.elementTable.addElement(title = 'Item Size', name = 'itemSize', value = 0, elementType = 'FLOAT')
-		self.critical = self.elementTable.addElement(title = 'Critical Item', name = 'critical', value = False, elementType = 'BOOL')
-		self.subType = self.elementTable.addElement(title = 'item Subtype', name = 'subType', value = 'general', elementType = 'STRING')
+		self.smallestUnit = self.elementTable.addElement(title = 'Smallest Unit of the item', name = 'smallestUnit', value = 0, elementType = 'FLOAT', hide = True)
+
 		self.table = 'items'
 		self.codeName = 'itemCode'
 

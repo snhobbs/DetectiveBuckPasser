@@ -99,7 +99,7 @@ class InventoryTest(TestSuite):
 		testI.addItem('0','300')
 		print("\nBottles and Burboun: ")
 		self.printContents(testI)
-		testMove('1', 'Old Crow Burboun', 300, testI)
+		testMove('1', 'Whiskey', 300, testI)
 
 		print("\nJust Bottles: ")
 		self.printContents(testI)
@@ -130,7 +130,7 @@ class InventoryTest(TestSuite):
 		testI.placeItem(testII, 'bottle', '300')
 
 		#Move more of an item than you have
-		testI.placeItem(testII, 'Old Crow Burboun', '400')
+		testI.placeItem(testII, 'Whiskey', '400')
 
 		print("\nContents 1")
 		self.printContents(testI)

@@ -12,12 +12,10 @@ create table events(
 
 create table items(
 	itemCode int NOT NULL,
-	subType string NOT NULL,
 	itemName text NOT NULL,
 	descrip text NOT NULL,
 	weight int NOT NULL,
-	itemSize int NOT NULL,
-	critical bool NOT NULL,
+	discrete bool NOT NULL,
 	primary key(itemCode)
 );
 

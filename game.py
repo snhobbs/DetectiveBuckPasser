@@ -22,13 +22,13 @@ class GameCommands(object):
 		self.commands = {
 			'start':userInput.Command(func=self.startMenu, takesArgs=False, descrip = 'Start Menu'),
 			'help':userInput.Command(func=self.printHelp, takesArgs=False, descrip = 'No one can save you now'),
-			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound'),
 			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing'),
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
-			'items':userInput.Command(func=self.buckPasser.listItems, takesArgs=True, descrip = 'List what you have on you'),
-			'search':userInput.Command(func=self.self.currRoom.commands['search'].run, takesArgs=True, descrip = 'Root around for something'),
-			'look':userInput.Command(func=self.currRoom.look, takesArgs=False, descrip = 'Look around')
+			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
+			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
+			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around'),
+			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound')
 			}
 
 		self.neighbors = None
@@ -142,6 +142,14 @@ class GameCommands(object):
 			room.readFromDB(self.stage)
 			self.neighbors.update({room.roomName.value : int(code)})
 
+	def setupNewRoom(self):
+		'''
+		Sets up self.currRoom properly
+		'''
+		self.currRoom.loadRoom(self.stage)
+		self.currRoom.inventory.charInventory = self.buckPasser.inventory
+		self.currRoom.inventory.refreshList()
+
 	def move(self, room = None):
 		'''
 		change current room to an available neighbor.
@@ -167,13 +175,23 @@ class GameCommands(object):
 			self._getRoom(room)
 
 			self.currRoom = self.inspection
+			self.setupNewRoom()
 			self.currRoom.look()
-			self.getRoomNeighbors()
 
+			self.getRoomNeighbors()
 			self.buckPasser.roomInventory = self.currRoom.inventory
 			self.currRoom.inventory.charInventory = self.buckPasser.inventory
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room))
+
+	def listItems(self):
+		self.buckPasser.listItems()
+
+	def search(self):
+		self.currRoom.commands['search'].run()
+
+	def look(self):
+		self.currRoom.look()
 
 class GameMenu(Menu):
 	def __init__(self, db):
@@ -181,7 +199,7 @@ class GameMenu(Menu):
 		self.addOption(MenuOption(db = db, title = "Quit Game", description="Exit Game", commit = True, clear=True, action = self._exit))
 		self.addOption(MenuOption(db = db, title = "Save", description="", commit = True, clear=True, action = self._save))
 		self.addOption(MenuOption(db = db, title = "Load", description="Load a previous save", commit = False, clear=True, action=self._load))
-		self.addOption(MenuOption(db = db, title = "Music", description="Play some sultry tunes", commit = False, clear=True, action=self.musicMenu.runMenu))
+		self.addOption(MenuOption(db = db, title = "Music", description="Play some sultry tunes", commit = False, clear=True, action=self.music))
 
 	def startMenu(self):
 		self.runMenu()
@@ -223,19 +241,23 @@ class Game(GameCommands, GameMenu):
 		except:
 			pass
 
-	def __setupGame(self):
-		self.currRoom = Room.Room(self.db)
-		self.currRoom.setCode(0)
-		self.currRoom.loadRoom(self.stage)
-		self.getRoomNeighbors()
+	def music(self):
+		self.musicMenu.runMenu()
 
+	def __setupGame(self):
 		self.buckPasser = hero.Hero(self.db)
 		self.buckPasser.inventory = inventory.HeroInventory(self.db)
 		self.buckPasser.inventory.setCode(0)
 		self.buckPasser.inventory.readFromDB()
+		self.buckPasser.inventory.refreshList()
+
+		self.currRoom = Room.Room(self.db)
+		self.currRoom.setCode(0)
+		self.setupNewRoom()
 
 		self.buckPasser.inventory.roomInventory = self.currRoom.inventory
-		self.buckPasser.inventory.refreshList()
+
+		self.getRoomNeighbors()
 		self._save()
 
 	def checkStage(self):

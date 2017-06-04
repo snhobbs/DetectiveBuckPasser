@@ -76,7 +76,7 @@ class Menu(BaseMenu):
 				except KeyboardInterrupt:
 					break
 				except UserWarning as uw:
-					userInput.printToScreen(uw)
+					print(uw)
 					continue
 
 	def addOption(self, option):
@@ -155,7 +155,7 @@ class ListMenu(BaseMenu):
 			except KeyboardInterrupt:
 				break
 			except UserWarning as uw:
-				userInput.printToScreen(uw)
+				print(uw)
 				continue
 			except IndexError:
 				continue
