@@ -14,7 +14,8 @@ class BaseMenu(object):
 		self.description = description
 
 	def clearLines(self, lines):
-		userInput.printToScreen("\033[F\033[K" * lines)
+		pass
+		#userInput.printToScreen("\033[F\033[K" * lines)
 
 	def borderString(self):
 		columns, rows = userInput.getTerminalSize()
