@@ -68,11 +68,14 @@ def printSelect(options = None, cursor = ''):
 			return int(resp)
 
 def getTerminalSize():
+	'''
+	returns columns, rows
+	'''
 	import shutil
 	return shutil.get_terminal_size((80, 20))
 
 def printToScreen(text):
 	import textwrap
-	width = getTerminalSize()[0] - 10
+	width = getTerminalSize()[0]
 	for par in text.split('\n'):
-		print('\n'.join(textwrap.wrap(par, width=width, tabsize=8)))
+		print('\n'.join(textwrap.wrap(par, width=width, tabsize=4)))

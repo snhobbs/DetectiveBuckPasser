@@ -5,6 +5,9 @@ import subprocess, readline, userInput, os
 
 
 class BaseMenu(object):
+
+	linePad = 50
+
 	def __init__(self, db, title, description):
 		self.db = db
 		self.title = title
@@ -13,15 +16,8 @@ class BaseMenu(object):
 	def clearLines(self, lines):
 		print("\033[F\033[K" * lines)
 
-	def calcScreen(self):
-		try:
-			rows, columns = subprocess.check_output(['stty', 'size']).split()
-		except:
-			rows, columns = [100, self.linePad]
-		return [int(rows), int(columns)]
-
 	def borderString(self):
-		rows, columns = self.calcScreen()
+		columns, rows = userInput.getTerminalSize()
 		return ''.center(columns,'#')
 
 	def underLine(self, inStr = None, minLength = 12):
@@ -31,10 +27,11 @@ class BaseMenu(object):
 
 	def makeTitle(self, title, description):
 		titleString = []
-		rows, columns = self.calcScreen()
+		columns, rows = userInput.getTerminalSize()
 		titleString.append(self.borderString())
 		titleString.append('\n')
 		titleString.append(title.center(columns))
+		titleString.append('\n')
 		titleString.append('%s'%(self.underLine(inStr=title).center(columns)))
 		titleString.append('\n')
 		if not self.description in [None, ""]:
@@ -52,7 +49,7 @@ class Menu(BaseMenu):
 	'''
 	Menu is the base class for all numberical selection menus
 	'''
-	linePad = 50
+
 	def __init__(self, db, title, description, cursor):
 		BaseMenu.__init__(self, db, title, description)
 		self.cursor = cursor
@@ -87,11 +84,11 @@ class Menu(BaseMenu):
 		return option
 
 	def numberedLine(self, text, count):
-		rows, columns = self.calcScreen()
+		columns, rows = userInput.getTerminalSize()
 		return ("\t\t%d)  %s"%(count, text)).ljust(self.linePad, ' ').center(columns).title()
 
 	def makeScreenLines(self):
-		return ("%s"%(self.numberedLine(self.MenuOptions[i].title, i + 1)) + '\r' for i in range(len(self.MenuOptions)))
+		return ("%s"%(self.numberedLine(self.MenuOptions[i].title, i + 1)) + '\n' for i in range(len(self.MenuOptions)))
 
 class MenuOption(object):
 	def __init__(self, db = None, title = None, description = None, commit = False, clear = True, action=None):
@@ -174,7 +171,7 @@ class ListMenu(BaseMenu):
 
 	def listLine(self, listItem):
 		formattedFields = []
-		rows, cols = self.calcScreen()
+		columns, rows = userInput.getTerminalSize()
 
 		for field, relFieldLen in zip(listItem, self.fieldLengths):
 			field = str(field)
@@ -189,11 +186,6 @@ class ListMenu(BaseMenu):
 		return (self.listLine(listItem) + '\n' for listItem in self.listItems)
 
 if __name__ =="__main__":
-	import sqlite3
-	import characters, os
-	dbFile = 'test.db'
-	os.system('sqlite3 {0} < {1}'.format(dbFile, 'sqlStructure.sql'))
-	db = sqlite3.connect(dbFile)
-	bear = characters.Bear(db)
-	bear.runMenu()
-
+	menuEx = Menu(db = None, title = "Title", description = "Description", cursor = "  >")
+	screen = menuEx.makeScreen()
+	userInput.printToScreen(screen)

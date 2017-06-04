@@ -293,4 +293,6 @@ try:
 except FileNotFoundError:
 	pass
 
-Game(dataBaseFile).run()
+gameObj = Game(dataBaseFile)
+gameObj.linepad = userInput.getTerminalSize()[0]
+gameObj.run()
