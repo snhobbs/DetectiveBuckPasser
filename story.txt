@@ -10,9 +10,9 @@ the rooms stay stagnent until an 'event' occurs -> you get an object or talk to 
 
 you have to get hgs keys -> when you get the keys and go to the pontiac its been towed. Highlight the stte of the car and that it hasnt moved in years. You then have to get a steak, wire cutters and a tow driver. You just put the beat ass car back in the grooves the tires have sunk into over the years. you give the items to hg he gets the car.
 
-you need to get a new hammer for hg, talk to 6$ and you need to get evidence on him to extort money from him. got to robot to get him to run a scan. robot wants the old foot in a boot. old lady wants a date w/ jfk. talk to jfk, long talk to do ALL the jokes. 'ask naught if I can get to 1st base butt rather how she feels about ass play" "response: she's all about the bum.". 
+you need to get a new hammer for hg, talk to 6$ and you need to get evidence on him to extort money from him. got to robot to get him to run a scan. robot wants the old foot in a boot. old lady wants a date w/ jfk. talk to jfk, long talk to do ALL the jokes. 'ask naught if I can get to 1st base butt rather how she feels about ass play" "response: she's all about the bum.".
 
-After the car get towed he goes home grabbing a sixer of shaefer on his way back. (emphasis on this being his everyday behavior) 
+After the car get towed he goes home grabbing a sixer of shaefer on his way back. (emphasis on this being his everyday behavior)
 
 What kind of favors?
 items?
@@ -33,7 +33,7 @@ When you get a critical item or you enter a critical event happens, the stage in
 -> go to HG, try and get coke. Need $4
 -> find $4 in the couch cusions in all the apartments -> the canadian always has the tips for the current stage
 -> go back to HG, car has been towed. Need stuff to bust the car out
--> Have to get a steak, pipe wrench, blow torch, and a homemade zip gun	-> Go get the other 4 dollars from 6 dollar man 
+-> Have to get a steak, pipe wrench, blow torch, and a homemade zip gun	-> Go get the other 4 dollars from 6 dollar man
 	You get the information on six dollar man from computer.
 -> Chach-Naughts is a bodega -> what do we get from that bodega?
 -> get the stuff (put this chain together)
@@ -43,7 +43,7 @@ When you get a critical item or you enter a critical event happens, the stage in
 Questions
 	-> How does the bodega fit in?
 	-> Do we do the revolver or whiskey?
-	-> Can we break up the break in, coke scene anymore?	
+	-> Can we break up the break in, coke scene anymore?
 
 Important Objects:
 	-> Telephones w/ messages from bear
@@ -51,4 +51,17 @@ Important Objects:
 
 Events
 	-> Items
-	-> conversations	
+	-> conversations
+
+Todo
+	- Make the phone object
+	- More complex neighbor objects
+		- Locked rooms still listed but prints a statment instead of moving
+
+
+Stage 0
+	- Stuck in the apartment until you check your phone messages
+	- Message from the chief about the grizzly murder
+
+Stage 1
+	-

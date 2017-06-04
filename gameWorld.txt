@@ -1,8 +1,8 @@
 gameWorld.txt
 
 Rooms:
-	- Home (home) -> 0
-	- Tchotch-Naughts (store) -> 1
+	- Home (home) -> 0, 1, 2, 3
+	- Tchotch-Naughts (store) -> 4
 	- Apartment Foyer (apartments) -> 2
 	- Apartments:
 		- Bear's Apartment (murder) -> 5

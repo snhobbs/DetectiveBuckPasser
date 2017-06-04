@@ -13,7 +13,7 @@ from menus import Menu, MenuOption
 import subprocess
 '''
 To do:
-1) Item transfers, special items, linking inventorys
+1) Bathroom takes you to the home bathroom, fix
 2) remove simpleaudio if possible with wav
 '''
 class GameCommands(object):
@@ -161,11 +161,18 @@ class GameCommands(object):
 		if the room code is a valid room, change the currRoom object to the corresponding room and print the room description
 		'''
 		if room == None:
-			room = [input('To Where?> ').strip()]
-		try:
-			room = ' '.join(room).title()
-		except AttributeError:
-			return
+			options = ['Exit']
+			options += self.neighbors.keys()
+			selection = userInput.printSelect(options = options, cursor = 'To Where?> ')
+			if(selection == 0):
+				return
+			else:
+				room = options[selection]
+		else:
+			try:
+				room = ' '.join(room).title()
+			except AttributeError:
+				return
 
 		if room in self.neighbors.keys():
 			self.currRoom.writeRoom()
