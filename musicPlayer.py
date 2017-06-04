@@ -10,7 +10,6 @@ def playClip(fileIn):
 	wave_obj = sa.WaveObject.from_wave_file(fileIn)
 	playObj = wave_obj.play()
 	playObj.wait_done()
-	input()
 
 def music(dirName = './', mode = 'single', repeat = False):
 	def play(queue, clipList, repeat):
