@@ -14,7 +14,7 @@ class BaseMenu(object):
 		self.description = description
 
 	def clearLines(self, lines):
-		print("\033[F\033[K" * lines)
+		userInput.printToScreen("\033[F\033[K" * lines)
 
 	def borderString(self):
 		columns, rows = userInput.getTerminalSize()
@@ -60,7 +60,7 @@ class Menu(BaseMenu):
 		raise KeyboardInterrupt
 
 	def runMenu(self):
-		print(self.makeScreen())
+		userInput.printToScreen(self.makeScreen())
 		while True:
 			varIn = input(self.cursor).upper().strip()
 
@@ -68,7 +68,7 @@ class Menu(BaseMenu):
 				try:
 					if(self.MenuOptions[int(varIn) -1].clear):
 						os.system('clear')
-						print(self.makeScreen())
+						userInput.printToScreen(self.makeScreen())
 					self.MenuOptions[int(varIn) -1].run()
 					if(self.MenuOptions[int(varIn) -1].commit):
 						self.db.commit()
@@ -76,7 +76,7 @@ class Menu(BaseMenu):
 				except KeyboardInterrupt:
 					break
 				except UserWarning as uw:
-					print(uw)
+					userInput.printToScreen(uw)
 					continue
 
 	def addOption(self, option):
@@ -128,12 +128,12 @@ class ListMenu(BaseMenu):
 		self.fieldLengths = fieldLengths
 
 	def printCommands(self):
-		print("Some of the Avaliable Commands:")
+		userInput.printToScreen("Some of the Avaliable Commands:")
 
 		maxLen = max([len(command) for command in self.commands if not self.commands[command].hide])
 		for command in self.commands:
 			if not self.commands[command].hide:
-				print('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
+				userInput.printToScreen('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
 		input('Enter to continue')
 		self.clearLines(3+len(self.commands))
 
@@ -141,7 +141,7 @@ class ListMenu(BaseMenu):
 		raise KeyboardInterrupt
 
 	def runMenu(self):
-		print(self.makeScreen())
+		userInput.printToScreen(self.makeScreen())
 		while True:
 			varIn = input(self.cursor).lower().strip()
 			self.clearLines(2)
@@ -155,7 +155,7 @@ class ListMenu(BaseMenu):
 			except KeyboardInterrupt:
 				break
 			except UserWarning as uw:
-				print(uw)
+				userInput.printToScreen(uw)
 				continue
 			except IndexError:
 				continue
@@ -175,7 +175,7 @@ class ListMenu(BaseMenu):
 
 		for field, relFieldLen in zip(listItem, self.fieldLengths):
 			field = str(field)
-			fieldLen = relFieldLen * cols
+			fieldLen = relFieldLen * columns
 			if len(field) > fieldLen:
 				formattedFields.append(field[:fieldLen - 3] + '...')
 			else:

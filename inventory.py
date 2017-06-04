@@ -182,6 +182,10 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
 			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
 
+	def refreshInventory(self):
+		self.refreshList()
+		userInput.printToScreen(self.menu.makeScreen())
+
 	def parseTransaction(self, inventory, args):
 		'''
 		Takes an inventory and an aray of args. Tests to see if either the first or 2nd arg is a known item, if it is the other (first or 2nd) is taken as the amount to be passed to put or take, returns the item name and amount. Otherwise raises a user warning.
@@ -289,7 +293,7 @@ class HeroInventory(Inventory):
 
 		try:
 			self.placeItem(self.roomInventory, itemName, amount)
-			self.refreshList()
+			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 

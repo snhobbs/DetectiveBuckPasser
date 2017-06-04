@@ -54,7 +54,7 @@ class Room(StagedSqlTable):
 		'''
 		brings up the rooms inventory
 		'''
-		self.inventory.menu.runMenu()
+		self.inventory.runMenu()
 
 	def getRoomByName(self, roomName):
 		self.roomName.value = roomName.title()#change to title case
