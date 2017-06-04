@@ -48,10 +48,10 @@ class Objects(StagedSqlTable):
 		self.listItems()
 
 	def describe(self):
-		print("\n{0.objName.value}\n-------------------\n{0.descrip.value}".format(self))
+		userInput.printToScreen("\n{0.objName.value}\n-------------------\n{0.descrip.value}".format(self))
 
 	def use(self):
-		print('That doesn\'t serve a purpose, just like your sorry ass.')
+		userInput.printToScreen('That doesn\'t serve a purpose, just like your sorry ass.')
 
 class Couch(Objects):
 	def __init__(self, db):
@@ -64,7 +64,7 @@ class Computer(Objects):
 		self.subType.value = 'COMPUTER'
 
 	def use(self):
-		print('Who would visit this website? Why does this dirt bag have it set as his home screen? Some questions are not meant to be answered.')
+		userInput.printToScreen('Who would visit this website? Why does this dirt bag have it set as his home screen? Some questions are not meant to be answered.')
 		fileName = "file:///home/simon/Documents/interests/eatABattery/home.html"
 		os.system("firefox {}".format(fileName))
 

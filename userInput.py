@@ -67,6 +67,12 @@ def printSelect(options = None, cursor = ''):
 		if(resp.isdigit() and int(resp) < len(uniqueOptions) and int(resp) >= 0):
 			return int(resp)
 
+def getTerminalSize():
+	import shutil
+	return shutil.get_terminal_size((80, 20))
+
 def printToScreen(text):
 	import textwrap
-	print('\n'.join(textwrap.wrap(text, width=90)))
+	width = getTerminalSize()[0] - 10
+	for par in text.split('\n'):
+		print('\n'.join(textwrap.wrap(par, width=width, tabsize=8)))

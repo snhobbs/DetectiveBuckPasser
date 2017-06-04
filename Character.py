@@ -50,7 +50,7 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.runMenu()
 
 	def assault(self):
-		print("That's just more paper work")
+		userInput.printToScreen("That's just more paper work")
 
 	def talk(self):
 		'''
@@ -66,7 +66,7 @@ class Character(StagedSqlTable, CharacterMenu):
 
 	def conversation(self, conv):
 		def printResp(charName, resp):
-			print("{}: {}".format(charName, resp))
+			userInput.printToScreen("{}: {}".format(charName, resp))
 		#print the conversation in an enumerated list
 		nextOpts = conv['startOpts']
 
@@ -86,7 +86,7 @@ class Character(StagedSqlTable, CharacterMenu):
 
 	def listItems(self):
 		if self.inventory is None or len(self.inventory.items) < 0:
-			print('Nothing found')
+			userInput.printToScreen('Nothing found')
 		else:
 			self.inventory.menu.runMenu()
 
@@ -94,7 +94,7 @@ class Character(StagedSqlTable, CharacterMenu):
 		self.listItems()
 
 	def describe(self):
-		print("\n{0.charName.value}\n-------------------\n{0.descrip.value}".format(self))
+		userInput.printToScreen("\n{0.charName.value}\n-------------------\n{0.descrip.value}".format(self))
 
 	def addInventory(self, inventory):
 		self.inventory = inventory

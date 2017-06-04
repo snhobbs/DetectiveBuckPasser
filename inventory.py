@@ -209,7 +209,7 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			try:
 				amount = float(input('Amount?> '))
 			except ValueError:
-				print("What?")
+				userInput.printToScreen("What?")
 		return(itemName, amount)
 
 class CharacterInventory(Inventory):
@@ -239,14 +239,14 @@ class PassiveInventory(Inventory):
 		try:
 			itemName, amount = self.parseTransaction(self.charInventory, args)
 		except UserWarning:
-			print("Item doesn't exist")
+			userInput.printToScreen("Item doesn't exist")
 			return
 
 		try:
 			self.charInventory.placeItem(itemName, amount)
 			self.refreshList()
 		except UserWarning:
-			print("Item doesn't exist or insufficient quantities for transaction")
+			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
 	def take(self, args):
 		'''
@@ -258,7 +258,7 @@ class PassiveInventory(Inventory):
 			self.placeItem(self.charInventory, itemName, amount)
 			self.refreshList()
 		except UserWarning:
-			print("Item doesn't exist or insufficient quantities for transaction")
+			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
 	def runMenu(self):
 		self.refreshList()
@@ -284,12 +284,12 @@ class HeroInventory(Inventory):
 		try:
 			itemName, amount = self.parseTransaction(self, args)
 		except UserWarning:
-			print("Item doesn't exist {}".format(args))
+			userInput.printToScreen("Item doesn't exist {}".format(args))
 			return
 
 		try:
 			self.placeItem(self.roomInventory, itemName, amount)
 			self.refreshList()
 		except UserWarning:
-			print("Item doesn't exist or insufficient quantities for transaction")
+			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
