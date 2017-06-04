@@ -288,9 +288,8 @@ class HeroInventory(Inventory):
 		try:
 			itemName, amount = self.parseTransaction(self, args)
 		except UserWarning:
-			userInput.printToScreen("Item doesn't exist {}".format(args))
+			userInput.printToScreen("Item doesn't exist")
 			return
-
 		try:
 			self.placeItem(self.roomInventory, itemName, amount)
 			self.refreshInventory()

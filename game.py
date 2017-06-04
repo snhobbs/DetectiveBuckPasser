@@ -16,7 +16,6 @@ To do:
 1) remove simpleaudio if possible with wav
 '''
 
-
 class GameCommands(object):
 	'''
 	self.currRoom is the room the character is in
@@ -34,9 +33,9 @@ class GameCommands(object):
 			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing'),
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
-			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
-			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
-			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around')
+			'items':userInput.Command(func=self.buckPasser.listItems, takesArgs=True, descrip = 'List what you have on you'),
+			'search':userInput.Command(func=self.self.currRoom.commands['search'].run, takesArgs=True, descrip = 'Root around for something'),
+			'look':userInput.Command(func=self.currRoom.look, takesArgs=False, descrip = 'Look around')
 			}
 
 		self.neighbors = None
@@ -142,12 +141,6 @@ class GameCommands(object):
 		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
 		#self.currRoom.look()
 
-	def search(self, subject = None):
-		self.currRoom.commands['search'].run()
-
-	def listItems(self):
-		self.buckPasser.listItems()
-
 	def getRoomNeighbors(self):
 		room = Room.Room(self.db)
 		self.neighbors = {}
@@ -155,9 +148,6 @@ class GameCommands(object):
 			room.setCode(code)
 			room.readFromDB(self.stage)
 			self.neighbors.update({room.roomName.value : int(code)})
-
-	def printNeighbors(self):
-		userInput.printToScreen("Neighboring Rooms:\n\t{}".format('\n\t'.join(key for key in sorted(self.neighbors.keys())[::-1])))#prints the lowest room code first
 
 	def move(self, room = None):
 		'''
@@ -192,16 +182,13 @@ class GameCommands(object):
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room))
 
-	def look(self):
-		self.currRoom.look()
-
 class GameMenu(Menu):
 	def __init__(self, db):
 		Menu.__init__(self, db, title =  'Start Menu', description="", cursor = " Start Menu> ")
 		self.addOption(MenuOption(db = db, title = "Quit Game", description="Exit Game", commit = True, clear=True, action = self._exit))
 		self.addOption(MenuOption(db = db, title = "Save", description="", commit = True, clear=True, action = self._save))
 		self.addOption(MenuOption(db = db, title = "Load", description="Load a previous save", commit = False, clear=True, action=self._load))
-		self.addOption(MenuOption(db = db, title = "Music", description="Play some sultry tunes", commit = False, clear=True, action=self.music))
+		self.addOption(MenuOption(db = db, title = "Music", description="Play some sultry tunes", commit = False, clear=True, action=self.musicMenu.runMenu))
 
 	def startMenu(self):
 		self.runMenu()
@@ -243,9 +230,6 @@ class Game(GameCommands, GameMenu):
 			self.musicMenu.musicProcess.terminate()
 		except:
 			pass
-
-	def music(self, args = None):
-		self.musicMenu.runMenu()
 
 	def __setupGame(self):
 		self.currRoom = Room.Room(self.db)
