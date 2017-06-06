@@ -238,7 +238,7 @@ class StartGame(Menu):
 			dbFile = "game_{}.db".format(userInput.inputUniversal('Enter a save name> ').upper().replace(' ','_').strip())
 
 		if os.path.isfile(dbFile):
-			raise UserWarning("File name {} exists")
+			raise UserWarning("File name {} exists".format(dbFile))
 
 		db = sqlite3.connect(dbFile)
 		# make the new db ensuring its not writing over another file of the same name
