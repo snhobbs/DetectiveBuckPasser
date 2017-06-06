@@ -107,23 +107,27 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		return None #item not in inventory
 
 	def _moveItem(self, itemName, amount):
+		import math
 		inventEntry = self.getItemEntryByName(itemName)
 		if inventEntry is None:
 			raise UserWarning("Item {} doesn't exist".format(itemName))
 
-		if(float(amount) <= 0):
-			raise UserWarning("You can't move an amount <= 0 you clot")
+		if(float(amount) <= float(inventEntry.item.smallestUnit.value)):
+			raise UserWarning("You can't move an amount <= the smallest unit you clot")
 
 		if(float(amount) > float(inventEntry.amount)):
 			raise UserWarning("You don't have enough to do that")
-		remaining = float(inventEntry.amount) - float(amount)
 
-		if remaining < 1e-3:#FIXME this is gross
+		discreteAmount = math.floor(float(amount)/float(inventEntry.item.smallestUnit.value)) # Amount in units of the smallestUnit
+		adjustedAmount = discreteAmount*float(inventEntry.item.smallestUnit.value)
+		remaining = float(inventEntry.amount) - adjustedAmount
+
+		if float(remaining) < float(inventEntry.item.smallestUnit.value):
 			self.items.pop(self.items.index(inventEntry))
 			self.deleteSql(inventEntry.item.tableCode)#delete item from inventory
 		else:
 			inventEntry.amount = remaining
-		return (inventEntry.item.code, amount)
+		return (inventEntry.item.code, adjustedAmount)
 
 	def placeItem(self, inventory, itemName, amount):
 		'''
@@ -132,7 +136,7 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		assert(isinstance(inventory, Inventory))
 		try:
 			itemCode, itemAmount = self._moveItem(itemName, amount)
-			assert(itemAmount == amount)
+			# itemAmount is the highest whole value of the items smallest unit that is <= amount
 			inventory.addItem(itemCode, itemAmount)
 		except UserWarning as uw:
 			print(uw)
@@ -222,7 +226,7 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 
 		if amount is None:
 			try:
-				amount = float(input('Amount?> '))
+				amount = float(userInput.inputUniversal('Amount?> '))
 			except ValueError:
 				userInput.printToScreen("What?")
 		return(itemName, amount)
@@ -276,13 +280,14 @@ class PassiveInventory(Inventory):
 		Add an item to this inventory from charInventory
 		'''
 		try:
-			itemName, amount = self.parseTransaction(self.charInventory, args)
+			itemName, amount = self.parseTransaction(inventory = self.charInventory, args = args)
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist")
 			return
 
 		try:
-			self.charInventory.placeItem(itemName, amount)
+			print(itemName, amount)
+			self.charInventory.placeItem(inventory = self, itemName = itemName, amount = amount)
 			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
@@ -292,9 +297,9 @@ class PassiveInventory(Inventory):
 		move an item from this inventory to the charInventory
 		'''
 
-		itemName, amount = self.parseTransaction(self, args)
+		itemName, amount = self.parseTransaction(inventory = self, args = args)
 		try:
-			self.placeItem(self.charInventory, itemName, amount)
+			self.placeItem(inventory = self.charInventory, itemName = itemName, amount = amount)
 			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
@@ -321,12 +326,12 @@ class HeroInventory(Inventory):
 
 	def drop(self, args):
 		try:
-			itemName, amount = self.parseTransaction(self, args)
+			itemName, amount = self.parseTransaction(inventory = self, args = args)
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist")
 			return
 		try:
-			self.placeItem(self.roomInventory, itemName, amount)
+			self.placeItem(inventory = self.roomInventory, itemName = itemName, amount = amount)
 			self.refreshInventory()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
