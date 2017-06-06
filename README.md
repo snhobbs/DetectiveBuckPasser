@@ -15,7 +15,7 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 </p>
 
 <h2><b>Rave Reviews</b></h2>
-<ul>
+<ul id="reviews" font-size=25px>
 <li>"Please stop calling us" - IGN</li>
 
 <li>"Notification: emails flagged as spam" - Giantbomb.com</li>
@@ -46,8 +46,6 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 <li>Programs 		 | Python3, sqlite3</li>
 
-<h3>Optional:</b>
-
-<h3>For sound to work:</h3>
+<h3>Optional {For sound to work:} </h3>
 
 <li>Python3 Packages | simpleaudio>=1.0.1 (On Linux this requires libasound2-dev)</li>
