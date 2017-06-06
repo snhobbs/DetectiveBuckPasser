@@ -13,10 +13,6 @@ class BaseMenu(object):
 		self.title = title
 		self.description = description
 
-	def clearLines(self, lines):
-		pass
-		#userInput.printToScreen("\033[F\033[K" * lines)
-
 	def borderString(self):
 		columns, rows = userInput.getTerminalSize()
 		return ''.center(columns,'#')
@@ -135,8 +131,6 @@ class ListMenu(BaseMenu):
 		for command in self.commands:
 			if not self.commands[command].hide:
 				userInput.printToScreen('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
-		input('Enter to continue')
-		self.clearLines(3+len(self.commands))
 
 	def exitMenu(self):
 		raise KeyboardInterrupt
@@ -145,7 +139,6 @@ class ListMenu(BaseMenu):
 		userInput.printToScreen(self.makeScreen())
 		while True:
 			varIn = input(self.cursor).lower().strip()
-			self.clearLines(2)
 			try:
 				arrayIn = varIn.split(' ')
 				command = self.commands[arrayIn[0]]
