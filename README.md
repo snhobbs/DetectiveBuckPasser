@@ -15,7 +15,7 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 </p>
 
 <h2><b>Rave Reviews</b></h2>
-<ul id="reviews" font-size=25px>
+<ul>
 <li>"Please stop calling us" - IGN</li>
 
 <li>"Notification: emails flagged as spam" - Giantbomb.com</li>
