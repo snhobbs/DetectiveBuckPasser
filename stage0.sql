@@ -2,26 +2,52 @@
 
 /**characters**/
 
-insert into chars values(0, 0, 'standard', 'Six Dollar Man', 6, "Randy Savage except with a viciously failed wrestling career following a failed marriage. Weakness are his ex wife Sharron, alimony, and the IRS.", 0,
-	'{"startOpts" : ["opt1","opt2"], "options" : {"opt1" : {"text" : "Option 1 Default", "nextOpts" : ["opt2","opt3"]}, "opt2" : {"text" : "Option 2 Default", "nextOpts" : ["opt1","opt3"]}, "opt3" : {"text" : "Option 3 Default", "nextOpts" : []}}}',
 
-	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"text" : "Option 1", "nextOpts" : []}}}'
-	, 0);
+insert into chars values(0, 0, 'Hammer Guy', "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump.", 0,
 
-insert into chars values(0, 1, 'standard', 'Bear', 1e6, "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear", 0,
-	'{"startOpts" : ["opt1","opt2"], "options" : {"opt1" : {"text" : "Option 1", "nextOpts" : ["opt2","opt3"]}, "opt2" : {"text" : "Option 2", "nextOpts" : ["opt1","opt3"]}, "opt3" : {"text" : "Option 3", "nextOpts" : []}}}',
+	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}',
+	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}', 0);
 
-	'{"startOpts" : ["opt1","opt2"], "options" : {"opt1" : {"text" : "Option 1", "nextOpts" : ["opt2","opt3"]}, "opt2" : {"text" : "Option 2", "nextOpts" : ["opt1","opt3"]}, "opt3" : {"text" : "Option 3", "nextOpts" : []}}}'
-	, 0);
+insert into chars values(0, 1, 'Bear', "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", 0,
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Om man is that a mess", "nextOpts" : []}}}', 0);
 
+insert into chars values(0, 2, 'Six Dollar Man', "Randy Savage except with a viciously failed wrestling career following a failed marriage. Weakness are his ex wife Sharron, alimony, and the IRS.", 0,
 
-insert into chars values(0, 5, 'standard', 'JFK', 1e6, "35th president of the United State of America, you know the guy. The way they reattached the bits of his head they managed to scrape off Jackie were unfortunately put together like a muppet. He now runs Tchotch Naught, a novelty store in north Any Town, USA. He's a moon landing 'truther' just like Charlie Rose... the schmuck.", 0,
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "I aint got time for this brother, you seen Sharron", "nextOpts" : []}}}', 0);
 
-	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "The flag was waving, the flag was WAVING!", "nextOpts" : []}}}',
+insert into chars values(0, 3, 'Old Lady', "There is a significant chance that she will be eaten by her herds of cats.", 0,
 
-	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "The moon landing was STTTAAAGGGEEEDDD", "nextOpts" : ["opt2"]}, "opt2" : {"ques" : "Who staged it?", "resp" : "Armstrong`s a fraaaauuuddd", "nextOpts" : []}}}'
-	, 0);
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You want the old foot in the boot?", "nextOpts" : []}}}', 0);
 
+insert into chars values(0, 4, 'Steve The Canadian', "Canadian AF. Real shithole you got here. Worse mess than when I saw this biker get in a tiffy with a moose. He's the hints.", 0,
+
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Oh hey there bud, ya want a Molson?", "nextOpts" : []}}}', 0);
+
+insert into chars values(0, 5, 'JFK', "35th president of the United State of America, you know the guy. The way they reattached the bits of his head they managed to scrape off Jackie were unfortunately put together like a muppet. He now runs Tchotch Naught, a novelty store in north Any Town, USA. He's a moon landing 'truther' just like Charlie Rose... the schmuck.", 0,
+
+	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "The moon landing was STTTAAAGGGEEEDDD", "nextOpts" : ["opt2"]}, "opt2" : {"ques" : "Who staged it?", "resp" : "Armstrong`s a fraaaauuuddd", "nextOpts" : []}}}',
+
+	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "The flag was waving, the flag was WAVING!", "nextOpts" : []}}}', 0);
+
+insert into chars values(0, 6, 'Robot', "Early Yahoo AI experiment. After learning everything it knows from the combined knowledge of Geocities, Myspace, tomagachis, and The Charlie Rose Show... the putz, he has been left unplugged and abandoned. The net of his knowledge has left him with the operating IQ of a mid 2000's Crunk rapper. Due a Nas CD left in his drive when unplugged he claims to understand 'the struggle' and knows 'the Bridge'. Thinks OE in plastic is bullshit, coincidentaly Charlie Roses favorite beverage, the narc.", 0,
+
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "404: Robot not found", "nextOpts" : []}}}', 0);
+
+insert into chars values(0, 7, 'Joe', "Bear's AA sponsor, had to constantly deal with bear", 0,
+
+	NULL, '{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Im not gonna say Im glad hes dead, but we havent had to hear anymore Reel Big Fish...", "nextOpts" : []}}}', 0);
+
+insert into chars values(0, 8, 'Veterinarian', "Battle fatigued veterinarian. He enjoys putting down animals a bit too much. 'You ever seen what piano wire will do to a pomeranians neck?", 0,
+
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Well, lost another patient", "nextOpts" : []}}}', 0);
+
+insert into chars values(0, 10, 'Derrick The Salesman', "Don't buy a car from this guy", 0,
+
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Heeyyy muchacho, wanna buy a Pontiac?", "nextOpts" : []}}}', 0);
+
+insert into chars values(0, 11, 'Guy Fieri', "Oh dear god no", 0,
+
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Welcome to Flavortown", "nextOpts" : []}}}', 0);
 
 /**objects**/
 insert into objects values(0,0, 'couch', 'Your shitty beige couch', 'It looks like it used to be suade before the layers of hair grease and cheap whiskey have left it in a state reminiscent of your soul.',0);
@@ -48,22 +74,22 @@ insert into rooms values(0,7,'Second Floor','6,7,8,12,13,14', NULL, "Second Floo
 insert into rooms values(0,8,'Third Floor','6,7,8,15,16,17', NULL, "Third Floor", 0,NULL);
 
 --
-insert into rooms values(0,9,'1 A','6,7,8,20', NULL, "Apartment 1A", 0,NULL);
-insert into rooms values(0,10,'1 B','6,7,8,19', NULL, "Apartment 1B", 0,NULL);
-insert into rooms values(0,11,'1 C','6,7,8,20', NULL, "Apartment 1C", 0,NULL);
+insert into rooms values(0,9,'1 A','6,7,8,20', '4', "Apartment 1A", 0,NULL);
+insert into rooms values(0,10,'1 B','6,7,8,19', '6', "Apartment 1B", 0,NULL);
+insert into rooms values(0,11,'1 C','6,7,8,20', '7', "Apartment 1C", 0,NULL);
 
-insert into rooms values(0,12,'2 A','6,7,8', NULL, "Third Floor", 0,NULL);
-insert into rooms values(0,13,'2 B','6,7,8', NULL, "Third Floor", 0,NULL);
-insert into rooms values(0,14,'2 C','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,12,'2 A','6,7,8', '8', "Apartment 2A", 0,NULL);
+insert into rooms values(0,13,'2 B','6,7,8', NULL, "Apartment 2B", 0,NULL);
+insert into rooms values(0,14,'2 C','6,7,8', '10', "Apartment 2C", 0,NULL);
 
-insert into rooms values(0,15,'3 A','6,7,8', NULL, "Third Floor", 0,NULL);
-insert into rooms values(0,16,'3 B','6,7,8', NULL, "Third Floor", 0,NULL);
-insert into rooms values(0,17,'3 C','6,7,8', NULL, "Third Floor", 0,NULL);
+insert into rooms values(0,15,'3 A','6,7,8', '1', "Apartment 3A", 0,NULL);
+insert into rooms values(0,16,'3 B','6,7,8', '3', "Apartment 3B", 0,NULL);
+insert into rooms values(0,17,'3 C','6,7,8', '2', "Apartment 3C", 0,NULL);
 
 insert into rooms values(0,18,'Bathroom','9', NULL, "On suite bathroom for 1A", 0,NULL);
 insert into rooms values(0,19,'Bathroom','10', NULL, "On suite bathroom for 1B", 0,NULL);
 insert into rooms values(0,20,'Bathroom','11', NULL, "On suite bathroom for 1C", 0,NULL);
 
 insert into rooms values(0,21,'Home Depot','4,21,22', NULL, "Home depot parking lot", 0,NULL);
-insert into rooms values(0,22,'Pontiac Fiero','21,22', NULL, "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 0,NULL);
-insert into rooms values(0,23,'Murder Scene', '5,6', NULL, "Gruesome murder scene", 0,NULL);
+insert into rooms values(0,22,'Pontiac Fiero','21,22', '0', "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 0,NULL);
+insert into rooms values(0,23,'Murder Scene', '5,6', '1', "Gruesome murder scene", 0,NULL);
