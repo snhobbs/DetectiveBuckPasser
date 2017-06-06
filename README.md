@@ -8,7 +8,7 @@ Detective Passer has two goals in his day to day life: don't do any paperwork an
 
 You play as Detective Buck Passer in his first text based adventure game. The developers would like to claim this design choice opens up a more imaginative world. The truth of why there is no animation probably falls closer to these inbreds never being able to color in the lines.
 
-There has been a murder at an apartment block in the Bowery, it is up to Buck Passer to do what he does best: mess up the crime scene to push the body onto another department so he doesn't have to do the paperwork.
+There has been a murder at an apartment block in the Bowery, it is up to Buck Passer to do what he does best: mess up the crime scene to push the body onto another task force so he doesn't have to do the paperwork.
 
 <center>
 
