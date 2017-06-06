@@ -21,10 +21,11 @@ Characters:
 	- JFK -> 5
 	- Robot -> 6
 	- AA Sponser -> 7
-	- AA Sponsers roommate -> 8
-	- Guy Fieri -> 9
-	- Veterinarian -> 10
-	- Salesman -> 11
+	- Veterinarian -> 8
+
+	- Roommate ->9
+	- Salesman -> 10
+	- Guy Fieri -> 11
 
 items:
 

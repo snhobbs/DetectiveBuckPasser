@@ -1,1 +1,3 @@
 -> Beefarino, for the man that's given up (Marketing poster for inspecting beefarino)
+
+print("As you unholster the greasy tarnished M1911 you see the look of exceptance in Six Dollar's eyes. He embraces the sweet release of death, you reholster your gun, who are you to give such satisfaction?")
