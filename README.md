@@ -16,37 +16,38 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 <h2><b>Rave Reviews</b></h2>
 <ul>
-<li>"Please stop calling us" - IGN
+<li>"Please stop calling us" - IGN</li>
 
-<li>"Notification: emails flagged as spam" - Giantbomb.com
+<li>"Notification: emails flagged as spam" - Giantbomb.com</li>
 
-<li>"We're calling security" - Charles the Doorman, Waypoint, Vice Media
+<li>"We're calling security" - Charles the Doorman, Waypoint, Vice Media</li>
 
-<li>"Cease and desist" NYPD's 9th Precinct
+<li>"Cease and desist" NYPD's 9th Precinct</li>
 
-<li>"You'll be hearing from my counsel" - Charlie Rose
-
+<li>"You'll be hearing from my counsel" - Charlie Rose</li>
+</ul>
 
 
 <h2><b>Features</b></h2>
 
-<p>Full QWERTY keyboard compatibility!</p>
+<ul>
+<li> Full QWERTY keyboard compatibility! </li>
 
-<p>Breakthrough 1976 technology!</p>
-
+<li> Breakthrough 1976 technology! </li>
+</ul>
 
 
 
 <h2><b>Dependencies</b></h2>
 
-<b>Requirements:</b>
+<h3>Requirements:</h3>
+<ul>
+<li>System			 | Not Windows</li>
 
-<p>System			 | Not Windows</p>
+<li>Programs 		 | Python3, sqlite3</li>
 
-<p>Programs 		 | Python3, sqlite3</p>
+<h3>Optional:</b>
 
-<b>Optional:</b>
+<h3>For sound to work:</h3>
 
-<p>For sound to work:</p>
-
-<p>Python3 Packages | simpleaudio>=1.0.1 (On Linux this requires libasound2-dev)</p>
+<li>Python3 Packages | simpleaudio>=1.0.1 (On Linux this requires libasound2-dev)</li>
