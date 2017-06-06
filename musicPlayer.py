@@ -1,12 +1,12 @@
 #musicPlayer.py
-import simpleaudio as sa
 from multiprocessing import Process, Queue
 import os
 import random
 from menus import Menu, MenuOption
-from userInput import printSelect
+import userInput
 
 def playClip(fileIn):
+	import simpleaudio as sa
 	wave_obj = sa.WaveObject.from_wave_file(fileIn)
 	playObj = wave_obj.play()
 	playObj.wait_done()
@@ -30,7 +30,8 @@ def music(dirName = './', mode = 'single', repeat = False):
 	repeat = True
 	if mode == 'single':
 		optionTitles = [':\t'.join(option.split('/')[-1].split('.')[-2].split('+')) for option in options if option.split('.')[-1] == 'wav']
-		filesToOpen = prepFiles(dirName, options[printSelect(options = optionTitles, cursor = 'Select some sultry tunes> ')])
+		fileName = options[userInput.printSelect(options = optionTitles, cursor = 'Select some sultry tunes> ')]
+		filesToOpen = prepFiles(dirName, fileName)
 	elif mode == 'shuffle':
 		random.shuffle(options, random.random)
 		filesToOpen = prepFiles(dirName, options)
@@ -75,3 +76,9 @@ class MusicMenu(Menu):
 		except:
 			#print("Cant mute")
 			pass
+
+	def runMenu(self):
+		if userInput.checkForPackage('simpleaudio'):
+			super().runMenu()
+		else:
+			userInput.printToScreen("Simpleaudio isn't installed. Install this package to get sound.")

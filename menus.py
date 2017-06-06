@@ -59,7 +59,7 @@ class Menu(BaseMenu):
 	def runMenu(self):
 		userInput.printToScreen(self.makeScreen())
 		while True:
-			varIn = input(self.cursor).upper().strip()
+			varIn = userInput.inputUniversal(self.cursor).upper().strip()
 
 			if(varIn.isdigit() and int(varIn) <= len(self.MenuOptions)):
 				try:
@@ -138,7 +138,7 @@ class ListMenu(BaseMenu):
 	def runMenu(self):
 		userInput.printToScreen(self.makeScreen())
 		while True:
-			varIn = input(self.cursor).lower().strip()
+			varIn = userInput.inputUniversal(self.cursor).lower().strip()
 			try:
 				arrayIn = varIn.split(' ')
 				command = self.commands[arrayIn[0]]
