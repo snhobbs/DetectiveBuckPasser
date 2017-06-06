@@ -124,10 +124,22 @@ class GameCommands(object):
 		if self.currRoom.characters == None:
 			userInput.printToScreen("No one is here")
 			return
-		if charName == None:
-			charName = [input("Who do you want to talk to? ").strip()]
-		self.__makeCommand(subject = charName, command = 'talk', onCharacter = True)
-		#self.currRoom.look()
+
+		if type(charName) in [tuple, list]:
+			charName = ' '.join(charName).upper()
+
+		elif charName == None:
+			options = ['No one']
+			options.extend(char.charName.value for char in self.currRoom.characters)
+
+			selection = userInput.printSelect(options = options, cursor = 'To Whom?> ')
+			if(selection == 0):
+				return
+			else:
+				charName = options[selection]
+		char = [char for char in self.currRoom.characters if char.charName.value.upper() == charName]
+		if len(char) > 0:
+			char[0].talk()
 
 	def getRoomNeighbors(self):
 		room = Room.Room(self.db)
