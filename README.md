@@ -12,7 +12,7 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 <center>
 
-<b>Rave Reviews</b>
+<h2><b>Rave Reviews</b></h2>
 
 "Please stop calling us" - IGN
 
@@ -28,7 +28,7 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 <center>
 
-<b>Features</b>
+<h2><b>Features</b></h2>
 
 Full QWERTY keyboard compatibility!
 
@@ -37,10 +37,16 @@ Breakthrough 1976 technology!
 </center>
 
 
-<b>Dependencies</b>
+<h2><b>Dependencies</b></h2>
+
+<b>Requirements:</b>
 
 System			 | Not Windows
 
-Programs 		 | Python3, sqlite3, pip3, libasound2-dev
+Programs 		 | Python3, sqlite3
 
-Python3 Packages | simpleaudio>=1.0.1
+<b>Optional:</b>
+
+For sound to work:
+
+Python3 Packages | simpleaudio>=1.0.1 (On Linux this requires libasound2-dev)
