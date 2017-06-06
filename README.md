@@ -42,7 +42,20 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 
 <h3>Requirements:</h3>
 <ul>
-<li>System			 | Not Windows</li>
+<li>Systems:
+	<ul>
+		<li>Linux</li>
+		<li>Mac OS</li>
+		<li>FreeBSD</li>
+		<li>Windows</li>
+		<li>AIX</li>
+		<li>Solaris</li>
+		<li>PDP-11</li>
+		<li>OS/2</li>
+		<li>MULTICS</li>
+		<li>VAX-VMS</li>
+		<li>DOS 1.0 (Later versions not supported)</li>
+	</ul>
 
 <li>Programs 		 | Python3, sqlite3</li>
 </ul>
