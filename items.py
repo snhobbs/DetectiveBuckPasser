@@ -1,14 +1,5 @@
 #items.py
 from sqlTable import SQLTable
-def itemFactory(db, subType):
-	itemDict = {
-		'general':Item
-	}
-	try:
-		return itemDict[subType](db)
-	except KeyError:
-		raise UserWarning('Unknown item type {}'.format(subType))
-
 
 class Item(SQLTable):
 	def __init__(self, db):
@@ -20,7 +11,3 @@ class Item(SQLTable):
 
 		self.table = 'items'
 		self.codeName = 'itemCode'
-
-	def loadItem(self, inventoryEntry):
-		item = itemFactory(self.db, inventoryEntry)
-		item.readFromDB()
