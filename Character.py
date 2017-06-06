@@ -24,17 +24,15 @@ class Character(StagedSqlTable, CharacterMenu):
 		StagedSqlTable.__init__(self, db)
 		self.code = code
 		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = 0, elementType = 'INT')
-		self.subType = self.elementTable.addElement(title = 'Characters Type', name = 'subType', value = 'standard', elementType = 'STRING', updatable = False)
 		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = None, elementType = 'STRING', updatable = False)
-		self.money = self.elementTable.addElement(title = 'Characters Net Worth', name = 'money', value = None, elementType = 'FLOAT')
 		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = None, elementType = 'STRING', updatable = False)
 		self.jsonConv = self.elementTable.addElement(title = 'Conversation Object', name = 'conv', value = None, elementType = 'STRING', updatable = False)
 		self.defaultJsonConv = self.elementTable.addElement(title = 'Conversation Object After Interaction', name = 'defaultConv', value = None, elementType = 'STRING', updatable = False)
 		self.interactedFlag = self.elementTable.addElement(title = 'Stage Interaction Flag', name = 'interactedFlag', value = None, elementType = 'BOOL')
+		self.inventoryCode = self.elementTable.addElement(title = 'Character Inventory', name = 'inventoryCode', value = None, elementType = 'INT')
 
 		self.table = 'chars'
 		self.codeName = 'charCode'
-		self.inventoryCode = None
 		self.inventory = None
 		self.addInventory(inventory.Inventory(self.db))
 		CharacterMenu.__init__(self, db)
@@ -57,7 +55,7 @@ class Character(StagedSqlTable, CharacterMenu):
 		Pass JSON conversation to self.conversation
 		'''
 		import json
-		if(self.interactedFlag.value in [True, 'True', '1', 1] or self.jsonConv.value is None):
+		if(self.interactedFlag.value in [True, 'True', '1', 1] or self.jsonConv.value in [None, 'None', '', 'Null','NULL']):
 			conv = json.loads(self.defaultJsonConv.value)
 		else:
 			conv = json.loads(self.jsonConv.value)
@@ -98,5 +96,5 @@ class Character(StagedSqlTable, CharacterMenu):
 
 	def addInventory(self, inventory):
 		self.inventory = inventory
-		self.inventoryCode = self.inventory.code
+		self.inventoryCode.value = self.inventory.code
 		self.inventory.writeToDB()
