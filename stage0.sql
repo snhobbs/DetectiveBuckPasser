@@ -1,7 +1,7 @@
 /**stage0.sql**/
 
 /**characters**/
-
+insert into game values(0,0);
 
 insert into chars values(0, 0, 'Hammer Guy', "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump.", 0,
 

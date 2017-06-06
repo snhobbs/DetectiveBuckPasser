@@ -57,6 +57,7 @@ class Menu(BaseMenu):
 		raise KeyboardInterrupt
 
 	def runMenu(self):
+		outVal = None
 		userInput.printToScreen(self.makeScreen())
 		while True:
 			varIn = userInput.inputUniversal(self.cursor).upper().strip()
@@ -64,9 +65,8 @@ class Menu(BaseMenu):
 			if(varIn.isdigit() and int(varIn) <= len(self.MenuOptions)):
 				try:
 					if(self.MenuOptions[int(varIn) -1].clear):
-						os.system('clear')
 						userInput.printToScreen(self.makeScreen())
-					self.MenuOptions[int(varIn) -1].run()
+					outVal = self.MenuOptions[int(varIn) -1].run()
 					if(self.MenuOptions[int(varIn) -1].commit):
 						self.db.commit()
 					break
@@ -75,6 +75,7 @@ class Menu(BaseMenu):
 				except UserWarning as uw:
 					print(uw)
 					continue
+		return outVal
 
 	def addOption(self, option):
 		self.MenuOptions.append(option)
@@ -106,7 +107,7 @@ class MenuOption(object):
 
 	def run(self):
 		if self.action != None:
-			self.action()
+			return self.action()
 
 class ListMenu(BaseMenu):
 	'''

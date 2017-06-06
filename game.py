@@ -1,9 +1,24 @@
 #!/usr/bin/python3
 import Room, hero, Character, objects, inventory, userInput
-import readline, traceback, sqlite3, os
+import readline, traceback, sqlite3
 from gameEvents import EventManager
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
+from sqlTable import SQLTable
+
+def loadSQLFile(db, fileName):
+	sqlLines = []
+	with open(fileName, 'r') as f:
+		for line in f:
+			sqlLines.append(line)
+	db.executescript('\n'.join(sqlLines))
+
+class GameTable(SQLTable):
+	def __init__(self, db):
+		SQLTable.__init__(self, db)
+		self.table = 'game'
+		self.codeName = 'code'
+		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = None, elementType = 'INT')
 
 class GameCommands(object):
 	'''
@@ -208,31 +223,60 @@ class GameMenu(Menu):
 
 	def startMenu(self):
 		self.runMenu()
-		os.system('clear')
 		self.currRoom.look()
+
+class StartGame(Menu):
+	def __init__(self):
+		Menu.__init__(self, db = None, title =  'Detective Buck Passer', description="", cursor = "Game Menu> ")
+		self.addOption(MenuOption(db = None, title = "New Game", description="It's your own funeral", commit = False, action = self._newGame))
+		self.addOption(MenuOption(db = None, title = "Load", description="Load a previous save", commit = False, action=self._loadGame))
+
+	def _newGame(self, dbFile = None):
+		import os
+		if dbFile is None:
+			# Get a new game name
+			dbFile = "game_{}.db".format(userInput.inputUniversal('Enter a save name> ').upper().replace(' ','_').strip())
+
+		if os.path.isfile(dbFile):
+			raise UserWarning("File name {} exists")
+
+		db = sqlite3.connect(dbFile)
+		# make the new db ensuring its not writing over another file of the same name
+		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql', 'stage0.sql']
+		for sqlFile in sqlFiles:
+			loadSQLFile(db = db, fileName = sqlFile)
+		db.commit()
+		return dbFile
+
+	def _loadGame(self):
+		import glob
+		# Print a list of the available saves, have them choose one and load it in
+		dbs = glob.glob('game_*.db')
+		if len(dbs) < 1:
+			print('No Saved Games')
+			return
+
+		dbFile = userInput.printSelectGetOption(options = dbs, cursor = "Choose a saved game> ")
+		if dbFile is not None:
+			db = sqlite3.connect(dbFile)
+			db.commit()
+			return dbFile
 
 class Game(GameCommands, GameMenu):
 	def __init__(self, dbFile):
-		import glob
-		self.stage = 0
-		self.dbFile = dbFile
-		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql'] + glob.glob('stage*.sql')
-		for sqlFile in sqlFiles:
-			self.loadSQLFile(sqlFile)
-
-		os.stderr = open('log.log', 'w+')
-		self.db = sqlite3.connect(self.dbFile)
+		import os
+		self.stage = None
 		self.musicProcess = None
+		os.stderr = open('log.log', 'w+')
+		self.db = sqlite3.connect(dbFile)
 		GameCommands.__init__(self, self.db)
 		GameMenu.__init__(self, self.db)
 		self.musicMenu = MusicMenu(self.db, self.musicProcess)
 		self.eventManager = EventManager(self.db)
-
-	def loadSQLFile(self, fileName):
-		os.system("sqlite3 {0} < {1}".format(self.dbFile, fileName))#FIXME this is not cross platform
+		self._load()
 
 	def _loadStage(self):
-		self.loadSQLFile('stage{}.sql'.format(self.stage))
+		loadSQLFile(db = self.db, fileName = 'stage{}.sql'.format(self.stage))
 
 	def _exit(self):
 		self._save()
@@ -240,7 +284,11 @@ class Game(GameCommands, GameMenu):
 		exit(0)
 
 	def _load(self):
-		print("Not Implimented")
+		gameDB = GameTable(self.db)
+		gameDB.setCode(0)
+		gameDB.readFromDB()
+		self.stage = gameDB.stage.value
+		self.__setupGame()
 
 	def _save(self):
 		self.buckPasser.inventory.updateTable()
@@ -263,13 +311,15 @@ class Game(GameCommands, GameMenu):
 		self.buckPasser.inventory.refreshList()
 
 		self.currRoom = Room.Room(self.db)
-		self.currRoom.setCode(0)
+		self.currRoom.setCode(0) # you always start in your apartment on loading
 		self.setupNewRoom()
 
 		self.buckPasser.inventory.roomInventory = self.currRoom.inventory
-
 		self.getRoomNeighbors()
-		self._save()
+
+	def setStage(self, stage):
+		self.stage = stage
+		self._loadStage()
 
 	def checkStage(self):
 		'''
@@ -277,13 +327,11 @@ class Game(GameCommands, GameMenu):
 		'''
 		stageCheck = self.eventManager.checkGameEvent(self.buckPasser.inventory, self.currRoom)
 		if(stageCheck is not None):
-			self.stage = stageCheck
-			self._loadStage()
+			self.setStage(stageCheck)
 		self._save()
 
 	def run(self):
 		try:
-			self.__setupGame()
 			self.currRoom.look()
 
 			lastRoom = self.currRoom
@@ -299,13 +347,20 @@ class Game(GameCommands, GameMenu):
 					exit(1)
 		finally:
 			self.db.close()
-dataBaseFile = 'gameDB.db'
 
-try:
-	os.remove(dataBaseFile)#remove any previous file
-except FileNotFoundError:
-	pass
+if __name__ == "__main__":
+	import os
+	debug = False
 
-gameObj = Game(dataBaseFile)
-gameObj.linepad = userInput.getTerminalSize()[0]
-gameObj.run()
+	start = StartGame()
+	if(debug):
+		fdb = 'game.db'
+		os.system("rm %s"%fdb)
+		dbFile = start._newGame(fdb)
+	else:
+		dbFile = start.runMenu()
+
+	if dbFile is not None:
+		gameObj = Game(dbFile)
+		gameObj.linepad = userInput.getTerminalSize()[0]
+		gameObj.run()
