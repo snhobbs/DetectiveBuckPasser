@@ -218,7 +218,7 @@ class Game(GameCommands, GameMenu):
 		self.dbFile = dbFile
 		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql'] + glob.glob('stage*.sql')
 		for sqlFile in sqlFiles:
-			os.system("sqlite3 {0} < {1}".format(self.dbFile, sqlFile))#FIXME this is not cross platform
+			self.loadSQLFile(sqlFile)
 
 		os.stderr = open('log.log', 'w+')
 		self.db = sqlite3.connect(self.dbFile)
@@ -227,6 +227,12 @@ class Game(GameCommands, GameMenu):
 		GameMenu.__init__(self, self.db)
 		self.musicMenu = MusicMenu(self.db, self.musicProcess)
 		self.eventManager = EventManager(self.db)
+
+	def loadSQLFile(self, fileName):
+		os.system("sqlite3 {0} < {1}".format(self.dbFile, fileName))#FIXME this is not cross platform
+
+	def _loadStage(self):
+		self.loadSQLFile('stage{}.sql'.format(self.stage))
 
 	def _exit(self):
 		self._save()
@@ -272,6 +278,7 @@ class Game(GameCommands, GameMenu):
 		stageCheck = self.eventManager.checkGameEvent(self.buckPasser.inventory, self.currRoom)
 		if(stageCheck is not None):
 			self.stage = stageCheck
+			self._loadStage()
 		self._save()
 
 	def run(self):
