@@ -15,16 +15,16 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 </p>
 
 <h2><b>Rave Reviews</b></h2>
+<ul>
+<li>"Please stop calling us" - IGN
 
-<p>"Please stop calling us" - IGN</p>
+<li>"Notification: emails flagged as spam" - Giantbomb.com
 
-<p>"Notification: emails flagged as spam" - Giantbomb.com</p>
+<li>"We're calling security" - Charles the Doorman, Waypoint, Vice Media
 
-<p>"We're calling security" - Charles the Doorman, Waypoint, Vice Media</p>
+<li>"Cease and desist" NYPD's 9th Precinct
 
-<p>"Cease and desist" NYPD's 9th Precinct</p>
-
-<p>"You'll be hearing from my counsel" - Charlie Rose</p>
+<li>"You'll be hearing from my counsel" - Charlie Rose
 
 
 
