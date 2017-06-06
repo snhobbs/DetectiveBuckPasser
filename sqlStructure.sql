@@ -28,13 +28,11 @@ create table inventory(
 create table chars(
 	stage int NOT NULL,
 	charCode int NOT NULL,
-	subType string NOT NULL,
 	charName text NOT NULL,
-	money float NOT NULL,
 	descrip text NOT NULL,
 	inventoryCode int,
-	defaultConv text NOT NULL,
 	conv text,
+	defaultConv text NOT NULL,
 	interactedFlag bool NOT NULL,
 	primary key(stage, charCode)
 );
