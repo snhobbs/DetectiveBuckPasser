@@ -45,7 +45,10 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 <li>System			 | Not Windows</li>
 
 <li>Programs 		 | Python3, sqlite3</li>
+</ul>
 
-<h3>Optional {For sound to work:} </h3>
+<h4>Optional {For sound to work:}</h4>
 
+<ul>
 <li>Python3 Packages | simpleaudio>=1.0.1 (On Linux this requires libasound2-dev)</li>
+</ul>
