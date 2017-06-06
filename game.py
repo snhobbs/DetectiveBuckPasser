@@ -4,10 +4,6 @@ import readline, traceback, sqlite3, os
 from gameEvents import EventManager
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
-'''
-To do:
-1) remove simpleaudio if possible with wav
-'''
 
 class GameCommands(object):
 	'''
@@ -117,27 +113,27 @@ class GameCommands(object):
 
 	def describe(self, subject = None):
 		if subject == None:
-			subject = [input('Describe What? :  ').strip().lower()]
-		self.__makeCommand(subject = subject, command = 'describe', onObject = True, onCharacter = True, onItem = True)
+			userInput.printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit')
+			subject = userInput.printSelectGetOption(options = [obj.objName.value for obj in self.currRoom.objects] + [char.charName.value for char in self.currRoom.characters], cursor = 'Describe What?> ')
+			if subject is None:
+				return
+		self.__makeCommand(subject = subject, command = 'describe', onObject = True, onCharacter = True)
 
 	def talkTo(self, charName = None):
 		if self.currRoom.characters == None:
 			userInput.printToScreen("No one is here")
 			return
+		elif len(self.currRoom.characters) == 1:
+			charName = self.currRoom.characters[0].charName.value
 
 		if type(charName) in [tuple, list]:
 			charName = ' '.join(charName).upper()
-
 		elif charName == None:
-			options = ['No one']
-			options.extend(char.charName.value for char in self.currRoom.characters)
-
-			selection = userInput.printSelect(options = options, cursor = 'To Whom?> ')
-			if(selection == 0):
+			charNames = [char.charName.value for char in self.currRoom.characters]
+			charName = userInput.printSelectGetOption(options = charNames, cursor = 'To Whom?> ', exitPrompt = 'No one')
+			if charName is None:
 				return
-			else:
-				charName = options[selection]
-		char = [char for char in self.currRoom.characters if char.charName.value.upper() == charName]
+		char = [char for char in self.currRoom.characters if char.charName.value.upper() == charName.upper()]
 		if len(char) > 0:
 			char[0].talk()
 
@@ -188,6 +184,7 @@ class GameCommands(object):
 			self.getRoomNeighbors()
 			self.buckPasser.roomInventory = self.currRoom.inventory
 			self.currRoom.inventory.charInventory = self.buckPasser.inventory
+			self.currRoom.inventory.refreshList()
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room))
 
@@ -288,7 +285,7 @@ class Game(GameCommands, GameMenu):
 						lastRoom.writeRoom()#saves in nontemporary way (until save)
 						lastRoom = self.currRoom
 					self.checkStage()#check to see if a game event has occured, make something happen if it has
-					userInput.userInput(self.commands, input('  > '))
+					userInput.userInput(self.commands, userInput.inputUniversal('  > '))
 				except:
 					print(traceback.format_exc())
 					exit(1)
