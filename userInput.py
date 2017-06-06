@@ -107,7 +107,7 @@ def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
 	if(selection == 0):
 		return None
 	else:
-		return options[selection]
+		return options[selection - 1]
 
 def getTerminalSize():
 	'''
