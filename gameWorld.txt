@@ -28,6 +28,12 @@ Characters:
 	- Guy Fieri -> 11
 
 items:
+	- Foot in the boot
+	- HGs keys
+	- Blow
+	- Evidence?
+	- Stuff to break the car out
+	- money
 
 
 objects:

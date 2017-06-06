@@ -57,6 +57,7 @@ class GameCommands(object):
 		self.inspection = Room.Room(self.db)
 		self.inspection.setCode(code)
 		self.inspection.loadRoom(self.stage)
+		self.inspection.inventory.charInventory = self.buckPasser.inventory
 
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:

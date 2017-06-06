@@ -47,8 +47,29 @@ class Room(StagedSqlTable):
 		'''
 		self.readFromDB(stage)
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
-		#self.inventory.setCode(int(self.inventoryCode.value))
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
+
+		self.loadInventories()
+
+	def loadInventories(self):
+		try:
+			self.inventory.setCode(self.inventoryCode.value)
+			self.inventory.readFromDB()
+		except TypeError:
+			pass
+
+		try:
+			for obj in self.objects:
+				obj.inventory = inventory.PassiveInventory(db, title = "Room Items", charInventory = None)
+				obj.inventory.readFromDB()
+		except TypeError: #will fail if no objects
+			pass
+		try:
+			for character in self.characters:
+				character.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = None) # FIXME inventory type for characters
+				character.inventory.readFromDB()
+		except TypeError as te:
+			pass
 
 	def writeRoom(self):
 		try:

@@ -148,6 +148,7 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		self.items = None
 		for amount, itemCode in resp:
 			self.loadItem(itemCode, amount)
+		self.refreshList()
 
 	def itemInInventory(self, itemCode):
 		try:
@@ -217,6 +218,7 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 				amount = args[0]
 
 		else:
+			userInput.inputUniversal("I don't know what that means")
 			raise UserWarning("Unknown arguments {}".format(args))
 
 		try:
