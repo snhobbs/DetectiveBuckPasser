@@ -46,7 +46,6 @@ class GameCommands(object):
 
 	def _getObject(self, objName = None):
 		if self.currRoom.objects == None:
-			userInput.printToScreen("There's nothing in here")
 			return False
 		try:
 			self.inspection = [obj for obj in self.currRoom.objects if obj.objName.value.lower() == objName][0]
@@ -56,7 +55,6 @@ class GameCommands(object):
 
 	def _getCharacter(self, charName = None):
 		if self.currRoom.characters == None:
-			#print('You\'re all alone')
 			return False
 		try:
 			self.inspection = [character for character in self.currRoom.characters if character.charName.value.lower() == charName][0]
@@ -128,10 +126,20 @@ class GameCommands(object):
 		self.printCommands()
 
 	def describe(self, subject = None):
-		if subject == None:
-			userInput.printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit')
-			subject = userInput.printSelectGetOption(options = [obj.objName.value for obj in self.currRoom.objects] + [char.charName.value for char in self.currRoom.characters], cursor = 'Describe What?> ')
-			if subject is None:
+		if self.currRoom.objects is None and self.currRoom.characters is None:
+			userInput.printToScreen("Theres nothing here")
+			return
+
+		if subject is None:
+			options = []
+			if self.currRoom.objects is not None:
+				options.extend(obj.objName.value for obj in self.currRoom.objects)
+
+			if self.currRoom.characters is not None:
+				options.extend(char.charName.value for char in self.currRoom.characters)
+
+			subject = [userInput.printSelectGetOption(options = options, cursor = 'Describe What?> ')]
+			if subject[0] is None:
 				return
 		self.__makeCommand(subject = subject, command = 'describe', onObject = True, onCharacter = True)
 
