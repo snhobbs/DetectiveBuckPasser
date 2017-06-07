@@ -3,11 +3,6 @@
 /**characters**/
 insert into game values(0,0);
 
-insert into chars values(0, 0, 'Hammer Guy', "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump.", 0,
-
-	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}',
-	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}', 0);
-
 insert into chars values(0, 1, 'Bear', "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", 1,
 	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Om man is that a mess", "nextOpts" : []}}}', 0);
 
@@ -49,6 +44,11 @@ insert into chars values(0, 11, 'Guy Fieri', "Oh dear god no", 11,
 
 	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Welcome to Flavortown", "nextOpts" : []}}}', 0);
 
+insert into chars values(0, 12, 'Hammer Guy', "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump.", 0,
+
+	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}',
+	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}', 0);
+
 /**objects**/
 insert into objects values(0,0, 'couch', 'Your shitty beige couch', 'It looks like it used to be suade before the layers of hair grease and cheap whiskey have left it in a state reminiscent of your soul.',0);
 
@@ -88,5 +88,5 @@ insert into rooms values(0,19,'Bathroom','10', NULL, "On suite bathroom for 1B",
 insert into rooms values(0,20,'Bathroom','11', NULL, "On suite bathroom for 1C", 120,NULL);
 
 insert into rooms values(0,21,'Home Depot','4,21,22', NULL, "Home depot parking lot", 121,NULL);
-insert into rooms values(0,22,'Pontiac Fiero','21,22', '0', "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 122,NULL);
+insert into rooms values(0,22,'Pontiac Fiero','21,22', '12', "Hammer guy's burnt out black pontiac fiero. The tires have sunk into the pavement. Probably runs fine.", 122,NULL);
 insert into rooms values(0,23,'Murder Scene', '5,6', '1', "Gruesome murder scene", 123,NULL);

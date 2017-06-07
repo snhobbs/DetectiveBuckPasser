@@ -10,6 +10,8 @@ inventory commands:
 	-> take bottle 3 or take 3 bottles
 	-> drop 3 bottles
 	-> combine bottle, rag, gasoline -> replace these with moltov
+
+	Item code None is not a number
 '''
 
 class InventoryEntry(object):
@@ -142,12 +144,12 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			print(uw)
 
 	def readFromDB(self):
-		resp = self.selectSql(columnNames = self.columnNames, conditions = (self.tableCode))
-		if(resp is None):
-			raise UserWarning("No inventory for this code '%s'"%(self.code))
 		self.items = None
-		for amount, itemCode in resp:
-			self.loadItem(itemCode, amount)
+		resp = self.selectSql(columnNames = self.columnNames, conditions = (self.tableCode))
+		if(resp is not None):
+			# inventory is not empty
+			for amount, itemCode in resp:
+				self.loadItem(itemCode, amount)
 		self.refreshList()
 
 	def itemInInventory(self, itemCode):
