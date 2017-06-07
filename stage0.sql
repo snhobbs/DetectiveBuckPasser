@@ -71,7 +71,7 @@ insert into rooms values(0,7,'Second Floor','6,7,8,12,13,14', NULL, "Second Floo
 insert into rooms values(0,8,'Third Floor','6,7,8,15,16,17', NULL, "Third Floor", 108,NULL);
 
 --
-insert into rooms values(0,9,'1 A','6,7,8,20', '4', "Apartment 1A", 109,NULL);
+insert into rooms values(0,9,'1 A','6,7,8,18', '4', "Apartment 1A", 109,NULL);
 insert into rooms values(0,10,'1 B','6,7,8,19', '6', "Apartment 1B", 110,NULL);
 insert into rooms values(0,11,'1 C','6,7,8,20', '7', "Apartment 1C", 111,NULL);
 
