@@ -33,7 +33,7 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 <ul>
 <li> Full QWERTY keyboard compatibility! </li>
 <li> Breakthrough 1976 technology! </li>
-<li> FORTRAN Punchcard compatibility coming soon! </li>
+<li> FORTRAN Punchcard format coming soon! </li>
 <li> Sharp 256 colors! </li>
 <li> Flush Toilets! </li>
 </ul>

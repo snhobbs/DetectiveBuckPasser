@@ -4,11 +4,11 @@
 insert into game values(0,0);
 
 insert into chars values(0, 1, 'Bear', "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", 1,
-	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Om man is that a mess", "nextOpts" : []}}}', 0);
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Oh man is that a mess", "nextOpts" : []}}}', 0);
 
 insert into chars values(0, 2, 'Six Dollar Man', "Randy Savage except with a viciously failed wrestling career following a failed marriage. Weakness are his ex wife Sharron, alimony, and the IRS.", 2,
 
-	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "I aint got time for this brother, you seen Sharron", "nextOpts" : []}}}', 0);
+	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "I ain|t got time for this brother, you seen Sharron", "nextOpts" : []}}}', 0);
 
 insert into chars values(0, 3, 'Old Lady', "There is a significant chance that she will be eaten by her herds of cats.", 3,
 
@@ -30,7 +30,7 @@ insert into chars values(0, 6, 'Robot', "Early Yahoo AI experiment. After learni
 
 insert into chars values(0, 7, 'Joe', "Bear's AA sponsor, had to constantly deal with bear", 7,
 
-	NULL, '{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Im not gonna say Im glad hes dead, but we havent had to hear anymore Reel Big Fish...", "nextOpts" : []}}}', 0);
+	NULL, '{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "I|m not gonna say I|m glad hes dead, but we haven|t had to hear anymore Reel Big Fish...", "nextOpts" : []}}}', 0);
 
 insert into chars values(0, 8, 'Veterinarian', "Battle fatigued veterinarian. He enjoys putting down animals a bit too much. 'You ever seen what piano wire will do to a pomeranians neck?", 8,
 
@@ -44,21 +44,21 @@ insert into chars values(0, 11, 'Guy Fieri', "Oh dear god no", 11,
 
 	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Welcome to Flavortown", "nextOpts" : []}}}', 0);
 
-insert into chars values(0, 12, 'Hammer Guy', "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump.", 0,
+insert into chars values(0, 12, 'Hammer Guy', "Piece of shit, but hey, there's a lot to this guy. He hangs out in fornt of the Home Depot waiting for people to hire him. He's a real ladies man in his thickly motor oil permeated suede duster and his burnt-out '82 Pontic Fiero. He has a pet coyote, 'Keith'. It eats crows, that thing's on the brink of death sitting next to Charlie Rose... the schlump.", 12,
 
 	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}',
 	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}', 0);
 
 /**objects**/
-insert into objects values(0,0, 'couch', 'Your shitty beige couch', 'It looks like it used to be suade before the layers of hair grease and cheap whiskey have left it in a state reminiscent of your soul.',0);
+--insert into objects values(0,0, 'couch', 'Your shitty beige couch', 'It looks like it used to be suade before the layers of hair grease and cheap whiskey have left it in a state reminiscent of your soul.',0);
 
-insert into objects values(0,1, 'computer', 'Computer', "A beige Dell covered in Cheeto dust. Some Dope website's on the screen", 1);
+--insert into objects values(0,1, 'computer', 'Computer', "A beige Dell covered in Cheeto dust. Some Dope website's on the screen", 1);
 
 /**Rooms**/
 
 /**Home Apartment - Every room is connected, only 'Home' is connected to the outside**/
-insert into rooms values(0,0,'Home', '0,1,2,3,4', NULL, "Your apartment. You sit up on your bed with a comforter that used to be blue, and sheets that used to be white. A dim fluorescent light bulb hanging from its cord oscillates in the middle of the room. A goldfish tank festers in the corner, that's a new smell. Just another damn day.", 100, NULL);
-insert into rooms values(0,1,'Bathroom', '0,1,2,3,4', NULL, "You shuffle to the corner of the room. Technically its a bathroom, minus the bath... and the room. It's just a flowery plush arm chair with the seat cut out strategically placed over an empty can of Beefarino. There's a stack of Better Homes and Gardens magazines next to the can, what mess.", 101,NULL);
+insert into rooms values(0,0,'Home', '0,1,2,3,4', NULL, "Your apartment. You sit up on your bed with a comforter that used to be blue, and sheets that used to be white. A dim fluorescent light bulb hanging from it's cord oscillates in the middle of the room. A goldfish tank festers in the corner, that's a new smell. Just another damn day.", 100, NULL);
+insert into rooms values(0,1,'Bathroom', '0,1,2,3,4', NULL, "You shuffle to the corner of the room. Technically it's a bathroom, minus the bath... and the room. It's just a flowery plush arm chair with the seat cut out strategically placed over an empty can of Beefarino. There's a stack of Better Homes and Gardens magazines next to the can, what mess.", 101,NULL);
 insert into rooms values(0,2,'Kitchen', '0,1,2,3,4', NULL, "The kitchen, oh boy the kitchen. Stacks of Beefarino and a rusty can opener. It used to be your favorite spot to watch people on the street pass by, but the window was bricked over by the new expansion of the fancy feast cannery. The brick fails to dampen the smell", 102,NULL);
 insert into rooms values(0,3,'Window', '0,1,2,3,4', NULL, "As you survey your neighborhood you realize it's the same as always. A sickening red glow from the Hustler sign douses the streets which are littered with emaciated alley cats drawn to the cannery. A hooker is eating a tire.", 103,NULL);
 
