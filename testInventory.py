@@ -1,31 +1,28 @@
 #testInventory.py
 
-import sqlite3, glob
+import sqlite3
 from inventory import *
 import copy
-class TestSuite(object):
-	dbFile = 'gameDB.db'
-	def __init__(self):
-		os.system('rm {}'.format(self.dbFile))
-		os.system('touch {}'.format(self.dbFile))
-		os.system("chmod +w {}".format(self.dbFile))
-		sqlFiles = ['sqlStructure.sql', 'items.sql'] + glob.glob('stage*.sql')
-		for sqlFile in sqlFiles:
-			os.system('sqlite3 {0} < {1}'.format(self.dbFile, sqlFile))
+import unittest
+from game import StartGame
+import os
 
-		os.system("chmod +w {}".format(self.dbFile))
-		self.db = sqlite3.connect(self.dbFile)
+def printContents(inventory):
+	for itemEntry in inventory.items:
+		print("{0.item.itemName.value} {0.amount}".format(itemEntry))
 
-	def printContents(self, inventory):
-		for itemEntry in inventory.items:
-			print("{0.item.itemName.value} {0.amount}".format(itemEntry))
+class DBTest(unittest.TestCase):
+	def setUp(self):
+		self.db = sqlite3.connect(self.loadDb())
 
-class InventoryTest(TestSuite):
-	'''
-	Test the Inventory Transactions
-	'''
-	def __init__(self):
-		TestSuite.__init__(self)
+	def tearDown(self):
+		self.db.commit()
+		self.db.close()
+
+	def loadDb(self, fdb = 'gameDB.db'):
+		os.remove(fdb)
+		start = StartGame()
+		return start._newGame(fdb)
 
 	def valCheck(self, inventoryI, inventoryII):
 		'''
@@ -33,19 +30,22 @@ class InventoryTest(TestSuite):
 		'''
 		if inventoryI is inventoryII:
 			raise Exception("Inventories are identical")
-		print("Inventory Check\n")
-		for itemEntryI, itemEntryII in zip(inventoryI.items, inventoryII.items):
-			print("{0.item.itemName.value} {0.amount}\t{1.item.itemName.value} {1.amount}".format(itemEntryI, itemEntryII))
 
-		assert(len(inventoryI.items) == len(inventoryII.items))
-		for itemEntryI, itemEntryII in zip(inventoryI.items, inventoryII.items):
-			print("{0.item.itemName.value} {0.amount}\t{1.item.itemName.value} {1.amount}".format(itemEntryI, itemEntryII))
-			assert(float(itemEntryI.amount) == float(itemEntryII.amount))
-			assert(itemEntryI.item.itemName.value.lower() == itemEntryII.item.itemName.value.lower())
-			assert(int(itemEntryI.item.code) == int(itemEntryII.item.code))
+		self.assertEqual(len(inventoryI.items), len(inventoryII.items))
 
-	def test_readFromDB(self):
-		testI = Inventory(self.db)
+		for itemEntryI, itemEntryII in zip(inventoryI.items, inventoryII.items):
+			self.assertEqual(float(itemEntryI.amount), float(itemEntryII.amount))
+			self.assertEqual(itemEntryI.item.itemName.value.lower(), itemEntryII.item.itemName.value.lower())
+			self.assertEqual(int(itemEntryI.item.code), int(itemEntryII.item.code))
+
+class InventoryTest(DBTest):
+	'''
+	Test the Inventory Transactions
+	'''
+
+	def Step_readFromDB(self):
+		db = self.db
+		testI = Inventory(db)
 		testI.addItem('0','300')
 		testI.addItem('1','300')
 		#self.db.commit()
@@ -63,129 +63,194 @@ class InventoryTest(TestSuite):
 		del testI
 		del testICopy
 
-	def test_MoveItem(self):
+	def Step_MoveItem(self):
 		def testMove(itemCode, itemName, amount, testI):
 			(code, amountOut) = testI._moveItem(itemName, amount)
-			assert(amount == amountOut)
-			assert(itemCode == code)
-
-		print("\n\nMove Test\n\n")
+			self.assertEqual(amount, amountOut)
+			self.assertEqual(itemCode, code)
+		db = self.db
+		# Move Test
 		#_moveItem(self, itemName, amount)
-		testI = Inventory(self.db)
-		testI.addItem('0','300')
-		testI.addItem('1','300')
+
+		testI = Inventory(db)
+		bottleAmount = 300
+		whiskeyAmount = 300
+		testI.addItem('0',bottleAmount)
+		testI.addItem('1',whiskeyAmount)
 
 		#####################################
 		#move all bottles
-		testMove('0', 'bottle', 300, testI)
+		testMove('0', 'bottle', bottleAmount, testI)
 
 		ret = testI.getItemEntry('0')
-		assert(ret is None)
+		self.assertIsNone(ret)
 
 		#####################################
 		#readd bottles, move more than you have, will riase userwarning
-		testI.addItem('0','300')
-		try:
-			testMove('0', 'bottle', 400, testI)
-			assert(0)#Moved more of an item than it had
-		except UserWarning:
-			testMove('0', 'bottle', 300, testI)
+		testI.addItem('0',bottleAmount)
+		with self.assertRaises(UserWarning):
+			testMove('0', 'bottle', bottleAmount + 100, testI)
+
+		testMove('0', 'bottle', bottleAmount, testI)
 
 		#####################################
 		#move in more bottles
-		print("Just Burboun: ")
-		self.printContents(testI)
+
+		# Just Burboun
+		self.assertIn('1', [entry.item.code for entry in testI.items])
+		self.assertNotIn('0', [entry.item.code for entry in testI.items])
+		self.assertEqual(len(testI.items), 1)
 
 		testI.addItem('0','300')
-		print("\nBottles and Burboun: ")
-		self.printContents(testI)
+		# Bottles and Burboun
+		self.assertIn('1', [entry.item.code for entry in testI.items])
+		self.assertIn('0', [entry.item.code for entry in testI.items])
+		self.assertEqual(len(testI.items), 2)
+
 		testMove('1', 'Whiskey', 300, testI)
 
-		print("\nJust Bottles: ")
-		self.printContents(testI)
+		# Just Bottles
+		self.assertNotIn('1', [entry.item.code for entry in testI.items])
+		self.assertIn('0', [entry.item.code for entry in testI.items])
+		self.assertEqual(len(testI.items), 1)
+
 
 		#####################################
 		#Move negative amounts
-		print("\nMove Negative Amounts")
-		try:
+		#print("\nMove Negative Amounts")
+
+		with self.assertRaises(UserWarning):
 			testMove('0', 'bottle', -300, testI)
-			assert(0)
-		except UserWarning as uw:
-			print(uw)
-		self.printContents(testI)
+
+		self.assertEqual(testI.getItemEntryByName('bottle').amount, bottleAmount)
 		del testI
 
-	def test_placeItem(self):
-		testI = Inventory(self.db)
-		testII = Inventory(self.db)
+	def Step_placeItem(self):
+		db = self.db
+		testI = Inventory(db)
+		testII = Inventory(db)
 
-		print("\n\nPlace Item Test\n\n")
+		#print("\n\nPlace Item Test\n\n")
 
-		testI.addItem('0','300')
-		testI.addItem('1','300')
+		bottleAmount = 300
+		whiskeyAmount = 300
+		testI.addItem('0', bottleAmount)
+		self.assertEqual(len(testI.items), 1)
+		testI.addItem('1',whiskeyAmount)
+		self.assertEqual(len(testI.items), 2)
 
-		testI.placeItem(testII, 'bottle', '300')
+		testI.placeItem(testII, 'bottle', bottleAmount)
+		self.assertEqual(len(testI.items), 1)
+		self.assertEqual(len(testII.items), 1)
 
 		#Move a nonexistant item
-		testI.placeItem(testII, 'bottle', '300')
+		testI.placeItem(testII, 'bottle', bottleAmount)
+		self.assertEqual(bottleAmount, [entry.amount for entry in testII.items if entry.item.itemName.value.upper() == 'BOTTLE'][0])
+
+		self.assertNotIn('WHISKEY', [entry.item.itemName.value.upper() for entry in testII.items])
+		self.assertNotIn('BOTTLE', [entry.item.itemName.value.upper() for entry in testI.items])
 
 		#Move more of an item than you have
-		testI.placeItem(testII, 'Whiskey', '400')
-
-		print("\nContents 1")
-		self.printContents(testI)
-
-		print("\nContents 2")
-		self.printContents(testII)
+		testI.placeItem(testII, 'Whiskey', whiskeyAmount + 100)
+		self.assertEqual(whiskeyAmount, testI.getItemEntryByName('Whiskey').amount)
+		self.assertEqual(bottleAmount, testII.getItemEntryByName('Bottle').amount)
 
 		del testI
 		del testII
 
-	def test_parseTransaction(self):
-		print("\n\nParse Test:\n")
-		pi = Inventory(self.db)
+	def Step_parseTransaction(self):
+		#print("\n\nParse Test:\n")
+		db = self.db
+		pi = Inventory(db)
 
 		pi.addItem('0',100)
-		print("['bottle', 10]: {}".format(pi.parseTransaction(inventory = pi, args = ['bottle', 10])))
-		print("[10, 'bottle']: {}".format(pi.parseTransaction(inventory = pi, args = [10, 'bottle'])))
+		self.assertEqual(pi.parseTransaction(inventory = pi, args = ['bottle', 10]), pi.parseTransaction(inventory = pi, args = [10, 'bottle']))
 
-	def run(self):
-		self.test_readFromDB()
-		self.db.commit()
-		self.test_MoveItem()
-		self.db.commit()
-		self.test_placeItem()
-		self.test_parseTransaction()
+	def test_Inventory(self):
+		self.Step_readFromDB()
+		self.Step_parseTransaction()
+		self.Step_placeItem()
+		self.Step_MoveItem()
 
-class PassiveInventoryTest(TestSuite):
-	def __init__(self):
-		TestSuite.__init__(self)
+class HeroPassiveInventoryTest(DBTest):
+	def Step_drop(self):
+		db = self.db
+		testI = HeroInventory(db)
+		testII = PassiveInventory(db, title = "Parse Transaction", charInventory = testI)
+		testI.roomInventory = testII
 
-	def test_put_take(self):
-		print("\n\nPut/Take Test:\n")
-		testI = PassiveInventory(self.db, title = "Parse Transaction", charInventory = None)
-		testII = PassiveInventory(self.db, title = "Parse Transaction", charInventory = testI)
+		bottleAmount = 100
+		whiskeyAmount = 1000
+		testI.addItem('0',bottleAmount)
+		testI.addItem('1',whiskeyAmount)
+		self.assertEqual(len(testI.items), 2)
+
+		testI.drop(['bottle', bottleAmount])
+
+		#whiskey only
+		self.assertEqual(len(testI.items), 1)
+		self.assertEqual(testI.items[0].item.itemName.value.upper(), 'WHISKEY')
+		self.assertEqual(testI.items[0].amount, whiskeyAmount)
+
+		#bottles only
+		self.assertEqual(len(testII.items), 1)
+		self.assertEqual(testII.items[0].item.itemName.value.upper(), 'BOTTLE')
+		self.assertEqual(testII.items[0].amount, bottleAmount)
+
+	def Step_put_take(self):
+		#db = sqlite3.connect(dbFile)
+		db = self.db
+		testI = PassiveInventory(db, title = "Parse Transaction", charInventory = None)
+		testII = PassiveInventory(db, title = "Parse Transaction", charInventory = testI)
 
 		testI.charInventory = testII
 
-		testI.addItem('0',100)
-		testI.addItem('1',100)
-		testI.take([100, 'bottle'])
+		bottleAmount = 100
+		whiskeyAmount = 1000
+		testI.addItem('0',bottleAmount)
+		testI.addItem('1',whiskeyAmount)
 
-		print("Burboun only")
-		self.printContents(testI)
-		print("Bottles only")
-		self.printContents(testII)
+		testI.take([bottleAmount, 'bottle'])
 
-	def run(self):
-		self.test_put_take()
+		#whiskey only
+		self.assertEqual(len(testI.items), 1)
+		self.assertEqual(testI.items[0].item.itemName.value.upper(), 'WHISKEY')
+		self.assertEqual(testI.items[0].amount, whiskeyAmount)
+
+		#bottles only
+		self.assertEqual(len(testII.items), 1)
+		self.assertEqual(testII.items[0].item.itemName.value.upper(), 'BOTTLE')
+		self.assertEqual(testII.items[0].amount, bottleAmount)
+
+	def test_hero_passive(self):
+		self.Step_put_take()
+		self.Step_drop()
+
+class ReadWriteTest(DBTest):
+	'''
+	Ensure that the inventories are faithfully written and read from the database
+
+	Takeaway, dont ever use writeToDB or updateTable except in internal inventory functions
+	'''
+	def test_readWrite(self):
+		testI = Inventory(self.db)
+		testII = Inventory(self.db)
+
+		bottleAmount = 100
+		whiskeyAmount = 1000
+		testI.addItem('0',bottleAmount)
+		testI.addItem('1',whiskeyAmount)
+
+		self.db.commit()
+		testII.setCode(testI.code)
+
+		#read multiple times
+		testII.readFromDB()
+		testII.readFromDB()
+		testII.readFromDB()
+
+		print(testI.items[0].item.code, testII.items[0].item.code)
+		self.valCheck(testI, testII)
 
 if __name__ == "__main__":
-	ti = InventoryTest()
-	ti.run()
-
-	input("Continue? ")
-	os.system('clear')
-
-	piTest = PassiveInventoryTest()
-	piTest.run()
+	unittest.main(verbosity=2)
