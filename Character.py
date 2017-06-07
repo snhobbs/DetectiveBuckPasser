@@ -97,4 +97,3 @@ class Character(StagedSqlTable, CharacterMenu):
 	def addInventory(self, inventory):
 		self.inventory = inventory
 		self.inventoryCode.value = self.inventory.code
-		self.inventory.writeToDB()

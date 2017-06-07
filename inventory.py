@@ -30,16 +30,17 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 	'''
 	Inventory is the base class for the hero, passive, and character classes
 	'''
-	def __init__(self, db):
+	def __init__(self, db, title = "Inventory"):
 		SQLTable.__init__(self, db)
 		self.table = 'inventory'
 		self.codeName = 'inventoryCode'
 		self.amount = self.elementTable.addElement(title = 'Item Amount', name = 'amount', value = None, elementType = 'FLOAT')
 		self.itemCode = self.elementTable.addElement(title = 'Item Code', name = 'itemCode', value = None, elementType = 'INT')
 		self.items = None
-
+		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
 		self.menuCommands = {
-			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Describe an item')
+			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Describe an item'),
+			'look':userInput.Command(func=self.refreshInventory, takesArgs=False, descrip = 'List items again')
 		}
 		self.assignCode()
 
@@ -270,7 +271,6 @@ class PassiveInventory(Inventory):
 	def __init__(self, db, title = None, charInventory = None):
 		Inventory.__init__(self, db)
 
-		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
 		self.menuCommands.update({
 		'put':userInput.Command(func=self.put, takesArgs=True, descrip = 'Move an item to this inventory'),
 		'take':userInput.Command(func=self.take, takesArgs=True, descrip = 'Take an item')
@@ -290,9 +290,9 @@ class PassiveInventory(Inventory):
 			return
 
 		try:
-			print(itemName, amount)
 			self.charInventory.placeItem(inventory = self, itemName = itemName, amount = amount)
-			self.refreshInventory()
+			self.refreshList()
+			self.charInventory.refreshList()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
@@ -304,7 +304,8 @@ class PassiveInventory(Inventory):
 		itemName, amount = self.parseTransaction(inventory = self, args = args)
 		try:
 			self.placeItem(inventory = self.charInventory, itemName = itemName, amount = amount)
-			self.refreshInventory()
+			self.refreshList()
+			self.charInventory.refreshList()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
 
@@ -317,10 +318,8 @@ class HeroInventory(Inventory):
 	The players inventory, allows dropping items to the current room, and combining items
 	'''
 	def __init__(self, db, roomInventory = None):
-		Inventory.__init__(self, db)
-		title = "Inventory"
+		Inventory.__init__(self, db = db)
 
-		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
 		self.menuCommands.update({
 		'drop':userInput.Command(func=self.drop, takesArgs=True, descrip = 'Drop an item on the floor')
 		})
@@ -336,6 +335,7 @@ class HeroInventory(Inventory):
 			return
 		try:
 			self.placeItem(inventory = self.roomInventory, itemName = itemName, amount = amount)
-			self.refreshInventory()
+			self.refreshList()
+			self.roomInventory.refreshList()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")

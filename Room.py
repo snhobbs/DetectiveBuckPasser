@@ -73,20 +73,14 @@ class Room(StagedSqlTable):
 
 	def writeRoom(self):
 		try:
-			self.inventory.updateTable()
-		except TypeError:
-			pass
-
-		try:
 			for obj in self.objects:
 				obj.updateTable()
-				obj.inventory.updateTable()
+
 		except TypeError: #will fail if no objects
 			pass
 		try:
 			for character in self.characters:
 				character.updateTable()
-				character.inventory.updateTable()
 		except TypeError as te:
 			pass
 		self.db.commit()

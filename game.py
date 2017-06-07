@@ -69,8 +69,6 @@ class GameCommands(object):
 			return False
 		self.inspection = Room.Room(self.db)
 		self.inspection.setCode(code)
-		self.inspection.loadRoom(self.stage)
-		self.inspection.inventory.charInventory = self.buckPasser.inventory
 
 	def _getItem(self, itemName = None):
 		if self.buckPasser.inventory == None or self.buckPasser.inventory.items ==  None or len(self.buckPasser.inventory.items) < 1:
@@ -206,7 +204,7 @@ class GameCommands(object):
 			self.currRoom.look()
 
 			self.getRoomNeighbors()
-			self.buckPasser.roomInventory = self.currRoom.inventory
+			self.buckPasser.inventory.roomInventory = self.currRoom.inventory
 			self.currRoom.inventory.charInventory = self.buckPasser.inventory
 			self.currRoom.inventory.refreshList()
 		else:
@@ -299,7 +297,6 @@ class Game(GameCommands, GameMenu):
 		self.__setupGame()
 
 	def _save(self):
-		self.buckPasser.inventory.updateTable()
 		self.db.commit()
 
 	def _mute(self):
@@ -313,10 +310,6 @@ class Game(GameCommands, GameMenu):
 
 	def __setupGame(self):
 		self.buckPasser = hero.Hero(self.db)
-		self.buckPasser.inventory = inventory.HeroInventory(self.db)
-		self.buckPasser.inventory.setCode(0)
-		self.buckPasser.inventory.readFromDB()
-		self.buckPasser.inventory.refreshList()
 
 		self.currRoom = Room.Room(self.db)
 		self.currRoom.setCode(0) # you always start in your apartment on loading
