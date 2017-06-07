@@ -42,7 +42,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Describe an item'),
 			'look':userInput.Command(func=self.refreshInventory, takesArgs=False, descrip = 'List items again')
 		}
-		self.assignCode()
 
 	def addAmount(self, itemCode, amount):
 		'''

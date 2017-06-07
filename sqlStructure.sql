@@ -58,9 +58,12 @@ create table rooms(
 create table objects(
 	stage int NOT NULL,
 	objCode int NOT NULL,
-	subType string NOT NULL,
 	objName string NOT NULL,
 	descrip text NOT NULL,
+	shortDescrip text NOT NULL,
+	useAlias text,
+	useDescrip text,
+	usePrint text,
 	inventoryCode int,
 	primary key(objCode, stage)
 );

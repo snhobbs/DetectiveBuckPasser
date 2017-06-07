@@ -39,7 +39,8 @@ class GameCommands(object):
 			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
 			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around'),
-			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound')
+			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound'),
+			'inspect':userInput.Command(func=self._inspect, takesArgs=True, hide = False, descrip = 'Inspect an object')
 			}
 
 		self.neighbors = None
@@ -48,7 +49,7 @@ class GameCommands(object):
 		if self.currRoom.objects == None:
 			return False
 		try:
-			self.inspection = [obj for obj in self.currRoom.objects if obj.objName.value.lower() == objName][0]
+			self.inspection = [obj for obj in self.currRoom.objects if obj.objName.value.lower() == objName.lower()][0]
 			return True
 		except IndexError:
 			raise UserWarning('No Object Found')
@@ -57,7 +58,7 @@ class GameCommands(object):
 		if self.currRoom.characters == None:
 			return False
 		try:
-			self.inspection = [character for character in self.currRoom.characters if character.charName.value.lower() == charName][0]
+			self.inspection = [character for character in self.currRoom.characters if character.charName.value.lower() == charName.lower()][0]
 			return True
 		except IndexError:
 			raise UserWarning('No Character Found')
@@ -75,7 +76,7 @@ class GameCommands(object):
 			#print('You ain\'t got shit')
 			return False
 		try:
-			self.inspection = [item for item in self.buckPasser.inventory.items if item.item.subType.value.lower() == itemName][0]
+			self.inspection = [item for item in self.buckPasser.inventory.items if item.item.subType.value.lower() == itemName.lower()][0]
 			return True
 		except IndexError:
 			raise UserWarning('No Item Found')
@@ -136,10 +137,28 @@ class GameCommands(object):
 			if self.currRoom.characters is not None:
 				options.extend(char.charName.value for char in self.currRoom.characters)
 
-			subject = [userInput.printSelectGetOption(options = options, cursor = 'Describe What?> ')]
-			if subject[0] is None:
-				return
+			if len(options) == 1:
+				subject = options
+			else:
+				subject = [userInput.printSelectGetOption(options = options, cursor = 'Describe What?> ')]
+				if subject[0] is None:
+					return
 		self.__makeCommand(subject = subject, command = 'describe', onObject = True, onCharacter = True)
+
+	def _inspect(self, subject = None):
+		if self.currRoom.objects is None:
+			userInput.printToScreen("Theres nothing here")
+			return
+
+		if subject is None:
+			if len(self.currRoom.objects) == 1:
+				subject = self.currRoom.objects[0].objName.value
+			else:
+				options = [obj.objName.value for obj in self.currRoom.objects]
+				subject = [userInput.printSelectGetOption(options = options, cursor = 'Inspect What?> ')]
+				if subject[0] is None:
+					return
+		self.__makeCommand(subject = subject, command = 'inspect', onObject = True)
 
 	def talkTo(self, charName = None):
 		if self.currRoom.characters == None:

@@ -60,7 +60,7 @@ class Room(StagedSqlTable):
 
 		try:
 			for obj in self.objects:
-				obj.inventory = inventory.PassiveInventory(db, title = "Room Items", charInventory = None)
+				obj.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = None)
 				obj.inventory.readFromDB()
 		except TypeError: #will fail if no objects
 			pass

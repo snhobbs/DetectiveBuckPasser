@@ -118,8 +118,8 @@ class ListMenu(BaseMenu):
 		self.cursor = cursor
 		self.commands = {
 			'exit':userInput.Command(func=self.exitMenu, takesArgs=False, descrip = 'Exit Inventory'),
-			'commands':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'Print the available commands'),
-			'help':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'No one can save you now')
+			'commands':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'Print the available commands', hide = True),
+			'help':userInput.Command(func=self.printCommands, takesArgs=False, descrip = 'No one can save you now', hide = True)
 			}
 		self.listItems = []
 		self.fields = fields
@@ -179,6 +179,29 @@ class ListMenu(BaseMenu):
 
 	def makeScreenLines(self):
 		return (self.listLine(listItem) + '\n' for listItem in self.listItems)
+
+class ObjectMenu(ListMenu):
+	def __init__(self, db):
+		ListMenu.__init__(self, db, title = "Object", description = "", cursor = "  > ", closeOnPrint = True, fields = 1, fieldLengths = [1])
+		self.longDescrip = None
+
+	def makeTitle(self, title, description):
+		titleString = []
+		columns, rows = userInput.getTerminalSize()
+		titleString.append(self.borderString())
+		titleString.append('\n')
+		titleString.append(title.center(columns))
+		titleString.append('\n')
+		titleString.append('%s'%(self.underLine(inStr=title).center(columns)))
+		titleString.append('\n')
+		if not self.description in [None, ""]:
+			titleString.append(('    %s'%(description)).center(columns).title())
+			titleString.append('\n')
+			titleString.append('-'*columns)
+			if self.longDescrip not in [None, ""]:
+				titleString.append(self.longDescrip.center(columns))
+				titleString.append('\n')
+		return titleString
 
 if __name__ =="__main__":
 	menuEx = Menu(db = None, title = "Title", description = "Description", cursor = "  >")
