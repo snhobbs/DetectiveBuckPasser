@@ -368,19 +368,18 @@ class Game(GameCommands, GameMenu):
 		finally:
 			self.db.close()
 
-if __name__ == "__main__":
+def run():
 	import os
-	debug = False
-
 	start = StartGame()
-	if(debug):
-		fdb = 'game.db'
-		os.system("rm %s"%fdb)
-		dbFile = start._newGame(fdb)
-	else:
-		dbFile = start.runMenu()
+	dbFile = start.runMenu()
 
 	if dbFile is not None:
 		gameObj = Game(dbFile)
 		gameObj.linepad = userInput.getTerminalSize()[0]
 		gameObj.run()
+
+if __name__ == "__main__":
+	start = StartGame()
+	fdb = 'game.db'
+	os.system("rm %s"%fdb)
+	dbFile = start._newGame(fdb)
