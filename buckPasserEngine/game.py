@@ -6,6 +6,9 @@ from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 from sqlTable import SQLTable
 
+global sqlDir
+sqlDir = "gameFiles"
+
 def loadSQLFile(db, fileName):
 	sqlLines = []
 	with open(fileName, 'r') as f:
@@ -269,7 +272,7 @@ class StartGame(Menu):
 		# make the new db ensuring its not writing over another file of the same name
 		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql', 'stage0.sql']
 		for sqlFile in sqlFiles:
-			loadSQLFile(db = db, fileName = sqlFile)
+			loadSQLFile(db = db, fileName = os.path.join(sqlDir, sqlFile))
 		db.commit()
 		return dbFile
 
@@ -301,7 +304,8 @@ class Game(GameCommands, GameMenu):
 		self._load()
 
 	def _loadStage(self):
-		loadSQLFile(db = self.db, fileName = 'stage{}.sql'.format(self.stage))
+		import os
+		loadSQLFile(db = self.db, fileName = os.path.join(sqlDir, 'stage{}.sql'.format(self.stage)))
 
 	def _exit(self):
 		self._save()
