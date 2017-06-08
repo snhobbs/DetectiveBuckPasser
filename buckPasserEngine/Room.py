@@ -60,13 +60,14 @@ class Room(StagedSqlTable):
 
 		try:
 			for obj in self.objects:
-				obj.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = None)
+				obj.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = self.inventory.charInventory)
 				obj.inventory.readFromDB()
+
 		except TypeError: #will fail if no objects
 			pass
 		try:
 			for character in self.characters:
-				character.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = None) # FIXME inventory type for characters
+				character.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = self.inventory.charInventory) # FIXME inventory type for characters
 				character.inventory.readFromDB()
 		except TypeError as te:
 			pass
