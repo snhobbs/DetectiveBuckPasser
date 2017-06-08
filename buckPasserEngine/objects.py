@@ -14,7 +14,7 @@ def objectFactory(db, code, stage):
 	obj.menu.cursor = "{} > ".format(obj.objName.value)
 	obj.inventory = Inventory(db)
 	obj.inventory.setCode(obj.inventoryCode.value)
-
+	obj.inventory.menu.title = obj.objName.value.title()
 	obj.menu.commands.update({obj.useAlias.value.lower(): userInput.Command(func=obj.use, descrip = obj.useDescrip.value, takesArgs=False)})
 
 	return obj
@@ -47,19 +47,19 @@ class Objects(StagedSqlTable):
 
 		self.menuCommands = {
 			'search':userInput.Command(func=self.search, descrip = "Search for items",takesArgs=False, hide = False),
-			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True),
-			'use':userInput.Command(func=self.use, takesArgs=False, hide = True)
+			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True)
+			#'use':userInput.Command(func=self.use, takesArgs=False, hide = True)
 			}
 		self.menu.commands.update(self.menuCommands)
 
 	def inspect(self):
 		self.menu.runMenu()
 
-	def search(self):
-		self.listItems()
-
 	def describe(self):
 		userInput.printToScreen("\n{0.objName.value}\n-------------------\n{0.descrip.value}".format(self))
+
+	def search(self):
+		self.inventory.runMenu()
 
 	def use(self):
 		if self.usePrint.value in ['', 'NULL','None', None]:
