@@ -114,8 +114,8 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if inventEntry is None:
 			raise UserWarning("Item {} doesn't exist".format(itemName))
 
-		if(float(amount) <= float(inventEntry.item.smallestUnit.value)):
-			raise UserWarning("You can't move an amount <= the smallest unit you clot")
+		if(float(amount) < float(inventEntry.item.smallestUnit.value)):
+			raise UserWarning("You can't move an amount < the smallest unit you clot")
 
 		if(float(amount) > float(inventEntry.amount)):
 			raise UserWarning("You don't have enough to do that")
