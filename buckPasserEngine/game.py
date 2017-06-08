@@ -35,11 +35,11 @@ class GameCommands(object):
 		self.buckPasser = None
 		self.commands = {
 			'start':userInput.Command(func=self.startMenu, takesArgs=False, descrip = 'Start Menu'),
-			'help':userInput.Command(func=self.printHelp, takesArgs=False, descrip = 'No one can save you now'),
+			'help':userInput.Command(func=self.printHelp, takesArgs=False, hide = True, descrip = 'No one can save you now'),
 			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing'),
 			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
-			'items':userInput.Command(func=self.listItems, takesArgs=True, descrip = 'List what you have on you'),
+			'items':userInput.Command(func=self.listItems, takesArgs=False, descrip = 'List what you have on you'),
 			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around'),
 			'mute':userInput.Command(func=self._mute, takesArgs=False, hide = True, descrip = 'Mute the sound'),
@@ -193,9 +193,9 @@ class GameCommands(object):
 		'''
 		Sets up self.currRoom properly
 		'''
-		self.currRoom.loadRoom(self.stage)
 		self.currRoom.inventory.charInventory = self.buckPasser.inventory
 		self.currRoom.inventory.refreshList()
+		self.currRoom.loadRoom(self.stage)
 
 	def move(self, room = None):
 		'''
