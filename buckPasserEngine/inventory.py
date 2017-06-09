@@ -191,18 +191,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if int(itemCode) == entry.item.itemCode:
 			return float(entry.amount)
 
-	def refreshList(self):
-		if not self.checkEntryLength():
-			# there are no items in the inventory
-			self.menu.listItems = []
-			self.menu.addListItem(['Empty','',''])
-			return
-		self.menu.listItems = []
-		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])
-		for inventEntry in self.items:
-			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
-			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
-
 	def refreshInventory(self):
 		self.refreshList()
 		userInput.printToScreen(self.menu.makeScreen())
@@ -262,16 +250,28 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 				itemsName = [options[selection]]
 		userInput.printToScreen(self.getItemEntryByName(itemsName[0].title()).item.descrip.value)
 
-class CharacterInventory(Inventory):
+class StandardInventory(Inventory):
 	def __init__(self, db):
 		Inventory.__init__(self, db)
 
-class PassiveInventory(Inventory):
+	def refreshList(self):
+		if not self.checkEntryLength():
+			# there are no items in the inventory
+			self.menu.listItems = []
+			self.menu.addListItem(['Empty','',''])
+			return
+		self.menu.listItems = []
+		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])
+		for inventEntry in self.items:
+			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
+			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
+
+class PassiveInventory(StandardInventory):
 	'''
 	Inventory for rooms and objects
 	'''
 	def __init__(self, db, title = None, charInventory = None):
-		Inventory.__init__(self, db)
+		StandardInventory.__init__(self, db)
 
 		self.menuCommands.update({
 		'put':userInput.Command(func=self.put, takesArgs=True, descrip = 'Move an item to this inventory'),
@@ -315,18 +315,17 @@ class PassiveInventory(Inventory):
 		self.refreshList()
 		self.menu.runMenu()
 
-class HeroInventory(Inventory):
+class HeroInventory(StandardInventory):
 	'''
 	The players inventory, allows dropping items to the current room, and combining items
 	'''
 	def __init__(self, db, roomInventory = None):
-		Inventory.__init__(self, db = db)
+		StandardInventory.__init__(self, db = db)
 
 		self.menuCommands.update({
 		'drop':userInput.Command(func=self.drop, takesArgs=True, descrip = 'Drop an item on the floor')
 		})
 		self.menu.commands.update(self.menuCommands)
-
 		self.roomInventory = roomInventory
 
 	def drop(self, args):
@@ -341,3 +340,52 @@ class HeroInventory(Inventory):
 			self.roomInventory.refreshList()
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
+
+class StoreInventory(Inventory):
+	'''
+	Inventory for a store, accepts cash for items
+	'''
+	def __init__(self, db, title = None, charInventory = None):
+		Inventory.__init__(self, db)
+
+		self.menuCommands.update({
+		'buy':userInput.Command(func=self.put, takesArgs=True, descrip = 'Purchase an item')
+		})
+		self.menu.commands.update(self.menuCommands)
+
+		self.charInventory = charInventory
+
+	def buy(self, args):
+		'''
+		Add an item to this inventory from charInventory
+		'''
+		try:
+			itemName, amount = self.parseTransaction(inventory = self.charInventory, args = args)
+		except UserWarning:
+			userInput.printToScreen("Item doesn't exist")
+			return
+
+		try:
+			entry = self.getItemEntryByName(itemName = itemName)
+			self.charInventory.placeItem(inventory = self, itemName = 'Money', amount = amount*entry.item.price)
+			self.placeItem(inventory = self.charInventory, itemName = itemName, amount = amount)
+			self.refreshList()
+			self.charInventory.refreshList()
+		except UserWarning:
+			userInput.printToScreen("Item doesn't exist or insufficient quantities for transaction")
+
+	def refreshList(self):
+		import math
+		if not self.checkEntryLength():
+			# there are no items in the inventory
+			self.menu.listItems = []
+			self.menu.addListItem(['Empty','',''])
+			return
+		self.menu.listItems = []
+		self.menu.addListItem(['Name', 'In Stock', 'Price per unit'])
+		for inventEntry in self.items:
+			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "$%d.%d"%(math.floor(int(inventEntry.item.price.value)/100), (int(inventEntry.item.price.value)%100))])
+
+	def runMenu(self):
+		self.refreshList()
+		self.menu.runMenu()

@@ -8,6 +8,7 @@ class Item(SQLTable):
 		self.itemName = self.elementTable.addElement(title = 'Item Name', name = 'itemName', value = '', elementType = 'STRING')
 		self.weight = self.elementTable.addElement(title = 'Item Weight', name = 'weight', value = 0, elementType = 'FLOAT')
 		self.smallestUnit = self.elementTable.addElement(title = 'Smallest Unit of the item', name = 'smallestUnit', value = 0, elementType = 'FLOAT')
+		self.price = self.elementTable.addElement(title = 'Cost of the item', name = 'price', value = 0, elementType = 'INT')
 
 		self.table = 'items'
 		self.codeName = 'itemCode'

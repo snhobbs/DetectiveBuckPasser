@@ -21,6 +21,7 @@ create table items(
 	descrip text NOT NULL,
 	weight int NOT NULL,
 	smallestUnit float NOT NULL,
+	price int,
 	primary key(itemCode)
 );
 
