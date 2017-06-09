@@ -17,7 +17,7 @@ def objectFactory(db, code, stage):
 	obj.inventory.setCode(obj.inventoryCode.value)
 	obj.inventory.menu.title = obj.objName.value.title()
 	obj.menu.commands.update({obj.useAlias.value.lower(): userInput.Command(func=obj.use, descrip = obj.useDescrip.value, takesArgs=False)})
-
+	obj.inventory.readFromDB()
 	return obj
 
 class Objects(StagedSqlTable):
