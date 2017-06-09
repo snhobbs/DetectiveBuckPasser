@@ -48,7 +48,7 @@ class Room(StagedSqlTable):
 		self.readFromDB(stage)
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
-
+		
 		self.loadInventories()
 
 	def loadInventories(self):
@@ -60,7 +60,7 @@ class Room(StagedSqlTable):
 
 		try:
 			for obj in self.objects:
-				obj.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = self.inventory.charInventory)
+				#obj.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = self.inventory.charInventory)
 				obj.inventory.readFromDB()
 
 		except TypeError: #will fail if no objects

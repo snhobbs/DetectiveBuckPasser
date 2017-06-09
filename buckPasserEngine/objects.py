@@ -1,6 +1,6 @@
 #objects.py
 from sqlTable import SQLTable, StagedSqlTable
-from inventory import Inventory
+from inventory import PassiveInventory
 import userInput, os
 from menus import ObjectMenu
 
@@ -12,7 +12,8 @@ def objectFactory(db, code, stage):
 	obj.menu.description = obj.shortDescrip.value
 	obj.menu.longDescrip = obj.descrip.value
 	obj.menu.cursor = "{} > ".format(obj.objName.value)
-	obj.inventory = Inventory(db)
+	obj.inventory = PassiveInventory(db)
+	print("Inventory code ", obj.inventoryCode.value)
 	obj.inventory.setCode(obj.inventoryCode.value)
 	obj.inventory.menu.title = obj.objName.value.title()
 	obj.menu.commands.update({obj.useAlias.value.lower(): userInput.Command(func=obj.use, descrip = obj.useDescrip.value, takesArgs=False)})
