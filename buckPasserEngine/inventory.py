@@ -193,6 +193,9 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 
 	def refreshList(self):
 		if not self.checkEntryLength():
+			# there are no items in the inventory
+			self.menu.listItems = []
+			self.menu.addListItem(['Empty','',''])
 			return
 		self.menu.listItems = []
 		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])

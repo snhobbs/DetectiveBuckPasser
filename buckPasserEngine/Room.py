@@ -48,13 +48,18 @@ class Room(StagedSqlTable):
 		self.readFromDB(stage)
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
-		
-		self.loadInventories()
+		self.linkInventories()
 
-	def loadInventories(self):
+	def linkInventories(self):
 		try:
-			self.inventory.setCode(self.inventoryCode.value)
-			self.inventory.readFromDB()
+			for obj in self.objects:
+				obj.inventory.charInventory = self.inventory.charInventory
+		except TypeError:
+			pass
+
+		try:
+			for char in self.characters:
+				char.inventory.charInventory = self.inventory.charInventory
 		except TypeError:
 			pass
 

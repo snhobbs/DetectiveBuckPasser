@@ -1,10 +1,10 @@
 #testInventory.py
 
 import sqlite3
-from inventory import *
+from buckPasserEngine.inventory import *
 import copy
 import unittest
-from game import StartGame
+from buckPasserEngine.game import StartGame
 import os
 
 def printContents(inventory):

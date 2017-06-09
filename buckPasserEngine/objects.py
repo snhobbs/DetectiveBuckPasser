@@ -8,16 +8,18 @@ def objectFactory(db, code, stage):
 	obj = Objects(db)
 	obj.setCode(code)
 	obj.readFromDB(stage)
+
 	obj.menu.title = obj.objName.value.title()
 	obj.menu.description = obj.shortDescrip.value
 	obj.menu.longDescrip = obj.descrip.value
 	obj.menu.cursor = "{} > ".format(obj.objName.value)
+
 	obj.inventory = PassiveInventory(db)
-	print("Inventory code ", obj.inventoryCode.value)
 	obj.inventory.setCode(obj.inventoryCode.value)
 	obj.inventory.menu.title = obj.objName.value.title()
-	obj.menu.commands.update({obj.useAlias.value.lower(): userInput.Command(func=obj.use, descrip = obj.useDescrip.value, takesArgs=False)})
 	obj.inventory.readFromDB()
+
+	obj.menu.commands.update({obj.useAlias.value.lower(): userInput.Command(func=obj.use, descrip = obj.useDescrip.value, takesArgs=False)})
 
 	return obj
 

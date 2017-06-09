@@ -224,11 +224,9 @@ class GameCommands(object):
 			self.currRoom = self.inspection
 			self.setupNewRoom()
 			self.currRoom.look()
-
 			self.getRoomNeighbors()
 			self.buckPasser.inventory.roomInventory = self.currRoom.inventory
-			self.currRoom.inventory.charInventory = self.buckPasser.inventory
-			self.currRoom.inventory.refreshList()
+
 		else:
 			raise UserWarning("{} is not a valid neighbor".format(room))
 
