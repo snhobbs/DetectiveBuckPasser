@@ -32,7 +32,7 @@ class BaseMenu(object):
 		titleString.append('%s'%(self.underLine(inStr=title).center(columns)))
 		titleString.append('\n')
 		if not self.description in [None, ""]:
-			titleString.append(('    %s:'%(description)).center(columns).title())
+			titleString.append(('    %s:'%(description)).center(columns))
 			titleString.append('\n')
 		return titleString
 
@@ -195,7 +195,7 @@ class ObjectMenu(ListMenu):
 		titleString.append('%s'%(self.underLine(inStr=title).center(columns)))
 		titleString.append('\n')
 		if not self.description in [None, ""]:
-			titleString.append(('    %s'%(description)).center(columns).title())
+			titleString.append(('    %s'%(description)).center(columns))
 			titleString.append('\n')
 			titleString.append('-'*columns)
 			if self.longDescrip not in [None, ""]:
