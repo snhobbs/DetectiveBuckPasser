@@ -120,6 +120,9 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if(float(amount) > float(inventEntry.amount)):
 			raise UserWarning("You don't have enough to do that")
 
+		if(float(inventEntry.item.smallestUnit.value) <= 0):
+			raise UserWarning("You can't just take that!")
+
 		discreteAmount = math.floor(float(amount)/float(inventEntry.item.smallestUnit.value)) # Amount in units of the smallestUnit
 		adjustedAmount = discreteAmount*float(inventEntry.item.smallestUnit.value)
 		remaining = float(inventEntry.amount) - adjustedAmount
