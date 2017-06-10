@@ -48,6 +48,7 @@ class Room(StagedSqlTable):
 		self.readFromDB(stage)
 		self.inventory.setCode(self.inventoryCode.value)
 		self.inventory.readFromDB()
+
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
 		self.linkInventories()
