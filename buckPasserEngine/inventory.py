@@ -243,6 +243,9 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if self.isEmpty():
 			return
 
+		if type(itemsName) in [list, tuple]:
+			itemsName = ' '.join(itemsName)
+
 		if itemsName in [None, [], '']:
 			options = ['Nothing']
 			options.extend(entry.item.itemName.value for entry in self.items)
@@ -250,8 +253,8 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			if(selection == 0):
 				return
 			else:
-				itemsName = [options[selection]]
-		userInput.printToScreen(self.getItemEntryByName(itemsName[0].title()).item.descrip.value)
+				itemsName = options[selection]
+		userInput.printToScreen(self.getItemEntryByName(itemsName.title()).item.descrip.value)
 
 class StandardInventory(Inventory):
 	def __init__(self, db):
