@@ -12,7 +12,7 @@ insert into items values(7, 'Cedar Box', "Has Bud Abbott's mustache on a velvet 
 insert into items values(8, 'Portable Glory Hole', "Makes anonymous oral sex portable!", 1, 0);
 insert into items values(9, 'Roller Skates', "Saturn V Rocket powered roller skates", 1, 0);
 insert into items values(10, 'Textbook', "Introduction to the Moon Landing Truth by John Fitzgerald Kennedy. All signed by the author!", 1, 0);
-insert into items values(11, 'Body Part', "Gorbachev's mole delicately stapled to a Mickey Mantle rookie card", 1, 0);
+insert into items values(11, 'Body Part', "Gorbachev's birthmark delicately stapled to a Mickey Mantle rookie card", 1, 0);
 
 /**inventory**/
 insert into inventory values(0, 0, 100);
