@@ -124,7 +124,7 @@ class GameCommands(object):
 				userInput.printToScreen('{0}{1} -> {2.descrip}'.format(' '*(maxLen - len(command)), command, self.commands[command]))
 
 	def printHelp(self):
-		userInput.printToScreen('\n\nNo one can help your sorry ass, just go score some blow.\n\n')
+		userInput.printToScreen('\nNo one can help you\n')
 		self.printCommands()
 
 	def describe(self, subject = None):

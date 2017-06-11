@@ -39,7 +39,7 @@ class Room(StagedSqlTable):
 			userInput.printToScreen("You're all alone")
 
 		if self.objects != None:
-			userInput.printToScreen("Shit in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
+			userInput.printToScreen("Things in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
 
 	def loadRoom(self, stage):
 		'''
