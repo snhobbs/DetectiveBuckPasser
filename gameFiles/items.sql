@@ -1,14 +1,36 @@
 /**items.sql**/
 
+/**
+	itemName text NOT NULL,
+	descrip text NOT NULL,
+	weight int NOT NULL,
+	smallestUnit float NOT NULL,
+**/
+
 insert into items values(0, 'Bottle', 'An empty bottle, like the one that biker beat you with last week at the End Zone', 0.1, 1);
 
 insert into items values(1, 'Whiskey', 'Old Crow, best bourbon in the $5 price range', 0.5, 1);
 
-insert into items values(2, 'Foot in the boot', 'An old foot in a boot', 7, 1);
+insert into items values(2, 'Foot in the Boot', 'An old foot in a boot', 7, 1);
+insert into items values(3, 'Cocaine', 'Just enough blow to make this a drug squad issue', 0.1, 1);
+insert into items values(4, 'Rent Money', "Roughly $17 in a crumped up ball", 1, 1);
 
-insert into items values(3, 'Cocaine', 'Just enough blow to mess make this a drug squad issue', 0.1, 1);
+--Tchotch-Naughts Store Items
 
-insert into items values(4, 'Rent Money', "Wad of greasy $1's", 1, 1);
+insert into items values(5, 'Dancing Pickle', "PJ The Party Pickle, you know what it is", 15, 1);
+insert into items values(6, 'Post Card', "It reads: Wish you were here. The Grassy Knoll, Dallas TX", 1, 1);
+insert into items values(7, 'Portable Glory Hole', "A pocket size apparatus that make anonymous oral sex a breeze! *Limit 1 per customer.", 1, 1);
+insert into items values(8, 'Hand in a jar', "Captain Hook's missing hand suspended in fromaldahyde.", 2, 1);
+insert into items values(9, 'Cedar Box', "Bud Abbott's mustache on a velvet pillow.", .2, 1);
+insert into items values(10, "Vinyl Record", "Phil Harmonix's Dog Whistle Orchestra", .05, 1);
+insert into items values(11, "Pez Dispenser", "Limited edition Larry David, Curb Your Insulin Pez dispenser", .01, 1);
+insert into items values(12, "Lighter", "Ford Pinto shaped Zippo lighter, how fitting", .025, 1);
+insert into items values(13, "Book", "Pen Pals by Ted Kaczynski", 1.2, 1);
+insert into items values(14, "Cookbook", "Eating Right by Jeffery Dahmer", .01, 1);
+
+
+insert into items values(15, "Gin", "Your only solace", .05, 1);
+
 
 /**inventory**/
 insert into inventory values(0, 0, 100);
