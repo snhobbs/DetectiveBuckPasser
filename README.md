@@ -58,7 +58,7 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 			<li>VAX-VMS</li>
 			<li>DOS 1.0 (Later versions not supported)</li>
 		</ul>
-	<li>Programs: Python3, sqlite3</li>
+	<li>Programs: Python3</li>
 </ul>
 
 <h3>Optional {For sound to work}:</h3>

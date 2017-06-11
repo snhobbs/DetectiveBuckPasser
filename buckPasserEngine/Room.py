@@ -46,29 +46,24 @@ class Room(StagedSqlTable):
 		Load objects, inventories, and characters based off of the current game stage
 		'''
 		self.readFromDB(stage)
+		self.inventory.setCode(self.inventoryCode.value)
+		self.inventory.readFromDB()
+
 		self.objects = userInput.loadObjList(db = self.db, codeString = self.objectCodeString.value, stage = stage, factory = objects.objectFactory)
 		self.characters = userInput.loadObjList(db = self.db, codeString = self.characterCodeString.value, stage = stage, factory = Character.characterFactory)
+		self.linkInventories()
 
-		self.loadInventories()
-
-	def loadInventories(self):
+	def linkInventories(self):
 		try:
-			self.inventory.setCode(self.inventoryCode.value)
-			self.inventory.readFromDB()
+			for obj in self.objects:
+				obj.inventory.charInventory = self.inventory.charInventory
 		except TypeError:
 			pass
 
 		try:
-			for obj in self.objects:
-				obj.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = None)
-				obj.inventory.readFromDB()
-		except TypeError: #will fail if no objects
-			pass
-		try:
-			for character in self.characters:
-				character.inventory = inventory.PassiveInventory(self.db, title = "Room Items", charInventory = None) # FIXME inventory type for characters
-				character.inventory.readFromDB()
-		except TypeError as te:
+			for char in self.characters:
+				char.inventory.charInventory = self.inventory.charInventory
+		except TypeError:
 			pass
 
 	def writeRoom(self):

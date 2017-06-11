@@ -114,11 +114,14 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if inventEntry is None:
 			raise UserWarning("Item {} doesn't exist".format(itemName))
 
-		if(float(amount) <= float(inventEntry.item.smallestUnit.value)):
-			raise UserWarning("You can't move an amount <= the smallest unit you clot")
+		if(float(amount) < float(inventEntry.item.smallestUnit.value)):
+			raise UserWarning("You can't move an amount < the smallest unit you clot")
 
 		if(float(amount) > float(inventEntry.amount)):
 			raise UserWarning("You don't have enough to do that")
+
+		if(float(inventEntry.item.smallestUnit.value) <= 0):
+			raise UserWarning("You can't just take that!")
 
 		discreteAmount = math.floor(float(amount)/float(inventEntry.item.smallestUnit.value)) # Amount in units of the smallestUnit
 		adjustedAmount = discreteAmount*float(inventEntry.item.smallestUnit.value)
@@ -191,15 +194,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if int(itemCode) == entry.item.itemCode:
 			return float(entry.amount)
 
-	def refreshList(self):
-		if not self.checkEntryLength():
-			return
-		self.menu.listItems = []
-		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])
-		for inventEntry in self.items:
-			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
-			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
-
 	def refreshInventory(self):
 		self.refreshList()
 		userInput.printToScreen(self.menu.makeScreen())
@@ -249,6 +243,9 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if self.isEmpty():
 			return
 
+		if type(itemsName) in [list, tuple]:
+			itemsName = ' '.join(itemsName)
+
 		if itemsName in [None, [], '']:
 			options = ['Nothing']
 			options.extend(entry.item.itemName.value for entry in self.items)
@@ -256,19 +253,31 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			if(selection == 0):
 				return
 			else:
-				itemsName = [options[selection]]
-		userInput.printToScreen(self.getItemEntryByName(itemsName[0].title()).item.descrip.value)
+				itemsName = options[selection]
+		userInput.printToScreen(self.getItemEntryByName(itemsName.title()).item.descrip.value)
 
-class CharacterInventory(Inventory):
+class StandardInventory(Inventory):
 	def __init__(self, db):
 		Inventory.__init__(self, db)
 
-class PassiveInventory(Inventory):
+	def refreshList(self):
+		if not self.checkEntryLength():
+			# there are no items in the inventory
+			self.menu.listItems = []
+			self.menu.addListItem(['Empty','',''])
+			return
+		self.menu.listItems = []
+		self.menu.addListItem(['Name', 'Amount', 'Total Weight'])
+		for inventEntry in self.items:
+			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
+			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
+
+class PassiveInventory(StandardInventory):
 	'''
 	Inventory for rooms and objects
 	'''
 	def __init__(self, db, title = None, charInventory = None):
-		Inventory.__init__(self, db)
+		StandardInventory.__init__(self, db)
 
 		self.menuCommands.update({
 		'put':userInput.Command(func=self.put, takesArgs=True, descrip = 'Move an item to this inventory'),
@@ -312,18 +321,17 @@ class PassiveInventory(Inventory):
 		self.refreshList()
 		self.menu.runMenu()
 
-class HeroInventory(Inventory):
+class HeroInventory(StandardInventory):
 	'''
 	The players inventory, allows dropping items to the current room, and combining items
 	'''
 	def __init__(self, db, roomInventory = None):
-		Inventory.__init__(self, db = db)
+		StandardInventory.__init__(self, db = db)
 
 		self.menuCommands.update({
 		'drop':userInput.Command(func=self.drop, takesArgs=True, descrip = 'Drop an item on the floor')
 		})
 		self.menu.commands.update(self.menuCommands)
-
 		self.roomInventory = roomInventory
 
 	def drop(self, args):
