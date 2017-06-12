@@ -11,6 +11,7 @@ create table events(
 	itemCode int,
 	amount float,
 	charCode int,
+	objCode int,
 	eventDescrip string,
 	primary key(stage)
 );
@@ -65,5 +66,6 @@ create table objects(
 	useDescrip text,
 	usePrint text,
 	inventoryCode int,
+	interactedFlag bool NOT NULL,
 	primary key(objCode, stage)
 );

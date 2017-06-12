@@ -15,6 +15,7 @@ logsAndSaves = 'logsAndSaves'
 
 def loadSQLFile(db, fileName):
 	sqlLines = []
+	print(fileName)#fixme
 	with open(fileName, 'r') as f:
 		for line in f:
 			sqlLines.append(line)
@@ -309,8 +310,13 @@ class Game(GameCommands, GameMenu):
 
 	def _loadStage(self):
 		import os
-		loadSQLFile(db = self.db, fileName = os.path.join(sqlDir, 'stage{}.sql'.format(self.stage)))
-
+		stageFile = os.path.join(sqlDir, 'stage{}.sql'.format(self.stage))
+		if(os.path.isfile(stageFile)):
+			loadSQLFile(db = self.db, fileName = stageFile)
+			self.currRoom.writeRoom()
+			self.currRoom.loadRoom(self.stage)
+			self.setupNewRoom()
+			self.getRoomNeighbors()
 	def _exit(self):
 		self._save()
 		self._mute()

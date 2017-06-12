@@ -39,6 +39,7 @@ class Objects(StagedSqlTable):
 		self.useDescrip = self.elementTable.addElement(title = 'Object use method description', name = 'useDescrip', value = None, elementType = 'STRING')
 		self.usePrint = self.elementTable.addElement(title = 'What to print on use', name = 'usePrint', value = None, elementType = 'STRING')
 		self.inventoryCode = self.elementTable.addElement(title = 'Items in Object', name = 'inventoryCode', value = None, elementType = 'INT')
+		self.interactedFlag = self.elementTable.addElement(title = 'Object interacted with this stage', name = 'interactedFlag', value = None, elementType= 'INT')
 		self.inventory = None
 
 		self.table = 'objects'
@@ -70,5 +71,6 @@ class Objects(StagedSqlTable):
 			userInput.printToScreen('That doesn\'t serve a purpose, just like your sorry ass.')
 		else:
 			userInput.printToScreen(self.usePrint.value)
+		self.interactedFlag.value = True
 			#userInput.printToScreen('Who would visit this website? Why does this dirt bag have it set as his home screen? Some questions are not meant to be answered.')
 
