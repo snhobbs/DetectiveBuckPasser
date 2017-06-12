@@ -27,8 +27,8 @@ When the stage changes all the characters are referenced with that stage which b
 
 When you get a critical item or you enter a critical event happens, the stage incriments -> makes the game linear, but whatever
 
--> Go to murder
--> Talk to Canadian
+1) Check phone message from the chief
+2) Go to murder and talk to the canadian
 -> go to all apartments asking questions, make it clear this is going through the motions
 -> go to HG, try and get coke. Need $4
 -> find $4 in the couch cusions in all the apartments -> the canadian always has the tips for the current stage

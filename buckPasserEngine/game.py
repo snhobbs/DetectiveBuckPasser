@@ -15,7 +15,6 @@ logsAndSaves = 'logsAndSaves'
 
 def loadSQLFile(db, fileName):
 	sqlLines = []
-	print(fileName)#fixme
 	with open(fileName, 'r') as f:
 		for line in f:
 			sqlLines.append(line)
@@ -326,7 +325,9 @@ class Game(GameCommands, GameMenu):
 		gameDB = GameTable(self.db)
 		gameDB.setCode(0)
 		gameDB.readFromDB()
-		self.stage = gameDB.stage.value
+		self.stage = int(gameDB.stage.value)
+		self.eventManager.stage = self.stage
+		self.eventManager.nextEvent = self.stage#forces reloading of the event
 		self.__setupGame()
 
 	def _save(self):

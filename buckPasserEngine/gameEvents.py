@@ -31,17 +31,17 @@ class Event(SQLTable):
 class EventManager(object):
 	def __init__(self, db):
 		self.event = Event(db)
-		self.nextEvent = 1
-		self.stage = 0#FIXME change this for loading in previous saves
+		self.nextEvent = None
+		self.stage = None# this has to be set by the game
 
 	def getNextEvent(self):
 		'''
 		Load the next event requirements into self.nextEvent
 		'''
-		if(self.event.code == self.nextEvent):
-			return
-		self.event.code = self.nextEvent
-		self.event.readFromDB()
+		if(self.stage == self.nextEvent):
+			self.nextEvent = self.stage + 1
+			self.event.setCode(self.nextEvent)
+			self.event.readFromDB()
 
 	def checkEvent(self, inventory, room):
 		#get event type
@@ -57,10 +57,10 @@ class EventManager(object):
 				pass
 
 		elif self.event.itemCode.value not in [None, 'None', '', 'NULL']:
-			entry =	inventory.getItemEntry(self.events.itemCode.value)
+			entry =	inventory.getItemEntry(self.event.itemCode.value)
 			if entry is None:
 				return False
-			elif float(entry.amount) >= float(self.events.amount.value):
+			elif float(entry.amount) >= float(self.event.amount.value):
 				return True
 			else:
 				return False
