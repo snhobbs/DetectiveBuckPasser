@@ -82,6 +82,17 @@ def loadObjList(db, codeString, stage, factory):
 			objList.append(factory(db, code, stage))
 		return objList
 
+def genInsult():
+	import random
+	lines = []
+	lineCount = 0
+	with open("insults.txt", 'r') as f:
+		for line in f:
+			lineCount += 1
+			lines.append(line)
+	insultLine = random.randint(0,lineCount)
+	return lines[insultLine]	
+
 def printSelect(options = None, cursor = ''):
 	#options are an array of strings
 	uniqueOptions = set(options)
@@ -96,7 +107,12 @@ def printSelect(options = None, cursor = ''):
 		resp = inputUniversal(cursor)
 		if(resp.isdigit() and int(resp) < len(uniqueOptions) and int(resp) >= 0):
 			return int(resp)
-
+		else:
+			try:
+				float(resp)
+				printToScreen("Look at the options you {}".format(genInsult()))
+			except:
+				printToScreen("You gotta type a number {}".format(genInsult()))
 def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
 	'''
 	uses print select to return the actual option chosen, returns None if exit selected
