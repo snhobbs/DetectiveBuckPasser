@@ -89,7 +89,7 @@ def genInsult():
 	with open("insults.txt", 'r') as f:
 		for line in f:
 			lineCount += 1
-			lines.append(line)
+			lines.append(line.strip())
 	insultLine = random.randint(0,lineCount)
 	return lines[insultLine]	
 
@@ -112,7 +112,7 @@ def printSelect(options = None, cursor = ''):
 				float(resp)
 				printToScreen("Look at the options you {}".format(genInsult()))
 			except:
-				printToScreen("You gotta type a number {}".format(genInsult()))
+				printToScreen("You gotta type a number you {}".format(genInsult()))
 def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
 	'''
 	uses print select to return the actual option chosen, returns None if exit selected
