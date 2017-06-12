@@ -51,7 +51,7 @@ class Menu(BaseMenu):
 		BaseMenu.__init__(self, db, title, description)
 		self.cursor = cursor
 		self.MenuOptions = []
-		self.addOption(MenuOption(db = db, title = "Exit Menu", description="Exit Menu", commit = True, clear=True, action = self.exitMenu))
+		self.addOption(MenuOption(db = db, title = "Exit Menu", description="Exit Menu", commit = True, clear=False, action = self.exitMenu))
 
 	def exitMenu(self):
 		raise KeyboardInterrupt
