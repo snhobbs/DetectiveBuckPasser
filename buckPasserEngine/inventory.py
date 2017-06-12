@@ -254,7 +254,11 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 				return
 			else:
 				itemsName = options[selection]
-		userInput.printToScreen(self.getItemEntryByName(itemsName.title()).item.descrip.value)
+		item = self.getItemEntryByName(itemsName.title())
+		if item is None:
+			return
+		else:
+			userInput.printToScreen(item.item.descrip.value)
 
 class StandardInventory(Inventory):
 	def __init__(self, db):
