@@ -1,5 +1,8 @@
 #userInput.py
 
+global gameFiles
+gameFiles = 'gameFiles'
+
 def pythonVersion():
 	'''
 	return the python version
@@ -83,14 +86,14 @@ def loadObjList(db, codeString, stage, factory):
 		return objList
 
 def genInsult():
-	import random
+	import random, os
 	lines = []
 	lineCount = 0
-	with open("insults.txt", 'r') as f:
+	with open(os.path.join(gameFiles, "insults.txt"), 'r') as f:
 		for line in f:
 			lineCount += 1
 			lines.append(line.strip())
-	insultLine = random.randint(0,lineCount)
+	insultLine = random.randint(0,lineCount-1)
 	return lines[insultLine]	
 
 def printSelect(options = None, cursor = ''):

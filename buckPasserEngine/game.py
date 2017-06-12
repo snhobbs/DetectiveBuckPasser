@@ -6,8 +6,12 @@ from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 from sqlTable import SQLTable
 
+global gameFiles
+gameFiles = "gameFiles"
 global sqlDir
-sqlDir = "gameFiles"
+sqlDir = gameFiles
+global logsAndSaves
+logsAndSaves = 'logsAndSaves'
 
 def loadSQLFile(db, fileName):
 	sqlLines = []
@@ -262,7 +266,8 @@ class StartGame(Menu):
 		import os
 		if dbFile is None:
 			# Get a new game name
-			dbFile = "game_{}.db".format(userInput.inputUniversal('Enter a save name> ').upper().replace(' ','_').strip())
+			dbFileName = "game_{}.db".format(userInput.inputUniversal('Enter a save name> ').upper().replace(' ','_').strip())
+			dbFile = os.path.join(logsAndSaves, dbFileName)
 
 		if os.path.isfile(dbFile):
 			raise UserWarning("File name {} exists".format(dbFile))
@@ -276,9 +281,9 @@ class StartGame(Menu):
 		return dbFile
 
 	def _loadGame(self):
-		import glob
+		import glob, os
 		# Print a list of the available saves, have them choose one and load it in
-		dbs = glob.glob('game_*.db')
+		dbs = glob.glob(os.path.join(logsAndSaves, 'game_*.db'))
 		if len(dbs) < 1:
 			print('No Saved Games')
 			return
@@ -294,7 +299,7 @@ class Game(GameCommands, GameMenu):
 		import os
 		self.stage = None
 		self.musicProcess = None
-		os.stderr = open('log.log', 'w+')
+		os.stderr = open(dbFile.split('.')[0] + '.log', 'w+')
 		self.db = sqlite3.connect(dbFile)
 		GameCommands.__init__(self, self.db)
 		GameMenu.__init__(self, self.db)
