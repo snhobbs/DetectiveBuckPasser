@@ -125,6 +125,10 @@ def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
 	else:
 		return options[selection - 1]
 
+def clearScreen():
+	cols, rows = getTerminalSize()
+	clearLines(rows)
+
 def getTerminalSize():
 	'''
 	returns columns, rows
@@ -133,10 +137,14 @@ def getTerminalSize():
 	return shutil.get_terminal_size((80, 20))
 
 def clearLines(lines):
-	userInput.printToScreen("\033[F\033[K" * lines)
+	printToScreen("\033[F\033[K" * lines + '\033[F')
 
-def printToScreen(text): # FIXME add a clear option that will wipe the exact number of lines written
+def printToScreen(text, clear=False): # clear option that will wipe the exact number of lines written
 	import textwrap
 	width = getTerminalSize()[0]
+	lines = 0
 	for par in text.split('\n'):
+		lines += 1
 		print('\n'.join(textwrap.wrap(par, width=width, tabsize=4)))
+	if clear is True:
+		clearLines(lines)

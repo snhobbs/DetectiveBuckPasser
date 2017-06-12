@@ -38,7 +38,7 @@ class GameCommands(object):
 			'help':userInput.Command(func=self.printHelp, takesArgs=False, hide = True, descrip = 'No one can save you now'),
 			'move':userInput.Command(func=self.move, takesArgs=True, descrip = 'Move to a neighboring room'),
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Description of a person or thing'),
-			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this fucking explained you dim wit?'),
+			'talk':userInput.Command(func=self.talkTo, takesArgs=True, descrip = 'Really need this explained you {}?'.format(userInput.genInsult())),
 			'items':userInput.Command(func=self.listItems, takesArgs=False, descrip = 'List what you have on you'),
 			'search':userInput.Command(func=self.search, takesArgs=True, descrip = 'Root around for something'),
 			'look':userInput.Command(func=self.look, takesArgs=False, descrip = 'Look around'),
@@ -125,6 +125,7 @@ class GameCommands(object):
 
 	def printHelp(self):
 		userInput.printToScreen('\nNo one can help you\n')
+		self.commands['talk'].descrip = 'Really need this explained you {}?'.format(userInput.genInsult())
 		self.printCommands()
 
 	def describe(self, subject = None):
@@ -354,6 +355,7 @@ class Game(GameCommands, GameMenu):
 
 	def run(self):
 		try:
+			userInput.clearScreen()
 			self.currRoom.look()
 
 			lastRoom = self.currRoom
