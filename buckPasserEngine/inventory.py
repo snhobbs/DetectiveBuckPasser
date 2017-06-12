@@ -40,7 +40,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		self.menu = ListMenu(db = db, title = title, description = "Inventory", cursor = "Inventory> ", closeOnPrint = True, fields = 3, fieldLengths = [.3,.3,.4])
 		self.menuCommands = {
 			'describe':userInput.Command(func=self.describe, takesArgs=True, descrip = 'Describe an item'),
-			'look':userInput.Command(func=self.refreshInventory, takesArgs=False, descrip = 'List items again')
 		}
 
 	def addAmount(self, itemCode, amount):
@@ -153,7 +152,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 			# inventory is not empty
 			for amount, itemCode in resp:
 				self.loadItem(itemCode, amount)
-		self.refreshList()
 
 	def itemInInventory(self, itemCode):
 		try:
@@ -194,9 +192,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		if int(itemCode) == entry.item.itemCode:
 			return float(entry.amount)
 
-	def refreshInventory(self):
-		self.refreshList()
-		userInput.printToScreen(self.menu.makeScreen())
 
 	def parseTransaction(self, inventory, args):
 		'''
@@ -263,6 +258,7 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 class StandardInventory(Inventory):
 	def __init__(self, db):
 		Inventory.__init__(self, db)
+		self.menuCommands.update({'look':userInput.Command(func=self.refreshInventory, takesArgs=False, descrip = 'List items again')})
 
 	def refreshList(self):
 		if not self.checkEntryLength():
@@ -275,6 +271,14 @@ class StandardInventory(Inventory):
 		for inventEntry in self.items:
 			weight = float(inventEntry.item.weight.value) * float(inventEntry.amount)
 			self.menu.addListItem([inventEntry.item.itemName.value, inventEntry.amount, "%.3f"%weight])
+
+	def readFromDB(self):
+		super().readFromDB()
+		self.refreshList()
+
+	def refreshInventory(self):
+		self.refreshList()
+		userInput.printToScreen(self.menu.makeScreen())
 
 class PassiveInventory(StandardInventory):
 	'''
