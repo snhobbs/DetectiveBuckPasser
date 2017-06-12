@@ -254,8 +254,8 @@ class GameMenu(Menu):
 class StartGame(Menu):
 	def __init__(self):
 		Menu.__init__(self, db = None, title =  'Detective Buck Passer', description="", cursor = "Game Menu> ")
-		self.addOption(MenuOption(db = None, title = "New Game", description="It's your own funeral", commit = False, action = self._newGame))
-		self.addOption(MenuOption(db = None, title = "Load", description="Load a previous save", commit = False, action=self._loadGame))
+		self.addOption(MenuOption(db = None, title = "New Game", description="It's your own funeral", clear=False, commit = False, action = self._newGame))
+		self.addOption(MenuOption(db = None, title = "Load", description="Load a previous save", clear=False, commit = False, action=self._loadGame))
 
 	def _newGame(self, dbFile = None):
 		import os
