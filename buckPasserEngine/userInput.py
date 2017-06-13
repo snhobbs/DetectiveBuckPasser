@@ -1,4 +1,11 @@
 #userInput.py
+try:
+	import readline
+except ImportError:
+	try:
+		import pyreadline
+	except ImportError:
+		pass
 
 global gameFiles
 gameFiles = 'gameFiles'

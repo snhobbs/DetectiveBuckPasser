@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import Room, hero, Character, objects, inventory, userInput
-import readline, traceback, sqlite3
+import traceback, sqlite3
 from gameEvents import EventManager
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
