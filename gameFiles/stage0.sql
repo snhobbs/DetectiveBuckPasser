@@ -3,6 +3,8 @@
 /**characters**/
 insert into game values(0,0);
 
+insert into cutScene values(0, 'The Bowery, New York, 1972. 12:27PM', 'You wake up in your grimey bed. The neon light from the Hustler sign across the street somehow manages to make its way through the dense smog. Your 1 room apartment is doused in its light, the sun doesnt have a chance.~The Fancy Feast cat food cannery across the street has drawn even more alley cats.~Time to start the day');
+
 insert into chars values(0, 1, 'Bear', "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", 1,
 	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Oh man is that a mess", "nextOpts" : []}}}', 0);
 

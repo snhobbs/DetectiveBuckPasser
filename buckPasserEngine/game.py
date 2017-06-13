@@ -277,7 +277,7 @@ class StartGame(Menu):
 
 		db = sqlite3.connect(dbFile)
 		# make the new db ensuring its not writing over another file of the same name
-		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql', 'cutScenes.sql', 'stage0.sql']
+		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql', 'stage0.sql']
 		for sqlFile in sqlFiles:
 			loadSQLFile(db = db, fileName = os.path.join(sqlDir, sqlFile))
 		db.commit()
