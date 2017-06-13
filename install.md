@@ -20,3 +20,6 @@
 		</ul>
 	<h3>Running</h3>
 		<ul><li>Type: python3 buckPasser.py or just ./buckPasser.py into the command line</li></ul>
+
+<h2>Dependancies for Sound</h2>
+Sound is not functional unless the simpleaudio package is installed, but the game runs fine without it.
