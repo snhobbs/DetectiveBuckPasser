@@ -18,6 +18,8 @@ class Conversation(object):
 		self.conv['startOpts'].append(list(option.keys())[0])
 
 	def makeOpt(self, ques, resp):
+		ques.replace("'", "|")
+		resp.replace("'","|")
 		return {self.getOptName(): {"ques": ques, "resp": resp}, "nextOpts": []}
 
 	def addOpt(self, attachedOpt, ques, resp):

@@ -2,10 +2,10 @@ dummy
 dingus
 dork
 tool
-fool hardy harumph
+simpleton
 joker
-asbsurd andy
-yukon jack
+hillbilly
+meathead
 inbred
 ignorant ingrate
 loute
@@ -18,7 +18,7 @@ hyena filth
 gunsel
 jerk
 moron
-foul ragamuffin strumpet
+foul ragamuffin
 dolt
 imbecile
 ignoramus
@@ -38,3 +38,4 @@ twerp
 fathead
 wacko
 complete annoyance of a human being
+living breathing mistake

@@ -50,7 +50,7 @@ insert into chars values(0, 12, 'Hammer Guy', "Piece of shit, but hey, there's a
 	'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "You seen my keys? My cars", "nextOpts" : []}}}', 0);
 
 /**objects**/
-insert into objects values(0,0, "Bear's Corpse", "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Reall    y his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", "A cold stiff corpse of a poorly groomed Kodiak Grizzly","Investigate", "Search for clues", "Better leave that for someone else actually",200, 0);
+insert into objects values(0,0, "Bear's Corpse", "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", "A cold stiff corpse of a poorly groomed Kodiak Grizzly","Investigate", "Search for clues", "Better leave that for someone else actually",200, 0);
 
 insert into objects values(0,1, 'Toilet', "It's just a flowery plush arm chair with the seat cut out strategically placed over an empty can of Beefarino", "I guess it's a toilet", "flush", "Flush the toilet","You heave the can of beefarino out the window, no one notices, not even the alley cats or the hooker eating a tire",201, 0);
 
