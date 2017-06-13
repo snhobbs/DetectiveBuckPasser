@@ -19,7 +19,7 @@
 
 <h2>Linux/BSD/Mac/Solaris/AIX Install:</h2>
 	<h3>You almost already have python3!</h3>
-	<h3>Clone the repository</h3>
+	<h3>Clone the repository or download the zip</h3>
 		<ul>
 		<li>Download the zip file <a>https://github.com/snhobbs/DetectiveBuckPasser/archive/master.zip</a></li>
 		<li>Unzip and ensure your working directory is the one with buckPasser.py</li>
