@@ -3,7 +3,7 @@
 <a>https://www.howtogeek.com/197947/how-to-install-python-on-windows/</a>
 	<h3>2) Download Code</h3>
 			<ul>
-			<li>Download the zip file<a>https://github.com/snhobbs/DetectiveBuckPasser/archive/master.zip</a></li>
+			<li>Download the zip file <a>https://github.com/snhobbs/DetectiveBuckPasser/archive/master.zip</a></li>
 			<li>Unzip the code</li>
 			<li>Open a command window in the directory that has buckPasser.py</li></ul>
 	<h3>Running</h3>
