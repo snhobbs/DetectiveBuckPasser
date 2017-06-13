@@ -281,6 +281,10 @@ class StartGame(Menu):
 		for sqlFile in sqlFiles:
 			loadSQLFile(db = db, fileName = os.path.join(sqlDir, sqlFile))
 		db.commit()
+		cutScene = CutScene(db)
+		cutScene.setCode(0)
+		cutScene.readFromDB()
+		cutScene.play()
 		return dbFile
 
 	def _loadGame(self):

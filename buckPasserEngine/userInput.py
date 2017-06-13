@@ -150,8 +150,9 @@ def printToScreen(text, color='green'): # clear option that will wipe the exact 
 	lines = 0
 	print(colorCode.format(colors[color]), end = '')
 	for par in text.split('\n'):
-		lines += 1
-		print('\n'.join(textwrap.wrap(par, width=width, tabsize=4)))
+		wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
+		lines += len(wrappedLines) 
+		print('\n'.join(wrappedLines))
 	print(colorCode.format(colors['clear']), end = '')
 	print(colorCode.format(colors['green']), end = '')
 	return lines

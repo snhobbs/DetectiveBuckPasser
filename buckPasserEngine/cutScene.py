@@ -13,6 +13,7 @@ class CutScene(SQLTable):
 		self.text = self.elementTable.addElement(title = 'Cut scene main text', name = 'text', value = None, elementType = 'STRING')
 	
 	def play(self):
+		userInput.clearScreen()
 		columns, rows = userInput.getTerminalSize()
 		userInput.printToScreen(self.title.value.center(columns), color='cyan')
 		userInput.printToScreen(''.center(columns, '='))
