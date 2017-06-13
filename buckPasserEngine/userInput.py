@@ -140,11 +140,11 @@ def getTerminalSize():
 	return shutil.get_terminal_size((80, 20))
 
 def clearLines(lines):
-	print("\033[F\033[K" * lines + '\033[F', end = '')
+	print("\033[F\033[K" * lines + '\033[F\033[K', end = '')
 
-def printToScreen(text, clear=False, color='green'): # clear option that will wipe the exact number of lines written
+def printToScreen(text, color='green'): # clear option that will wipe the exact number of lines written
 	import textwrap
-	colors = {'green': 152, 'yellow': 93, 'red': 91, 'cyan': 95}
+	colors = {'clear': 0, 'green': 152, 'yellow': 93, 'red': 91, 'cyan': 95}
 	colorCode = '\033[{}m'
 	width = getTerminalSize()[0]
 	lines = 0
@@ -152,6 +152,6 @@ def printToScreen(text, clear=False, color='green'): # clear option that will wi
 	for par in text.split('\n'):
 		lines += 1
 		print('\n'.join(textwrap.wrap(par, width=width, tabsize=4)))
-	if clear is True:
-		clearLines(lines)
+	print(colorCode.format(colors['clear']), end = '')
 	print(colorCode.format(colors['green']), end = '')
+	return lines

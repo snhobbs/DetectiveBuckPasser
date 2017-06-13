@@ -12,7 +12,15 @@ create table events(
 	amount float,
 	charCode int,
 	objCode int,
+	roomCode int,
 	eventDescrip string,
+	primary key(stage)
+);
+
+create table cutScene(
+	stage int NOT NULL,
+	title text NOT NULL,
+	text text NOT NULL,
 	primary key(stage)
 );
 

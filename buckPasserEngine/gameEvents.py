@@ -22,6 +22,7 @@ class Event(SQLTable):
 		self.amount = self.elementTable.addElement(title = 'Event Item Amount', name = 'amount', value = None, elementType = 'FLOAT')
 		self.charCode = self.elementTable.addElement(title = 'Character Interaction Code', name = 'charCode', value = None, elementType = 'INT')
 		self.objCode = self.elementTable.addElement(title = 'Object interaction code', name = 'objCode', value = None, elementType = 'INT')
+		self.roomCode = self.elementTable.addElement(title = 'current room code', name = 'roomCode', value = None, elementType = 'INT')
 		self.table = 'events'
 		self.codeName = 'stage'
 
@@ -75,6 +76,13 @@ class EventManager(object):
 							return False
 			except TypeError:#no objects
 				pass
+		
+		elif self.event.roomCode.value not in [None, 'None','','NULL']:
+			if(int(room.code) == int(self.event.roomCode.value)):
+				return True	
+			else:
+				return False
+
 		else:
 			raise Exception("Event {} has bad values".format(self.event.code))
 

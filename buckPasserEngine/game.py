@@ -6,6 +6,7 @@ from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 from sqlTable import SQLTable
 from startScreen import title
+from cutScene import CutScene
 global gameFiles
 gameFiles = "gameFiles"
 global sqlDir
@@ -276,7 +277,7 @@ class StartGame(Menu):
 
 		db = sqlite3.connect(dbFile)
 		# make the new db ensuring its not writing over another file of the same name
-		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql', 'stage0.sql']
+		sqlFiles = ['sqlStructure.sql', 'items.sql', 'events.sql', 'cutScenes.sql', 'stage0.sql']
 		for sqlFile in sqlFiles:
 			loadSQLFile(db = db, fileName = os.path.join(sqlDir, sqlFile))
 		db.commit()
@@ -308,7 +309,7 @@ class Game(GameCommands, GameMenu):
 		self.musicMenu = MusicMenu(self.db, self.musicProcess)
 		self.eventManager = EventManager(self.db)
 		self._load()
-
+		self.cutScene = CutScene(self.db)
 	def _loadStage(self):
 		import os
 		stageFile = os.path.join(sqlDir, 'stage{}.sql'.format(self.stage))
@@ -365,8 +366,15 @@ class Game(GameCommands, GameMenu):
 		stageCheck = self.eventManager.checkGameEvent(self.buckPasser.inventory, self.currRoom)
 		if(stageCheck is not None):
 			self.setStage(stageCheck)
+			self.cutScene.setCode(self.stage)
+			cutSceneCount = self.cutScene.getCountInTable(conditions = self.cutScene.tableCode)
+	
+			if(self.cutScene.getCountInTable(conditions = self.cutScene.tableCode) > 0):
+				self.cutScene.readFromDB()
+				self.cutScene.play()
 		self._save()
-
+		
+		
 	def run(self):
 		try:
 			userInput.clearScreen()
