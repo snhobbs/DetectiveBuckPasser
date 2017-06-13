@@ -1,67 +1,50 @@
-bear is the super of a slum. His dad owns it and gave bear the job.
-he starts in his apartment goes immediately to hg tries and buys coke, hgs trunk is locked, cant find his keys
-you have to go around and go apartment to apartment doing favors for them to progress
-after you get the keys go to hg, unlock the trunk. bears head is just sitting in a rubbermaid, hg picks up the head and the cokes under the head.
-you then go back, sprinkle the blow on the body, it becomes the drug squads problem.
-have an option to arrest hg for the murder of bear (how do we handle this?)
+Background:
 
+Bear is the super of a slum. His dad owns it and gave bear the job. He has been found dead in the Kodiak Apartments in the Bowery and Buck is on the case.
 Bear is the murder victim, every apartment has a message from bear asking to hangout with something that he was supposed to do for them (fixing the toilet etc)
+
+Game Play:
+
+you have to go around and go apartment to apartment doing favors for them to progress
 the rooms stay stagnent until an 'event' occurs -> you get an object or talk to a critical person, then the dialog changes/items change etc.
+ the canadian always has the tips for the current stage
 
-you have to get hgs keys -> when you get the keys and go to the pontiac its been towed. Highlight the stte of the car and that it hasnt moved in years. You then have to get a steak, wire cutters and a tow driver. You just put the beat ass car back in the grooves the tires have sunk into over the years. you give the items to hg he gets the car.
+Story:
 
-you need to get a new hammer for hg, talk to 6$ and you need to get evidence on him to extort money from him. got to robot to get him to run a scan. robot wants the old foot in a boot. old lady wants a date w/ jfk. talk to jfk, long talk to do ALL the jokes. 'ask naught if I can get to 1st base butt rather how she feels about ass play" "response: she's all about the bum.".
+Stage 0:
+	Buck starts in his apartment and can't leave until he checks his phone messages. (check messages)
+Stage 1:
+	The Apartments are now accessible and he must go to the murder scene and talk to the Canadian who reveals himself as the help (talk to canadian)
+Stage 2:
+	Go room to room and talk to everyone, kill Guy Fieri. (1 stage for each character, nothing changes in between)
+Stage 3:
+	Home Depot opens as an option. Got to hg, try and buys coke, hgs trunk is locked, cant find his keys (talk to hg)
+Stage 4:
+	Search the murder scene and find car keys there (get keys)
+Stage 5:
+	Go back to hg, the pontiac has been towed. Highlight the state of the car and that it hasnt moved in years.  (talk to hg)
+Cut Scene:
+	After the car get towed he goes home grabbing a sixer of shaefer on his way back. (emphasis on this being his everyday behavior)
+Stage 6:
+	Talk to ? How does the string of favours unravel? You then have to get a steak, wire cutters and a tow driver. You need to get a new hammer for hg, talk to 6$ and you need to get evidence on him to extort money from him. got to robot to get him to run a scan. robot wants the old foot in a boot. old lady wants a date w/ jfk. talk to jfk, long talk to do ALL the jokes. 'ask naught if I can get to 1st base butt rather how she feels about ass play" "response: she's all about the bum.".
+Stage 7:
+	Get hgs car back. You just put the beat ass car back in the grooves the tires have sunk into over the years. (Talk to HG)
+Cut Scene:
+	Open trunk, Bears head is just sitting in a rubbermaid, hg picks up the head and the cokes under the head. (Cut scene ends)
+Stage 8:
+	Go to murder sprinkle the blow on the body, it becomes the drug squads problem. (enter murder scene)
+Cut Scene:
+	You sprinkling blow on the body
+Cut Scene:
+	Have an option to arrest hg for the murder of bear, but its been taken off your hands, so who are you to complain?
 
-After the car get towed he goes home grabbing a sixer of shaefer on his way back. (emphasis on this being his everyday behavior)
 
-What kind of favors?
-items?
-why did hg kill bear?
-what are the special items? keys, coke, favor items
-
-Structure:
-The game stays static in each stage, there is a stage variable that is referenced in the mysql calls that sets this. Within a given stage a character that interacts (i.e. a special event occurs) has a 'completed' state.
-
-As the game loops there needs to be a stage test, which goes through our inventory and decides if the stage has incimented
-When the stage changes all the characters are referenced with that stage which binds their attributes
-
-When you get a critical item or you enter a critical event happens, the stage incriments -> makes the game linear, but whatever
-
-1) Check phone message from the chief
-2) Go to murder and talk to the canadian
--> go to all apartments asking questions, make it clear this is going through the motions
--> go to HG, try and get coke. Need $4
--> find $4 in the couch cusions in all the apartments -> the canadian always has the tips for the current stage
--> go back to HG, car has been towed. Need stuff to bust the car out
+-> find $4 in the couch cusions in all the apartments ->
 -> Have to get a steak, pipe wrench, blow torch, and a homemade zip gun	-> Go get the other 4 dollars from 6 dollar man
 	You get the information on six dollar man from computer.
--> Chach-Naughts is a bodega -> what do we get from that bodega?
--> get the stuff (put this chain together)
--> Go back to HG -> for now just have the story of them busting in to get the car, maybe include later
--> They get the car, get the coke, its under bears head, end of game
 
-Questions
-	-> How does the bodega fit in?
-	-> Do we do the revolver or whiskey?
-	-> Can we break up the break in, coke scene anymore?
+Add cut scenes, add event triggering on current room code
 
-Important Objects:
-	-> Telephones w/ messages from bear
-	-> Bears corpse (object or character?)
+Beefarino, for the man that's given up (Marketing poster for inspecting beefarino)
 
-Events
-	-> Items
-	-> conversations
-
-Todo
-	- Make the phone object
-	- More complex neighbor objects
-		- Locked rooms still listed but prints a statment instead of moving
-
-
-Stage 0
-	- Stuck in the apartment until you check your phone messages
-	- Message from the chief about the grizzly murder
-
-Stage 1
-	-
+As you unholster the greasy tarnished M1911 you see the look of exceptance in Six Dollar's eyes. He embraces the sweet release of death, you reholster your gun, who are you to give such satisfaction?

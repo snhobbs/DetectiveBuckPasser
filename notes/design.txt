@@ -43,3 +43,83 @@ Character Inventory
 
 
 
+game structure
+
+Detective
+---------
+- inventory
+
+Characters
+----------
+- inventory
+
+Rooms
+-----
+- inventory
+- move -> look through the neighbors and move to the room described
+- Door -> every room has a door which is locked or unlocked, if its locked there is a message with it that so the room can be closed
+
+Objects
+-------
+- search the object -> takes you to a menu where you can take the items in the object
+- insert -> inserts an item from your inventory into the object
+
+Items
+-----
+- held in an inventory
+- has size (aka volume), weight, and whether or not the item is critical (critical items cannot be sold or discarded)
+- use method
+- consume amount
+
+Inventory
+---------
+- Objects, characters, and rooms have an inventory of items
+- contains the item code and amount of the item
+- has a transfer method that moves a specified amount of an object from one inventory to another
+- method 'use (item name)' calls the specified items use method and removes the consume amount of the item from your inventory
+
+Commands
+--------
+1 word command (use, talk, inspect...)
+[possible filler (to, with, at...)]
+subject
+to pass/drop/get an object you need to be 'in scope' with the object, character, or room.
+
+Item Transaction
+----------------
+-> search ___ (room for the current room, object name for the object)
+-> talk ___ person -> option to transfer items
+
+Menus
+-----
+How to do menus?
+
+Stages
+------
+The game stays static until an 'event' happens. Then their new status needs to be loaded
+Needs a game status option and a 'done talking' option
+
+
+Machinery Needed
+----------------
+1) Menus
+2) Character interactions menus
+3) Loading character state after an event change
+4) How to talk to a character
+
+
+____________________________________________________
+Commands
+
+mute stops all sounds
+unmute unmutes sounds
+start brings up the game menu
+sound brings up the sound menu
+
+when you enter a room is prints the description of the room, who is in it and what objects are there. Items present in the room must be searched for
+move ___(room name) moves you to a new room if it is an available neighbor
+talk ___(character name) brings up a character interaction menu -> then have item options, question, ...
+search ___(room/object) brings up the inventory of them
+inspect ___(person, object, item) gives more information about the subject
+commands/help brings up the possible commands
+
