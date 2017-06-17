@@ -147,22 +147,21 @@ def getTerminalSize():
 	return shutil.get_terminal_size((80, 20))
 
 def clearLines(lines):
-	printToScreen("\033[F\033[K" * lines + '\033[F\033[K', end = '')
+	import os
+	if os.name != 'posix':
+		for _ in range(lines):
+			colorama.winterm.clear_line()
+	else:
+		printToScreen("\033[F\033[K" * lines + '\033[F\033[K', end = '')
 
 def printToScreen(text, color='green', end = None): 	
 	import textwrap, colorama, os, sys
-	#colorama.ansi()
 
 	width = getTerminalSize()[0]
 	lines = 0
 	colorama.init()
-	ansiWin = colorama.ansitowin32.AnsiToWin32(sys.stdout)
 	for par in text.split('\n'):
 		wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
 		lines += len(wrappedLines)
-		if(os.name != 'posix'):
-			print('\n'.join(wrappedLines), end = end)
-			#ansiWin.write_and_convert('\n\r'.join(wrappedLines))
-		else:
-			print('\n'.join(wrappedLines), end = end)
+		print('\n'.join(wrappedLines), end = end)
 	return lines
