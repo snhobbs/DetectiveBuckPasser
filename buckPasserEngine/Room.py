@@ -50,7 +50,7 @@ class Room(StagedSqlTable):
 			if self.characters is None:
 				outArray[0][0] = "You're all alone"
 			else:
-				outArray[0][0] = "People around:\n\t"
+				outArray[0][0] = "People around:"
 				for i, char in enumerate(self.characters):
 					outArray[i+1][0] = char.charName.value
 
