@@ -1,11 +1,6 @@
-insert into rooms values(2,23,'Murder Scene', '5,6', NULL, "Gruesome murder scene", 123,'0');--Steve has left the murder and gone to his own apartment
-insert into rooms values(2,9,'1 A','6,7,8,18', '4', "Apartment 1A, Steve the Canadian's place.", 109,NULL);--Steve's home
-
-insert into chars values(2, 4, 'Steve The Canadian', "Canadian AF. Real shithole you got here. Worse mess than when I saw this biker get in a tiffy with a moose. He's the hints.", 4, NULL, 
-	'{"startOpts" : ["opt1"], "options" : 
-		{"opt1": {"ques": null, "resp" : "Oh hey there bud, whats on your mind? ya want a Molson?", "nextOpts" : ["opt2", "opt3", "opt4"]}, 
-		 "opt2": {"ques": "Just give me the beer", "resp": "Sure thing there, let me know if ya need a hand looking around", "nextOpts": []}, 
-		 "opt3": {"ques": "I hear you know things. Tell me whats going on", "resp": "Oh I keep my ear to the tundra, what do ya want ta know bud?", "nextOpts": ["opt5", "opt6"]}, 
-		 "opt4": {"ques": "Tell me everything you know", "resp": "Hey bud, Im happy to help but youll need to be more polite than that. How about that Molson?", "nextOpts": []},
-		 "opt5": {"ques": "Who should I talk to?", "resp": "Oh I would suggest talking to everyone, arent you supposed to be the mountie?", "nextOpts": []}, 
-		 "opt6": {"ques": "What do I need to get?", "resp": "I havent heard of anything", "nextOpts": []} }}', 0);
+update game set stage = 2 where code = 0;
+insert into cutScene values(2,"The Bowery, Tchotch-Naughts Bodega, 12:34pm","You stumble down the dark stairway sporting yesterdays clothes and last weeks odor. You’re not sure if it’s broken glass, potato chips or bone but the stairs crunch and crackle under foot. The only thing guiding you through the darkness is a dim light glowing at the end of the stairs.
+^Walking into the bodega below you see the man that you'd detest if you were still capable of emotional response, the landlord, you owe him the rent.
+^There he is, John F Kennedy, a reconstructed abomination of the 35th President of the United States. You’re not sure if he is the real JFK, but you don't do your job at work so why start on the off hours?
+^He's yelling at a film of Apollo 11 coverage while cutting Macy’s security tags off of a haul of Hawaiian shirts and putting them on the sales rack. The mechanical jaw the hack surgeons gave him needs more oil. If this store didn't sell Schaefer it'd be a complete wash.
+^Just give him the rent and don't look at Armstrong on the screen, you have no energy for that again.");
