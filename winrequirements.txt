@@ -1,0 +1,4 @@
+#winrequirements.txt
+pyreadline>=2.1
+colorama>=0.3.9
+simpleaudio>=1.0.1
