@@ -6,6 +6,7 @@ except ImportError:
 		import pyreadline
 	except ImportError:
 		pass
+import os, sys, colorama, shutil
 
 global gameFiles
 gameFiles = 'gameFiles'
@@ -14,7 +15,6 @@ def pythonVersion():
 	'''
 	return the python version
 	'''
-	import sys
 	return sys.version.split(' ')[0]
 
 def checkForPackage(packageName):
@@ -93,7 +93,7 @@ def loadObjList(db, codeString, stage, factory):
 		return objList
 
 def genInsult():
-	import random, os
+	import random
 	lines = []
 	lineCount = 0
 	with open(os.path.join(gameFiles, "insults.txt"), 'r') as f:
@@ -123,6 +123,7 @@ def printSelect(options = None, cursor = ''):
 				printToScreen("Look at the options you {}".format(genInsult()))
 			except:
 				printToScreen("You gotta type a number you {}".format(genInsult()))
+
 def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
 	'''
 	uses print select to return the actual option chosen, returns None if exit selected
@@ -137,31 +138,36 @@ def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
 
 def clearScreen():
 	cols, rows = getTerminalSize()
-	clearLines(rows)
+	clearLines(rows + 1)
 
 def getTerminalSize():
 	'''
 	returns columns, rows
 	'''
-	import shutil
 	return shutil.get_terminal_size((80, 20))
 
 def clearLines(lines):
-	import os
-	if os.name != 'posix':
-		for _ in range(lines):
-			colorama.winterm.clear_line()
-	else:
-		printToScreen("\033[F\033[K" * lines + '\033[F\033[K', end = '')
+	printToScreen("\033[F\033[2K", end = '')
+	printToScreen("\033[F\033[K" * lines, end = '')
 
-def printToScreen(text, color='green', end = None): 	
-	import textwrap, colorama, os, sys
+def printToScreen(text, color='LIGHTGREEN', backColor='BLACK', end = None): 	
+	import textwrap
 
 	width = getTerminalSize()[0]
 	lines = 0
 	colorama.init()
+	
+	try:
+		print(colorama.ansi.Fore.__dict__[color], end = '')
+		print(colorama.ansi.Back.__dict__[backColor], end = '')
+	except KeyError:
+		pass
+
 	for par in text.split('\n'):
 		wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
 		lines += len(wrappedLines)
 		print('\n'.join(wrappedLines), end = end)
+
+	print(colorama.ansi.Fore.RESET, end = '')
+	print(colorama.ansi.Back.RESET, end = '')
 	return lines

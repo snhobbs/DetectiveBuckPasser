@@ -3,7 +3,8 @@ import userInput
 
 class CutScene(SQLTable):
 	'''
-	When a stage changes, check in the game if a cutscene with the next stage exists and display it
+	When a stage changes, check in the game if a cutscene with the next stage exists and display it.
+	~ is a clearing pause, ^ is a none clearing pause
 	'''
 	def __init__(self, db):
 		SQLTable.__init__(self, db)
@@ -13,17 +14,19 @@ class CutScene(SQLTable):
 		self.text = self.elementTable.addElement(title = 'Cut scene main text', name = 'text', value = None, elementType = 'STRING')
 	
 	def play(self):
+		userInput.clearLines(1)
 		userInput.clearScreen()
 		columns, rows = userInput.getTerminalSize()
-		userInput.printToScreen(self.title.value.center(columns), color='cyan')
+		userInput.printToScreen(self.title.value.center(columns), color='CYAN')
 		userInput.printToScreen(''.center(columns, '='))
 		textStatements = self.text.value.split('~')
 		for statement in textStatements:
-			lines = userInput.printToScreen(statement)
-			userInput.inputUniversal('...')
-			userInput.clearLines(lines) # clear the input lines
+			lines = 0
+			for pauseStatement in statement.split('^'):
+				lines += userInput.printToScreen(pauseStatement)
+				userInput.inputUniversal('...')
+				userInput.clearLines(0)
+				lines += userInput.printToScreen('')
+			userInput.clearLines(lines+1) # clear the input lines
 		userInput.clearLines(1)
-		print("\033[2K", end = '')
-
-if __name__ == "__main__":
-	pass
+		# print("\033[2K", end = '')

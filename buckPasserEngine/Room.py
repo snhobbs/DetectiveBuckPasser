@@ -32,15 +32,54 @@ class Room(StagedSqlTable):
 		self.codeName = 'roomCode'
 
 	def look(self):
+		def printStuff(self, cols):
+			'''
+			Format the character and object printing
+			'''
+			if self.characters is None:
+				charLen = 0
+			else:
+				charLen = len(self.characters)
+
+			if self.objects is None:
+				objLen = 0
+			else:
+				objLen = len(self.objects)
+
+			outArray = [[None, None] for _ in range(1+max(charLen, objLen))]
+			if self.characters is None:
+				outArray[0][0] = "You're all alone"
+			else:
+				outArray[0][0] = "People around:\n\t"
+				for i, char in enumerate(self.characters):
+					outArray[i+1][0] = char.charName.value
+
+			if self.objects is not None:
+				outArray[0][1] = "Things around:"
+				for i, obj in enumerate(self.objects):
+					outArray[i+1][1] = obj.objName.value
+
+			width = int(cols/2)
+			for line in outArray:
+				if line[0] is None:
+					left = ' '*width
+				else:
+					left = "{1}{0}".format(' '*(width - len(line[0])), line[0])
+				if line[1] is None:
+					right = '|'
+				else:
+					right = '| {}'.format(line[1])
+				userInput.printToScreen("{}{}".format(left, right))
+
+		cols, rows = userInput.getTerminalSize()
+		userInput.clearScreen()
+		userInput.printToScreen(self.roomName.value.center(cols), color='CYAN')
+	
+		userInput.printToScreen(''.center(cols, '='), color='WHITE')
 		userInput.printToScreen(self.descrip.value)
-		if self.characters != None:
-			userInput.printToScreen("Characters: \n\t{}".format('\n\t'.join(char.charName.value for char in self.characters)))
-		else:
-			userInput.printToScreen("You're all alone")
-
-		if self.objects != None:
-			userInput.printToScreen("Things in the room: \n\t{}".format('\n\t'.join(obj.objName.value for obj in self.objects)))
-
+		
+		printStuff(self, cols)
+	
 	def loadRoom(self, stage):
 		'''
 		Load objects, inventories, and characters based off of the current game stage
