@@ -150,16 +150,19 @@ def clearLines(lines):
 	printToScreen("\033[F\033[K" * lines + '\033[F\033[K', end = '')
 
 def printToScreen(text, color='green', end = None): 	
-	import textwrap, colorama, os
+	import textwrap, colorama, os, sys
 	#colorama.ansi()
 
 	width = getTerminalSize()[0]
 	lines = 0
+	colorama.init()
+	ansiWin = colorama.ansitowin32.AnsiToWin32(sys.stdout)
 	for par in text.split('\n'):
 		wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
 		lines += len(wrappedLines)
 		if(os.name != 'posix'):
-			colorama.ansitowin32().write_and_convert('\n'.join(wrappedLines))
+			print('\n'.join(wrappedLines), end = end)
+			#ansiWin.write_and_convert('\n\r'.join(wrappedLines))
 		else:
 			print('\n'.join(wrappedLines), end = end)
 	return lines
