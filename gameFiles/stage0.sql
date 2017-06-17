@@ -3,7 +3,12 @@
 /**characters**/
 insert into game values(0,0);
 
-insert into cutScene values(0, 'The Bowery, New York, 1972. 12:27PM', 'You wake up in your grimey bed. The neon light from the Hustler sign across the street somehow manages to make its way through the dense smog. Your 1 room apartment is doused in its light, the sun doesnt have a chance.^The Fancy Feast cat food cannery across the street has drawn even more alley cats.~Time to start the day');
+insert into cutScene values(0,"New York City, The Bowery, 1972. 9pm","There you are piss drunk, shuffling down the street on a Tuesday parting the rats, cockroaches, and old newspapers like Moses parting the red sea, that is if you count the people you're leading as the almost finished 18 pack of Schaefer in your hand and a lingering question of if you should chase the last one down with a bullet. 
+^But there's no time to finally finish something, a bowery bum stops you in your path flashing a switchblade demanding money. You pause.
+^As you finish smashing the last bottle over the man's head everything comes back into focus, Rays is open for another hour. After finishing 2 slices and cleaning the bum's blood off in the bathroom you decide to start the shuffle back home. There's so much to do tomorrow, and you don't want anything to do with it.
+^You walk up the stairs to your apartment and go to bed, hopefully the bats are already sleeping.");
+
+--insert into cutScene values(0, 'The Bowery, New York, 1972. 12:27PM', 'You wake up in your grimey bed. The neon light from the Hustler sign across the street somehow manages to make its way through the dense smog. Your 1 room apartment is doused in its light, the sun doesnt have a chance.^The Fancy Feast cat food cannery across the street has drawn even more alley cats.~Time to start the day');
 
 insert into chars values(0, 1, 'Bear', "Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.", 1,
 	NULL,'{"startOpts" : ["opt1"], "options" : {"opt1" : {"ques" : null, "resp" : "Oh man is that a mess", "nextOpts" : []}}}', 0);
