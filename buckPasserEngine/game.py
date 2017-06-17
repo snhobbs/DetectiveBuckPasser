@@ -5,7 +5,7 @@ from gameEvents import EventManager
 from musicPlayer import MusicMenu
 from menus import Menu, MenuOption
 from sqlTable import SQLTable
-from startScreen import title
+import startScreen
 from cutScene import CutScene
 global gameFiles
 gameFiles = "gameFiles"
@@ -263,7 +263,7 @@ class StartGame(Menu):
 		Menu.__init__(self, db = None, title =  'Detective Buck Passer', description="", cursor = "Game Menu> ")
 		self.addOption(MenuOption(db = None, title = "New Game", description="It's your own funeral", clear=False, commit = False, action = self._newGame))
 		self.addOption(MenuOption(db = None, title = "Load", description="Load a previous save", clear=False, commit = False, action=self._loadGame))
-		print(title)
+		startScreen.printScreen()
 
 	def _newGame(self, dbFile = None):
 		import os

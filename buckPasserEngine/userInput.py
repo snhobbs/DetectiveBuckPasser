@@ -147,19 +147,19 @@ def getTerminalSize():
 	return shutil.get_terminal_size((80, 20))
 
 def clearLines(lines):
-	print("\033[F\033[K" * lines + '\033[F\033[K', end = '')
+	printToScreen("\033[F\033[K" * lines + '\033[F\033[K', end = '')
 
-def printToScreen(text, color='green'): # clear option that will wipe the exact number of lines written
-	import textwrap
-	colors = {'clear': 0, 'green': 152, 'yellow': 93, 'red': 91, 'cyan': 95}
-	colorCode = '\033[{}m'
+def printToScreen(text, color='green', end = None): 	
+	import textwrap, colorama, os
+	#colorama.ansi()
+
 	width = getTerminalSize()[0]
 	lines = 0
-	print(colorCode.format(colors[color]), end = '')
 	for par in text.split('\n'):
 		wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
-		lines += len(wrappedLines) 
-		print('\n'.join(wrappedLines))
-	print(colorCode.format(colors['clear']), end = '')
-	print(colorCode.format(colors['green']), end = '')
+		lines += len(wrappedLines)
+		if(os.name != 'posix'):
+			colorama.ansitowin32().write_and_convert('\n'.join(wrappedLines))
+		else:
+			print('\n'.join(wrappedLines), end = end)
 	return lines

@@ -11,9 +11,9 @@ insert into items values(0, 'Bottle', 'An empty bottle, like the one that biker 
 insert into items values(1, 'Whiskey', 'Old Crow, best bourbon in the $5 price range', 0.5, 1);
 
 insert into items values(2, 'Foot in the Boot', 'An old foot in a boot', 7, 1);
-insert into items values(3, 'Cocaine', 'Just enough blow to make this a drug squad issue', 0.1, 1);
+insert into items values(3, 'Cocaine', 'Just enough bugger sugar to make this a drug squad issue', 0.1, 1);
 insert into items values(4, 'Rent Money', "Roughly $17 in a crumped up ball", 1, 1);
-insert into items values(5, 'Car Keys', 'Someones keys, there are 12 lock box keys in various stages of rust and a heavily worn car key that is kept on the chain in piano wire.', .2, 1);
+insert into items values(5, 'Car Keys', 'Someones keys, there are 12 lock box keys in various stages of rust and a heavily worn car key that is kept on the chain with piano wire.', .2, 1);
 insert into items values(6, 'Marriage Certificate', "Apparently Six Dollar Man's real is Oswald. I guess this is Sharron. He probably doesn't want anyone to know where to send the alimony late notices.", .2, 1);
 insert into items values(7, "Wire Cutters", "", 2.7, 1);
 insert into items values(8, "Hammer", "The murder weapon. Better hide this.", 2.7, 1);

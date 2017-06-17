@@ -10,13 +10,15 @@ the rooms stay stagnent until an 'event' occurs -> you get an object or talk to 
  the canadian always has the tips for the current stage
 
 Story:
-
+Starting Cut Scene
 Stage 0:
 	Buck starts in his apartment and can't leave until he checks his phone messages. (check messages)
+Cut Scene
 Stage 1:
 	The Apartments are now accessible and he must go to the murder scene and talk to the Canadian who reveals himself as the help (talk to canadian)
 Stage 2:
 	Go room to room and talk to everyone, kill Guy Fieri. (1 stage for each character, nothing changes in between)
+Cut Scene: Guy Fieri killing
 Stage 3:
 	Home Depot opens as an option. Got to hg, try and buys coke, hgs trunk is locked, cant find his keys (talk to hg)
 Stage 4:
@@ -27,6 +29,7 @@ Cut Scene:
 	After the car get towed he goes home grabbing a sixer of shaefer on his way back. (emphasis on this being his everyday behavior)
 Stage 6:
 	Talk to ? How does the string of favours unravel? You then have to get a steak, wire cutters and a tow driver. You need to get a new hammer for hg, talk to 6$ and you need to get evidence on him to extort money from him. got to robot to get him to run a scan. robot wants the old foot in a boot. old lady wants a date w/ jfk. talk to jfk, long talk to do ALL the jokes. 'ask naught if I can get to 1st base butt rather how she feels about ass play" "response: she's all about the bum.".
+Cut Scene: Busting the car out, "A single tear rolls down your cheek watching the carnage, extinguishing"
 Stage 7:
 	Get hgs car back. You just put the beat ass car back in the grooves the tires have sunk into over the years. (Talk to HG)
 Cut Scene:

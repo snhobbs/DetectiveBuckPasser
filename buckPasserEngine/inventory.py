@@ -345,6 +345,7 @@ class HeroInventory(StandardInventory):
 	def drop(self, args):
 		try:
 			itemName, amount = self.parseTransaction(inventory = self, args = args)
+			print(itemName)
 		except UserWarning:
 			userInput.printToScreen("Item doesn't exist")
 			return
