@@ -314,6 +314,7 @@ class Game(GameCommands, GameMenu):
 		self.eventManager = EventManager(self.db)
 		self._load()
 		self.cutScene = CutScene(self.db)
+
 	def _loadStage(self):
 		import os
 		stageFile = os.path.join(sqlDir, 'stage{}.sql'.format(self.stage))
@@ -376,6 +377,8 @@ class Game(GameCommands, GameMenu):
 			if(self.cutScene.getCountInTable(conditions = self.cutScene.tableCode) > 0):
 				self.cutScene.readFromDB()
 				self.cutScene.play()
+				userInput.clearScreen()
+				self.currRoom.look()
 		self._save()
 		
 		
