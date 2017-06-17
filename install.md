@@ -1,5 +1,5 @@
 <h2>Windows Install:</h2>
-	Doesn't work as well as Windows properly. This is Microsoft's fault.
+	Doesn't work as well on Windows. This is Microsoft's fault.
 	<h3>1) Get Python3</h3>	
 		<a>https://www.howtogeek.com/197947/how-to-install-python-on-windows/</a>
 		<ul>
