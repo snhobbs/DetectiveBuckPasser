@@ -240,8 +240,12 @@ class GameCommands(object):
 	def listItems(self):
 		self.buckPasser.listItems()
 
-	def search(self):
-		self.currRoom.commands['search'].run()
+	def search(self, args = None):
+		if args is None:
+			self.currRoom.commands['search'].run()
+		else:
+			subject = args[0]
+			self.__makeCommand(subject = subject, command = 'search', onObject = True, onCharacter = True)
 
 	def look(self):
 		self.currRoom.look()

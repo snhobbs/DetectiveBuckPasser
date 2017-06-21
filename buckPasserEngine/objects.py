@@ -46,6 +46,7 @@ class Objects(StagedSqlTable):
 		self.codeName = 'objCode'
 		self.menu = ObjectMenu(db = db)
 		self.commands = {
+			'search':userInput.Command(func=self.search, descrip = "Search for items",takesArgs=False, hide = False),
 			'inspect': userInput.Command(func=self.inspect, takesArgs=False, hide = False),
 			'describe':userInput.Command(func=self.describe, takesArgs=False, hide = True)
 		}
