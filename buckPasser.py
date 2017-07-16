@@ -2,18 +2,21 @@
 import os
 import buckPasserEngine
 
-musicDir = 'music'
-logsAndSaves = "logsAndSaves"
+def run():
+	musicDir = 'music'
+	logsAndSaves = "logsAndSaves"
 
-try:
-	os.makedirs(musicDir)
-except FileExistsError:
-	pass
+	try:
+		os.makedirs(musicDir)
+	except FileExistsError:
+		pass
 
-try:
-	os.makedirs(logsAndSaves)
-except FileExistsError:
-	pass
+	try:
+		os.makedirs(logsAndSaves)
+	except FileExistsError:
+		pass
+	
+	buckPasserEngine.run()
 
-buckPasserEngine.run()
-
+if __name__=="__main__":
+	run()

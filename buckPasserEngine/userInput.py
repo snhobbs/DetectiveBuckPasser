@@ -1,173 +1,177 @@
 #userInput.py
 try:
-	import readline
+    import readline
 except ImportError:
-	try:
-		import pyreadline
-	except ImportError:
-		pass
+    try:
+        import pyreadline
+    except ImportError:
+        pass
 import os, sys, colorama, shutil
 
 global gameFiles
 gameFiles = 'gameFiles'
 
 def pythonVersion():
-	'''
-	return the python version
-	'''
-	return sys.version.split(' ')[0]
+    '''
+    return the python version
+    '''
+    return sys.version.split(' ')[0]
 
 def checkForPackage(packageName):
-	'''
-	returns true if a package is installed
-	'''
-	import pip
-	installed_packages = pip.get_installed_distributions()
-	flat_installed_packages = [package.project_name for package in installed_packages]
-	if packageName in flat_installed_packages:
-		return True
-	else:
-		return False
+    '''
+    returns true if a package is installed
+    '''
+    import pip
+    installed_packages = pip.get_installed_distributions()
+    flat_installed_packages = [package.project_name for package in installed_packages]
+    if packageName in flat_installed_packages:
+        return True
+    else:
+        return False
 
 def inputUniversal(arg = None):
-	'''
-	uses the appropriate form of input or raw_input
-	'''
-	version = (pythonVersion().split('.')[0])
-	if version == '3':
-		return input(arg)
-	else:
-		return raw_input(arg)
+    '''
+    uses the appropriate form of input or raw_input
+    '''
+    version = (pythonVersion().split('.')[0])
+    if version == '3':
+        return input(arg + '/>')
+    else:
+        return raw_input(arg + '/>')
 
 class Command(object):
-	def __init__(self, func= None, takesArgs = False, descrip = '', hide = False):
-		self.func = func
-		self.takesArgs = takesArgs
-		self.descrip = descrip
-		self.hide = hide
+    def __init__(self, func= None, takesArgs = False, descrip = '', hide = False):
+        self.func = func
+        self.takesArgs = takesArgs
+        self.descrip = descrip
+        self.hide = hide
 
-	def run(self, *args, **kwargs):
-		try:
-			self.func(*args, **kwargs)
-		except UserWarning as uw:
-			print(uw)
+    def run(self, *args, **kwargs):
+        try:
+            self.func(*args, **kwargs)
+        except UserWarning as uw:
+            print(uw)
 
 def userInput(commands, userIn):
-	'''
-	take user input, conditions it, returns the command instance
-	'''
-	userIn = userIn.replace('to ','').replace('with ','').replace('the ','').strip().split(' ')
-	#check inspect commands
-	#check game commands
-	try:
-		command = commands[userIn[0]]
-		if len(userIn) == 1 or command.takesArgs == False:
-			command.run()
-		else:
-			command.run(userIn[1:])
-	except UserWarning as uw:
-		print(uw)
-		return False
-	except KeyError:
-		return False
+    '''
+    take user input, conditions it, returns the command instance
+    '''
+    userIn = userIn.replace('to ','').replace('with ','').replace('the ','').strip().split(' ')
+    #check inspect commands
+    #check game commands
+    try:
+        command = commands[userIn[0]]
+        if len(userIn) == 1 or command.takesArgs == False:
+            command.run()
+        else:
+            command.run(userIn[1:])
+    except UserWarning as uw:
+        print(uw)
+        return False
+    except KeyError:
+        return False
 
 def parseCSVNumString(stringIn):
-	if stringIn in [None, '', 'None','NULL','Null','null']:
-		return None
-	ret = []
-	for entry in stringIn.strip().split(','):
-		try:
-			ret.append(int(entry))
-		except ValueError:
-			raise UserWarning("CSV number String passed to parseCSVNumString is not just numbers ", stringIn)
-	return ret
+    if stringIn in [None, '', 'None','NULL','Null','null']:
+        return None
+    ret = []
+    for entry in stringIn.strip().split(','):
+        try:
+            ret.append(int(entry))
+        except ValueError:
+            raise UserWarning("CSV number String passed to parseCSVNumString is not just numbers ", stringIn)
+    return ret
 
 def loadObjList(db, codeString, stage, factory):
-	if codeString != None:
-		codes = parseCSVNumString(codeString)
-		if codes is None:
-			return
-		objList = []
-		for code in codes:
-			objList.append(factory(db, code, stage))
-		return objList
+    if codeString != None:
+        codes = parseCSVNumString(codeString)
+        if codes is None:
+            return
+        objList = []
+        for code in codes:
+            objList.append(factory(db, code, stage))
+        return objList
 
 def genInsult():
-	import random
-	lines = []
-	lineCount = 0
-	with open(os.path.join(gameFiles, "insults.txt"), 'r') as f:
-		for line in f:
-			lineCount += 1
-			lines.append(line.strip())
-	insultLine = random.randint(0,lineCount-1)
-	return lines[insultLine]	
+    import random
+    lines = []
+    lineCount = 0
+    with open(os.path.join(gameFiles, "insults.txt"), 'r') as f:
+        for line in f:
+            lineCount += 1
+            lines.append(line.strip())
+    insultLine = random.randint(0,lineCount-1)
+    return lines[insultLine]    
 
 def printSelect(options = None, cursor = ''):
-	#options are an array of strings
-	uniqueOptions = set(options)
-	if(len(uniqueOptions) != len(options)):
-		print(uniqueOptions, options)
-		raise UserWarning("None unique options")
+    #options are an array of strings
+    uniqueOptions = set(options)
+    if(len(uniqueOptions) != len(options)):
+        print(uniqueOptions, options)
+        raise UserWarning("None unique options")
 
-	for i in range(len(options)):
-		printToScreen("\t%d) %s"%(i, options[i]))
+    for i in range(len(options)):
+        printToScreen("\t%d) %s"%(i, options[i]))
 
-	while True:
-		resp = inputUniversal(cursor)
-		if(resp.isdigit() and int(resp) < len(uniqueOptions) and int(resp) >= 0):
-			return int(resp)
-		else:
-			try:
-				float(resp)
-				printToScreen("Look at the options you {}".format(genInsult()))
-			except:
-				printToScreen("You gotta type a number you {}".format(genInsult()))
+    while True:
+        resp = inputUniversal(cursor)
+        if(resp.isdigit() and int(resp) < len(uniqueOptions) and int(resp) >= 0):
+            return int(resp)
+        else:
+            try:
+                float(resp)
+                printToScreen("Look at the options you {}".format(genInsult()))
+            except:
+                printToScreen("You gotta type a number you {}".format(genInsult()))
 
 def printSelectGetOption(options = None, cursor = '', exitPrompt = 'Exit'):
-	'''
-	uses print select to return the actual option chosen, returns None if exit selected
-	'''
-	listOptions = [exitPrompt] + options
+    '''
+    uses print select to return the actual option chosen, returns None if exit selected
+    '''
+    listOptions = [exitPrompt] + options
 
-	selection = printSelect(options = listOptions, cursor = cursor)
-	if(selection == 0):
-		return None
-	else:
-		return options[selection - 1]
+    selection = printSelect(options = listOptions, cursor = cursor)
+    if(selection == 0):
+        return None
+    else:
+        return options[selection - 1]
 
 def clearScreen():
-	cols, rows = getTerminalSize()
-	clearLines(rows + 1)
+    cols, rows = getTerminalSize()
+    clearLines(rows + 1)
 
 def getTerminalSize():
-	'''
-	returns columns, rows
-	'''
-	return shutil.get_terminal_size((80, 20))
-
+    '''
+    returns columns, rows
+    '''
+    if True:
+        return shutil.get_terminal_size((80, 20))
+    else:
+        return 70, 40
+        
+        
 def clearLines(lines):
-	printToScreen("\033[F\033[2K", end = '')
-	printToScreen("\033[F\033[K" * lines, end = '')
+    printToScreen("\033[F\033[2K", end = '')
+    printToScreen("\033[F\033[K" * lines, end = '')
 
-def printToScreen(text, color='LIGHTGREEN', backColor='BLACK', end = None): 	
-	import textwrap
+def printToScreen(text, color='LIGHTGREEN', backColor='BLACK', end = None):     
+    import textwrap
 
-	width = getTerminalSize()[0]
-	lines = 0
-	colorama.init()
-	
-	try:
-		print(colorama.ansi.Fore.__dict__[color], end = '')
-		print(colorama.ansi.Back.__dict__[backColor], end = '')
-	except KeyError:
-		pass
+    width = getTerminalSize()[0]
+    lines = 0
+    colorama.init()
+    
+    try:
+        print(colorama.ansi.Fore.__dict__[color], end = '')
+        print(colorama.ansi.Back.__dict__[backColor], end = '')
+    except KeyError:
+        pass
 
-	for par in text.split('\n'):
-		wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
-		lines += len(wrappedLines)
-		print('\n'.join(wrappedLines), end = end)
+    for par in text.split('\n'):
+        wrappedLines = (textwrap.wrap(par, width=width, tabsize=4))
+        lines += len(wrappedLines)
+        print('\n'.join(wrappedLines), end = end)
 
-	print(colorama.ansi.Fore.RESET, end = '')
-	print(colorama.ansi.Back.RESET, end = '')
-	return lines
+    print(colorama.ansi.Fore.RESET, end = '')
+    print(colorama.ansi.Back.RESET, end = '')
+    return lines
