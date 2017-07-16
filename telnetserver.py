@@ -31,8 +31,11 @@ def process_clients():
     for client in clients:
         if client.active and client.cmd_ready:
             # If the client sends input echo it to the chat room
-            interact(client)
-
+            try:
+                interact(client)
+            except:
+                client.client.deactivate()
+                
 def interact(client):
     choice = client.process.expect([re.compile('\n*/>$'), '\n'])
     if choice == 1:
@@ -41,9 +44,10 @@ def interact(client):
         client.client.send(client.process.before + '\n')
     else:
         msg = client.get_command().strip()
-        client.client.send(client.process.before.strip() + client.process.after[:-3])
+        print('msg info',msg, len(msg))
+        client.client.send(client.process.before + client.process.after[:-3] )
         client.process.sendline(msg)
-            
+                    
 if __name__ == "__main__":
     tn = miniboa.TelnetServer(
         port=7000, 
