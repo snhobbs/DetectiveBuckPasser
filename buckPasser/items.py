@@ -1,5 +1,5 @@
 #items.py
-from sqlTable import SQLTable
+from buckPasser.sqlTable import SQLTable
 
 class Item(SQLTable):
 	def __init__(self, db):

@@ -2,16 +2,16 @@
 from multiprocessing import Process, Queue
 import os
 import random
-from menus import Menu, MenuOption
-import userInput
+from buckPasser.menus import Menu, MenuOption
+from . import userInput
 
 def playClip(fileIn):
-	import simpleaudio as sa
 	wave_obj = sa.WaveObject.from_wave_file(fileIn)
 	playObj = wave_obj.play()
 	playObj.wait_done()
 
 def music(dirName = './', mode = 'single', repeat = False):
+	import simpleaudio as sa
 	def play(queue, clipList, repeat):
 		if repeat == True:
 			while True:

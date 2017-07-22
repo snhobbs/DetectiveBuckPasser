@@ -1,12 +1,11 @@
 import miniboa,os, subprocess, sys
 import pexpect, re
 from subprocess import PIPE, STDOUT
-from buckPasser import run
 clients = []
 
 class Client(object):
     def __init__(self):
-        self.process = pexpect.spawnu('python3', ['buckPasser.py'])
+        self.process = pexpect.spawnu('python3', ['-c', 'from buckPasser import run;run()'])
         self.process.setecho(0)
     
     def sendMessage(self, msg):
@@ -79,7 +78,12 @@ def process_clients():
             except:
                 client.close()
 
-if __name__ == "__main__":
+def runCmdLine():
+	client = Client()
+	while True:
+		client.interact()
+
+def runTelnet():
     tn = miniboa.TelnetServer(
         port=7000, 
         address='127.0.0.1', 

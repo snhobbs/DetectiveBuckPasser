@@ -1,5 +1,5 @@
-from Character import Character
-from inventory import HeroInventory, PassiveInventory
+from buckPasser.Character import Character
+from buckPasser.inventory import HeroInventory, PassiveInventory
 class Hero(Character):
 	'''
 	Hero is the main character who the user plays as

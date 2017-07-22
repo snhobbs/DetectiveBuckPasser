@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-import Room, hero, Character, objects, inventory, userInput
-import traceback, sqlite3
-from gameEvents import EventManager
-from musicPlayer import MusicMenu
-from menus import Menu, MenuOption
-from sqlTable import SQLTable
-import startScreen
-from cutScene import CutScene
+from . import startScreen, Room, hero, Character, objects, inventory, userInput
+import traceback, sqlite3, os, glob
+from buckPasser.gameEvents import EventManager
+from buckPasser.musicPlayer import MusicMenu
+from buckPasser.menus import Menu, MenuOption
+from buckPasser.sqlTable import SQLTable
+from buckPasser.cutScene import CutScene
+from operator import itemgetter
 global gameFiles
 gameFiles = "gameFiles"
 global sqlDir
@@ -209,7 +209,6 @@ class GameCommands(object):
 		change current room to an available neighbor.
 		if the room code is a valid room, change the currRoom object to the corresponding room and print the room description
 		'''
-		from operator import itemgetter
 		if room == None:
 			options = ['Stay Put']
 			options.extend(room[0] for room in sorted(self.neighbors.items(), key=itemgetter(1)))#print with lowest room code first
@@ -270,7 +269,6 @@ class StartGame(Menu):
 		startScreen.printScreen()
 
 	def _newGame(self, dbFile = None):
-		import os
 		if dbFile is None:
 			# Get a new game name
 			dbFileName = "game_{}.db".format(userInput.inputUniversal('Enter a save name> ').upper().replace(' ','_').strip())
@@ -292,7 +290,6 @@ class StartGame(Menu):
 		return dbFile
 
 	def _loadGame(self):
-		import glob, os
 		# Print a list of the available saves, have them choose one and load it in
 		dbs = glob.glob(os.path.join(logsAndSaves, 'game_*.db'))
 		if len(dbs) < 1:
@@ -307,7 +304,6 @@ class StartGame(Menu):
 
 class Game(GameCommands, GameMenu):
 	def __init__(self, dbFile):
-		import os
 		self.stage = None
 		self.musicProcess = None
 		os.stderr = open(dbFile.split('.')[0] + '.log', 'w+')
@@ -320,7 +316,6 @@ class Game(GameCommands, GameMenu):
 		self.cutScene = CutScene(self.db)
 
 	def _loadStage(self):
-		import os
 		stageFile = os.path.join(sqlDir, 'stage{}.sql'.format(self.stage))
 		if(os.path.isfile(stageFile)):
 			loadSQLFile(db = self.db, fileName = stageFile)
@@ -406,7 +401,18 @@ class Game(GameCommands, GameMenu):
 			self.db.close()
 
 def run():
-	import os
+	musicDir = 'music'
+	logsAndSaves = 'logsAndSaves'
+	try:
+		os.makedirs(musicDir)
+	except FileExistsError:
+		pass
+
+	try:
+		os.makedirs(logsAndSaves)
+	except FileExistsError:
+		pass
+
 	start = StartGame()
 	dbFile = start.runMenu()
 

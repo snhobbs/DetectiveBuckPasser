@@ -1,8 +1,9 @@
 #objects.py
-from sqlTable import SQLTable, StagedSqlTable
-from inventory import PassiveInventory
-import userInput, os
-from menus import ObjectMenu
+from buckPasser.sqlTable import SQLTable, StagedSqlTable
+from buckPasser.inventory import PassiveInventory
+from . import userInput
+import os
+from buckPasser.menus import ObjectMenu
 
 def objectFactory(db, code, stage):
 	obj = Objects(db)

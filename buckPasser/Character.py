@@ -1,7 +1,6 @@
-from sqlTable import SQLTable, StagedSqlTable
-import userInput
-import inventory
-from menus import Menu, MenuOption
+from buckPasser.sqlTable import SQLTable, StagedSqlTable
+from . import userInput, inventory
+from buckPasser.menus import Menu, MenuOption
 
 def characterFactory(db, code, stage):
 	charObj = Character(db = db, code = code)
@@ -11,10 +10,16 @@ def characterFactory(db, code, stage):
 
 class CharacterMenu(Menu):
 	def __init__(self, db):
-		Menu.__init__(self, db, title=self.charName.value, description="Character Menu", cursor="What do you want to do? ")
-		self.addOption(MenuOption(db = db, title = "Talk", description="Talk to {0.charName.value}".format(self), commit = True, clear=True, action = self.talk))
-		#self.addOption(MenuOption(db = db, title = "Give/Get Items", description="Transfer items  between you", commit = True, clear=True, action = self.inventory.itemTransfer))
-		self.addOption(MenuOption(db = db, title = "Assault", description="", commit = True, clear=True, action=self.assault))
+		Menu.__init__(self, db, title=self.charName.value, 
+				description="Character Menu", cursor="What do you want to do? ")
+		self.addOption(MenuOption(db = db, title = "Talk", 
+			description="Talk to {0.charName.value}".format(self), commit = True, 
+			clear=True, action = self.talk))
+		#self.addOption(MenuOption(db = db, title = "Give/Get Items", 
+			#description="Transfer items  between you", commit = True, 
+			#clear=True, action = self.inventory.itemTransfer))
+		self.addOption(MenuOption(db = db, title = "Assault", 
+			description="", commit = True, clear=True, action=self.assault))
 
 class Character(StagedSqlTable, CharacterMenu):
 	'''
@@ -23,13 +28,20 @@ class Character(StagedSqlTable, CharacterMenu):
 	def __init__(self, db, code = None):
 		StagedSqlTable.__init__(self, db)
 		self.code = code
-		self.stage = self.elementTable.addElement(title = 'Game Stage', name = 'stage', value = 0, elementType = 'INT')
-		self.charName = self.elementTable.addElement(title = 'Characters Name', name = 'charName', value = None, elementType = 'STRING', updatable = False)
-		self.descrip = self.elementTable.addElement(title = 'Character Description', name = 'descrip', value = None, elementType = 'STRING', updatable = False)
-		self.jsonConv = self.elementTable.addElement(title = 'Conversation Object', name = 'conv', value = None, elementType = 'STRING', updatable = False)
-		self.defaultJsonConv = self.elementTable.addElement(title = 'Conversation Object After Interaction', name = 'defaultConv', value = None, elementType = 'STRING', updatable = False)
-		self.interactedFlag = self.elementTable.addElement(title = 'Stage Interaction Flag', name = 'interactedFlag', value = None, elementType = 'BOOL')
-		self.inventoryCode = self.elementTable.addElement(title = 'Character Inventory', name = 'inventoryCode', value = None, elementType = 'INT')
+		self.stage = self.elementTable.addElement(title = 'Game Stage', 
+				name = 'stage', value = 0, elementType = 'INT')
+		self.charName = self.elementTable.addElement(title = 'Characters Name', 
+				name = 'charName', value = None, elementType = 'STRING', updatable = False)
+		self.descrip = self.elementTable.addElement(title = 'Character Description', 
+				name = 'descrip', value = None, elementType = 'STRING', updatable = False)
+		self.jsonConv = self.elementTable.addElement(title = 'Conversation Object', 
+				name = 'conv', value = None, elementType = 'STRING', updatable = False)
+		self.defaultJsonConv = self.elementTable.addElement(title = 'Conversation Object After Interaction', 
+				name = 'defaultConv', value = None, elementType = 'STRING', updatable = False)
+		self.interactedFlag = self.elementTable.addElement(title = 'Stage Interaction Flag', 
+				name = 'interactedFlag', value = None, elementType = 'BOOL')
+		self.inventoryCode = self.elementTable.addElement(title = 'Character Inventory', 
+				name = 'inventoryCode', value = None, elementType = 'INT')
 
 		self.table = 'chars'
 		self.codeName = 'charCode'

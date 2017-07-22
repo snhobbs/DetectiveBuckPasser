@@ -29,7 +29,7 @@ symbols = '''
 '''
 
 def printScreen():
-	import userInput
+	from . import userInput
 	columns = userInput.getTerminalSize()[0]
 	
 	def printTitleSect(title, cols):

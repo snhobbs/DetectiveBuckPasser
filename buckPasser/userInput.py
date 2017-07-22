@@ -7,7 +7,9 @@ except ImportError:
     except ImportError:
         pass
 import os, sys, colorama, shutil
-
+import random
+import textwrap
+import pip
 global gameFiles
 gameFiles = 'gameFiles'
 
@@ -21,7 +23,6 @@ def checkForPackage(packageName):
     '''
     returns true if a package is installed
     '''
-    import pip
     installed_packages = pip.get_installed_distributions()
     flat_installed_packages = [package.project_name for package in installed_packages]
     if packageName in flat_installed_packages:
@@ -93,7 +94,6 @@ def loadObjList(db, codeString, stage, factory):
         return objList
 
 def genInsult():
-    import random
     lines = []
     lineCount = 0
     with open(os.path.join(gameFiles, "insults.txt"), 'r') as f:
@@ -155,7 +155,6 @@ def clearLines(lines):
     printToScreen("\033[F\033[K" * lines, end = '')
 
 def printToScreen(text, color='LIGHTGREEN', backColor='BLACK', end = None):     
-    import textwrap
 
     width = getTerminalSize()[0]
     lines = 0

@@ -1,5 +1,5 @@
 #gameEvents.py
-from sqlTable import SQLTable
+from buckPasser.sqlTable import SQLTable
 '''
 Events
 		-> Events are either getting an item or completing a conversation

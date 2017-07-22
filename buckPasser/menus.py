@@ -1,7 +1,8 @@
 '''
 menu classes
 '''
-import subprocess, userInput, os
+import subprocess, os
+from . import userInput
 
 
 class BaseMenu(object):

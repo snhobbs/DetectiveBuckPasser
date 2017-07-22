@@ -1,5 +1,5 @@
-from sqlTable import SQLTable
-import userInput
+from buckPasser.sqlTable import SQLTable
+from . import userInput
 
 class CutScene(SQLTable):
 	'''

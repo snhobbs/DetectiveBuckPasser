@@ -1,8 +1,5 @@
-from sqlTable import SQLTable, StagedSqlTable
-import objects
-import Character
-import userInput
-import inventory
+from buckPasser.sqlTable import SQLTable, StagedSqlTable
+from . import objects, Character, userInput, inventory
 
 class Room(StagedSqlTable):
 	'''

@@ -1,9 +1,8 @@
 #inventory.py
-from sqlTable import SQLTable, StagedSqlTable
-import items
-from menus import *
-import userInput
-
+from buckPasser.sqlTable import SQLTable, StagedSqlTable
+from . import items, userInput
+from buckPasser.menus import *
+import math
 '''
 inventory commands:
 	-> put bottle 3
@@ -108,7 +107,6 @@ class Inventory(SQLTable):#when interfacing w/ the db need to loop through all t
 		return None #item not in inventory
 
 	def _moveItem(self, itemName, amount):
-		import math
 		inventEntry = self.getItemEntryByName(itemName)
 		if inventEntry is None:
 			raise UserWarning("Item {} doesn't exist".format(itemName))
