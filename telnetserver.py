@@ -5,10 +5,47 @@ from buckPasser import run
 clients = []
 
 class Client(object):
-    def __init__(self, client):
-        self.client = client
-        self.process = pexpect.spawnu('./buckPasser.py')
+    def __init__(self):
+        self.process = pexpect.spawnu('python3', ['buckPasser.py'])
         self.process.setecho(0)
+    
+    def sendMessage(self, msg):
+        print(msg, end = '')
+
+    def getInput(self):
+        '''
+        assuming commandline
+        '''
+        return input()
+
+    def expectInteract(self):
+        '''
+        Gets input and puts output from the expect process.
+        Returns a string to be sent to the user and None otherwise
+        '''
+        choice = self.process.expect([re.compile('/>$'), '\n'])
+        #print("choice ", choice)
+        if choice == 0:
+            self.sendMessage(self.process.before + self.process.after[:-3])
+            msg = self.getInput()
+            #print('msg info',msg, len(msg))
+            self.process.sendline(msg)
+
+        elif choice == 1:
+            if len(self.process.before) > 0:
+                self.sendMessage(self.process.before + '\n')
+
+    def interact(self):
+        '''
+        Interacts with the client
+        '''
+        self.expectInteract()
+
+class TelnetClient(Client):
+    def __init__(self, client):
+        Client.__init__(self)
+        self.client = client
+        
     @property
     def active(self):
         return self.client.active
@@ -16,38 +53,32 @@ class Client(object):
     @property
     def cmd_ready(self):
         return self.client.cmd_ready
+    
+    def sendMessage(self,msg):
+        self.client.send(msg)
 
-    def get_command(self):
-        return self.client.get_command()
+    def getInput(self):
+        return client.client.get_command().strip()
+    
+    def close(self):
+        self.client.deactivate()
 
 def on_connect(client):
-    clients.append(Client(client))
+    clients.append(TelnetClient(client))
 
 def process_clients():
-    """
+    '''
     Check each client, if client.cmd_ready == True then there is a line of
-    input available via client.get_command().
-    """
+    input available via client.getInput.
+    '''
     for client in clients:
         if client.active and client.cmd_ready:
-            # If the client sends input echo it to the chat room
+            # If the client sends input interacte with it
             try:
-                interact(client)
+                client.interact()
             except:
-                client.client.deactivate()
-                
-def interact(client):
-    choice = client.process.expect([re.compile('\n*/>$'), '\n'])
-    if choice == 1:
-        if len(client.process.before) == 0:
-            return
-        client.client.send(client.process.before + '\n')
-    else:
-        msg = client.get_command().strip()
-        print('msg info',msg, len(msg))
-        client.client.send(client.process.before + client.process.after[:-3] )
-        client.process.sendline(msg)
-                    
+                client.close()
+
 if __name__ == "__main__":
     tn = miniboa.TelnetServer(
         port=7000, 
