@@ -1,0 +1,2 @@
+include LICENSE, README.md, install.md, _config.yml
+include gameFiles, *.sql, *.txt
