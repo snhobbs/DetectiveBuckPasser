@@ -83,10 +83,10 @@ def runCmdLine():
 	while True:
 		client.interact()
 
-def runTelnet():
+def runTelnet(address="127.0.0.1", port=7000):
     tn = miniboa.TelnetServer(
-        port=7000, 
-        address='127.0.0.1', 
+        port=port, 
+        address=address, 
         on_connect = on_connect
     )
     while True:
