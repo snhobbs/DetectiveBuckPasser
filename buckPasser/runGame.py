@@ -1,13 +1,17 @@
 import miniboa,os, subprocess, sys
-import pexpect, re
+import pexpect, re, traceback
+from collections import deque
 from subprocess import PIPE, STDOUT
 clients = []
 
 class Client(object):
+    arg = '/>'
+    regEx = re.compile(arg)
     def __init__(self):
         self.process = pexpect.spawnu('python3', ['-c', 'from buckPasser import run;run()'])
         self.process.setecho(0)
-    
+
+class CmdLineClient(Client):
     def sendMessage(self, msg):
         print(msg, end = '')
 
@@ -16,33 +20,23 @@ class Client(object):
         assuming commandline
         '''
         return input()
-
-    def expectInteract(self):
+    
+    def interact(self):
         '''
         Gets input and puts output from the expect process.
         Returns a string to be sent to the user and None otherwise
         '''
-        choice = self.process.expect([re.compile('/>$'), '\n'])
-        #print("choice ", choice)
-        if choice == 0:
-            self.sendMessage(self.process.before + self.process.after[:-3])
-            msg = self.getInput()
-            #print('msg info',msg, len(msg))
+        self.process.expect(self.regEx)
+        self.sendMessage(self.process.before)
+        msg = self.getInput()
+        if msg is not None:
             self.process.sendline(msg)
-
-        elif choice == 1:
-            if len(self.process.before) > 0:
-                self.sendMessage(self.process.before + '\n')
-
-    def interact(self):
-        '''
-        Interacts with the client
-        '''
-        self.expectInteract()
-
+ 
 class TelnetClient(Client):
     def __init__(self, client):
+        self.client = client
         Client.__init__(self)
+        self.cmdBuff = deque()
         self.client = client
         
     @property
@@ -57,13 +51,30 @@ class TelnetClient(Client):
         self.client.send(msg)
 
     def getInput(self):
-        return client.client.get_command().strip()
+        if len(self.cmdBuff) > 0:
+            return self.cmdBuff.popleft()
     
     def close(self):
         self.client.deactivate()
+    
+    def interact(self):
+        '''
+        Gets input and puts output from the expect process.
+        Returns a string to be sent to the user and None otherwise
+        '''
+        msg = self.getInput()
+        if msg is not None:
+            self.process.sendline(msg)
+        self.process.expect(self.regEx)
+        self.sendMessage(self.process.before)
 
 def on_connect(client):
     clients.append(TelnetClient(client))
+    clients[-1].interact()
+
+def on_disconnect(client):
+    if client in clients:
+        clients.remove(client)
 
 def process_clients():
     '''
@@ -71,15 +82,16 @@ def process_clients():
     input available via client.getInput.
     '''
     for client in clients:
-        if client.active and client.cmd_ready:
-            # If the client sends input interacte with it
+        if client.cmd_ready and client.active:
             try:
+                client.cmdBuff.append(client.client.get_command())
                 client.interact()
-            except:
+            except Exception as e:
+                print("Error:", e, traceback.print_exc())
                 client.close()
 
 def runCmdLine():
-	client = Client()
+	client = CmdLineClient()
 	while True:
 		client.interact()
 
@@ -87,7 +99,8 @@ def runTelnet(address="127.0.0.1", port=7000):
     tn = miniboa.TelnetServer(
         port=port, 
         address=address, 
-        on_connect = on_connect
+        on_connect = on_connect,
+        on_disconnect = on_disconnect
     )
     while True:
         tn.poll()

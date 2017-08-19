@@ -11,7 +11,8 @@ setup(name='buckPasser',
 			'pyfiglet',
 			'click',
 			'colorama',
-			'simpleaudio'
+			'miniboa',
+            'pexpect'
 		],
 		test_suite='nose.collector',
 		tests_require=['nose'],
