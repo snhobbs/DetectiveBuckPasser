@@ -1,4 +1,6 @@
 # DetectiveBuckPasser
+## Available At The Famous Site: 45.55.151.143:4000 On Telnet
+
 Text Adventure Game
 <p>
 New York, The Bowery 1972
@@ -38,31 +40,20 @@ There has been a murder at an apartment block in the Bowery, it is up to Buck Pa
 <li> Flush Toilets! </li>
 </ul>
 
-
-
-<h2><b>Dependencies</b></h2>
-
-<h3>Requirements:</h3>
+<h2>Supported Systems:</h2>
 <ul>
-	<li>Systems:</li>
-		<ul>
-			<li>Linux</li>
-			<li>Mac OS</li>
-			<li>FreeBSD</li>
-			<li>Windows</li>
-			<li>AIX</li>
-			<li>Solaris</li>
-			<li>PDP-11</li>
-			<li>OS/2</li>
-			<li>MULTICS</li>
-			<li>VAX-VMS</li>
-			<li>DOS 1.0 (Later versions not supported)</li>
-		</ul>
-	<li>Programs: Python3</li>
-</ul>
-
-<h3>Optional {For sound to work}:</h3>
-
-<ul>
-<li>Python3 Packages: simpleaudio>=1.0.1 (On Linux this requires libasound2-dev)</li>
+	<li>Linux</li>
+	<li>Mac OS</li>
+	<li>FreeBSD</li>
+	<li>Windows</li>
+	<li>Windows Phone</li>	
+	<li>Android</li>
+	<li>iOS</li>	
+	<li>AIX</li>
+	<li>Solaris</li>
+	<li>PDP-11</li>
+	<li>OS/2</li>
+	<li>MULTICS</li>
+	<li>VAX-VMS</li>
+	<li>DOS 1.0 (Later versions not supported)</li>
 </ul>
