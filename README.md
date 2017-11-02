@@ -1,5 +1,5 @@
 # DetectiveBuckPasser
-## Available At The Famous Site: 45.55.151.143:4000 On Telnet
+## Available At The Famous Site: eatabattery.com:7000 On Telnet
 
 Text Adventure Game
 <p>
