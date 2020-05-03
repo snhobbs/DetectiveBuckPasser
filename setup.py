@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 setup(name='buckPasser',
-		version='0.0.0b6',
+		version='0.0.0b7',
 		description='Detective Buck Passer',
 		url='http://github.com/snhobbs/DetectiveBuckPasser',
 		author='Simon Hobbs & Joey Ricci',
@@ -14,6 +14,7 @@ setup(name='buckPasser',
 			'miniboa',
             'pexpect'
 		],
+                scripts=["bin/runServer.sh"]
 		test_suite='nose.collector',
 		tests_require=['nose'],
 		include_package_data=True,
