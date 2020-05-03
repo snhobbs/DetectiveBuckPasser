@@ -14,7 +14,7 @@ setup(name='buckPasser',
 			'miniboa',
             'pexpect'
 		],
-                scripts=["bin/runServer.sh"]
+                scripts=["bin/runServer.sh"],
 		test_suite='nose.collector',
 		tests_require=['nose'],
 		include_package_data=True,
