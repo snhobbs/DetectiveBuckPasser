@@ -45,9 +45,9 @@ const demoDisk = {
   rooms: [
     {
       id: 'start', // Unique identifier for this room. Entering a room will set the disk's roomId to this.
-      name: 'The First Room', // Displayed each time the player enters the room.
+      name: 'Filthy Street', // Displayed each time the player enters the room.
       desc: cut_scenes.street_intro.text, // Displayed when the player first enters the room.
-      items: [
+/*      items: [
         {
           name: 'door',
           desc: 'It leads NORTH.', // Displayed when the player looks at the item.
@@ -92,7 +92,7 @@ const demoDisk = {
           dir: 'south',
           id: 'start',
         },
-      ],
+      ],*/
     }
   ],
 };
