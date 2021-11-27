@@ -29,11 +29,22 @@ const intro_screen =
 `;
 
 const cut_scenes = {
+  street_intro_full: {
+    text:`New York City, The Bowery, 1972. 9pm,
+      There you are piss drunk, shuffling down the street on a Tuesday parting the rats, cockroaches, and old newspapers like Moses parting the red sea, that is if you count the people you're leading as the almost finished 18 pack of Schaefer in your hand and a lingering question of if you should chase the last one down with a bullet.
+But there's no time to finally finish something, someone stops you in your path flashing a switchblade demanding money. You pause.
+
+As you finish smashing the last bottle over the man's head everything comes back into focus, Ray's is open for another hour. After finishing 2 slices and cleaning the blood off in the bathroom you decide to start the shuffle back home. There's so much to do tomorrow, and you don't want anything to do with it.
+
+You walk up the stairs to your apartment and go to bed, hopefully the bats are already sleeping.
+`
+  },
   street_intro: {
     text:`New York City, The Bowery, 1972. 9pm,
       There you are piss drunk, shuffling down the street on a Tuesday parting the rats, cockroaches, and old newspapers like Moses parting the red sea, that is if you count the people you're leading as the almost finished 18 pack of Schaefer in your hand and a lingering question of if you should chase the last one down with a bullet.
 But there's no time to finally finish something, someone stops you in your path flashing a switchblade demanding money. You pause.`
   },
+
   tchotch_naughts: {
     text: `The Bowery, Tchotch-Naughts Bodega, 12:34pm,
     You stumble down the dark stairway sporting yesterdays clothes and last weeks odor. You’re not sure if it’s broken glass, potato chips or bone but the stairs crunch and crackle under foot. The only thing guiding you through the darkness is a dim light glowing at the end of the stairs.
@@ -48,9 +59,6 @@ But there's no time to finally finish something, someone stops you in your path 
   }
 };
 /*
-After finishing 2 slices and cleaning the blood off in the bathroom you decide to start the shuffle back home. There's so much to do tomorrow, and you don't want anything to do with it.
-
-You walk up the stairs to your apartment and go to bed, hopefully the bats are already sleeping.
 */
 
 /*
@@ -66,6 +74,11 @@ const characters = [
     name:'Bear',
     roomId:"hotel lobby",
     desc:`Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.`
+  },
+  {
+    name:'The Tire Hooker',
+    roomId:"apartment window",
+    desc:`Hooker eating a tire, looks like a Perelli.`
   },
   {
     name: 'Six Dollar Man',
@@ -160,14 +173,14 @@ const characters = [
 /**
  * objects, list of none critical objects
  * **/
-const objects = [
-  {
+const objects = {
+  "Beer Bottle": {
     name: ["beer", "bottle", "beer bottle"],
     desc: 'A full case of Schaefer bottles, three left.',
     isTakeable: true
     //onUse: () => {}
   },
-  {
+  "Bears Corpse": {
     name: ["Bear's Corpse", "body", "bear", "corpse"],
     desc: `Trust fund animal. Yeah he sucks but his net worth is absurd. Problem is he wouldn't stop calling at dinner. Really his existance was the issue. If you're thinking one shouldn't speak ill of the dead, you clearly didn't know Bear. Also he's starting to smell.`,
     onUse: () => {
@@ -177,7 +190,7 @@ const objects = [
       println("A cold stiff corpse of a poorly groomed Kodiak Grizzly");
     }
   },
-  {
+  "Toilet":{
     name:["toilet", "throne", "john"],
     desc:`It's just a flowery plush arm chair with the seat cut out strategically placed over an empty can of Beefarino`,
     onUse: () => {
@@ -185,12 +198,12 @@ const objects = [
     },
     inspect: "I guess it's a toilet"
   },
-  {
+  "Magazine":{
     name:"Magazine",
     desc:`Dog eared copy of Better Homes and Gardens, the June, 1964 edition`,
     inspect:`You read the magazine as you have 700 times before. Maybe one day you'll try and make some of these improvements, but there you are with a can as your toilet.`
   },
-  {
+  "Phone":{
     name: "Phone",
     desc:`The cord is hopelessly tangled, the reciever is partially clogged with beefarino. If anyone ever wanted to talk to you you'd have to get a new one. Of course they don't so here it is.`,
     inspect:`Your shitty beige couch`,
@@ -199,33 +212,100 @@ const objects = [
 insert into objects values(0,3, 'Phone', "", 'Your home phone, you have a message','Messages', "Check your messages, do something for once.", "It's the Chief. 'Passer, there's been a murder down the street from you at the Kodiak Apartments. It sounds grizzly, go check it out. I want a report on my desk tomorrow, and it had better be good you layabout.'",203, 0);
 */
   },
-  {
+  "Couch":{
     name:"Couch",
     desc:`It looks like it used to be suade before the layers of hair grease and cheap whiskey have left it in a state reminiscent of your soul.`,
     inspect:"Your shitty beige couch"
   }
-];
+};
 
 const rooms = [
   {
+    id:'start',
+    name:'Filthy Street',
+    desc: cut_scenes.street_intro_full.text + "\n type go **HOME** to head into your dump",
+    exits: [
+      {
+        dir:'home',
+        id:'home'
+      }
+    ]
+  },
+  {
     id:'home',
     name:'Home',
-    desc:`Your apartment. You sit up on your bed with a comforter that used to be blue, and sheets that used to be white. A dim fluorescent light bulb hanging from it's cord oscillates in the middle of the room. A goldfish tank festers in the corner, that's a new smell. Just another damn day.`
+    desc:`Your apartment. You sit up on your bed with a comforter that used to be blue, and sheets that used to be white. A dim fluorescent light bulb hanging from it's cord oscillates in the middle of the room. A goldfish tank festers in the corner, that's a new smell. Just another damn day.`,
+    items: [objects["Couch"], objects["Phone"]],
+    exits: [
+      {
+        dir:'bathroom',
+        id:'bathroom'
+      },
+      {
+        dir:'kitchen',
+        id:'kitchen'
+      },
+      {
+        dir:'bed',
+        id:'bed'
+      },
+      {
+        dir:["apartment window", "window"],
+        id:"apartment window"
+      }
+    ],
   },
   {
     id:'bathroom',
     name:'\"Bathroom\"',
-    desc:`You shuffle to the corner of the room. Technically it's a bathroom, minus the bath... and the room. It's just a flowery plush arm chair with the seat cut out strategically placed over an empty can of Beefarino. There's a stack of Better Homes and Gardens magazines next to the can, what mess.`
+    desc:`You shuffle to the corner of the room. Technically it's a bathroom, minus the bath... and the room. It's just a flowery plush arm chair with the seat cut out strategically placed over an empty can of Beefarino. There's a stack of Better Homes and Gardens magazines next to the can, what mess.`,
+    items:[objects["toilet"], objects["magazine"]]
   },
   {
     id:'kitchen',
     name:'Kitchen',
-    desc:`The kitchen, oh boy the kitchen. Stacks of Beefarino and a rusty can opener. It used to be your favorite spot to watch people on the street pass by, but the window was bricked over by the new expansion of the fancy feast cannery. The brick fails to dampen the smell`
+    desc:`The kitchen, oh boy the kitchen. Stacks of Beefarino and a rusty can opener. It used to be your favorite spot to watch people on the street pass by, but the window was bricked over by the new expansion of the fancy feast cannery. The brick fails to dampen the smell`,
+    exits: [
+      {
+        dir:'bathroom',
+        id:'bathroom'
+      },
+      {
+        dir:'kitchen',
+        id:'kitchen'
+      },
+      {
+        dir:'bed',
+        id:'bed'
+      },
+      {
+        dir:["apartment window", "window"],
+        id:"apartment window"
+      }
+    ],
   },
   {
-    id:'bedroom window',
-    name:'Apartment Window',
-    desc:`As you survey your neighborhood you realize it's the same as always. A sickening red glow from the Hustler sign douses the streets which are littered with emaciated alley cats drawn to the cannery. A hooker is eating a tire.`
+    id:'apartment window',
+    name:['Apartment Window','window'],
+    desc:`As you survey your neighborhood you realize it's the same as always. A sickening red glow from the Hustler sign douses the streets which are littered with emaciated alley cats drawn to the cannery. A hooker is eating a tire.`,
+    exits: [
+      {
+        dir:'bathroom',
+        id:'bathroom'
+      },
+      {
+        dir:'kitchen',
+        id:'kitchen'
+      },
+      {
+        dir:'bed',
+        id:'bed'
+      },
+      {
+        dir:["apartment window", "window"],
+        id:"apartment window"
+      }
+    ],
   },
   {
     id: 'rays',
@@ -234,12 +314,12 @@ const rooms = [
     exits: [
       {
         dir: 'south',
-        id: 'start',
+        id: 'start'
       },
     ],
   },
   {
-    id: 'start',
+    id: 'street',
     name: 'Filthy Street', // Displayed each time the player enters the room.
     desc: cut_scenes.street_intro.text, // Displayed when the player first enters the room.
     items: [
