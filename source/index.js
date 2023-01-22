@@ -514,7 +514,7 @@ let chars = () => {
 
 // display help menu
 let help = () => {
-  const instructions = `The following commands are available:
+  const instructions = `At least the following commands are available:
     LOOK:   'look at key'
     TAKE:   'take book'
     GO:     'go north'
