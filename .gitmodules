@@ -1,0 +1,3 @@
+[submodule "js-text-adventure-engine"]
+	path = js-text-adventure-engine
+	url = https://github.com/snhobbs/js-text-adventure-engine
