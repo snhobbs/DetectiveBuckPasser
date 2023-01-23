@@ -1,5 +1,5 @@
 # DetectiveBuckPasser
-## Available At The Famous Site: eatabattery.com:7000 On Telnet
+## Available At The Famous Site: eatabattery.com:7000 On Telnet and eatabattery.com/buckpasser
 
 Text Adventure Game
 <p>
