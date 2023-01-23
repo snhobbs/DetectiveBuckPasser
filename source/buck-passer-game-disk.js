@@ -28,39 +28,6 @@ const intro_screen =
                              |;;;;;;;;;|
 `;
 
-const cut_scenes = {
-  street_intro_full: {
-    text:`New York City, The Bowery, 1972. 9pm,
-      There you are piss drunk, shuffling down the street on a Tuesday parting the rats, cockroaches, and old newspapers like Moses parting the red sea, that is if you count the people you're leading as the almost finished 18 pack of Schaefer in your hand and a lingering question of if you should chase the last one down with a bullet.
-But there's no time to finally finish something, someone stops you in your path flashing a switchblade demanding money. You pause.
-
-As you finish smashing the last bottle over the man's head everything comes back into focus, Ray's is open for another hour. After finishing 2 slices and cleaning the blood off in the bathroom you decide to start the shuffle back home. There's so much to do tomorrow, and you don't want anything to do with it.
-
-You walk up the stairs to your apartment and go to bed, hopefully the bats are already sleeping.
-`
-  },
-  street_intro: {
-    text:`New York City, The Bowery, 1972. 9pm,
-      There you are piss drunk, shuffling down the street on a Tuesday parting the rats, cockroaches, and old newspapers like Moses parting the red sea, that is if you count the people you're leading as the almost finished 18 pack of Schaefer in your hand and a lingering question of if you should chase the last one down with a bullet.
-But there's no time to finally finish something, someone stops you in your path flashing a switchblade demanding money. You pause.`
-  },
-
-  tchotch_naughts: {
-    text: `The Bowery, Tchotch-Naughts Bodega, 12:34pm,
-    You stumble down the dark stairway sporting yesterdays clothes and last weeks odor. You’re not sure if it’s broken glass, potato chips or bone but the stairs crunch and crackle under foot. The only thing guiding you through the darkness is a dim light glowing at the end of the stairs.
-
-  Walking into the bodega below you see the man that you'd detest if you were still capable of emotional response, the landlord, you owe him the rent.
-
-  There he is, John F Kennedy, a reconstructed abomination of the 35th President of the United States. You’re not sure if he is the real JFK, but you don't do your job at work so why start on the off hours?
-
-  He's yelling at a film of Apollo 11 coverage while cutting Macy’s security tags off of a haul of Hawaiian shirts and putting them on the sales rack. The mechanical jaw the hack surgeons gave him needs more oil. If this store didn't sell Schaefer it'd be a complete wash.
-
-  Just give him the rent and don't look at Armstrong on the screen, you have no energy for that again.`
-  }
-};
-/*
-*/
-
 /*
  * Characters
  * */
@@ -358,7 +325,7 @@ const rooms = [
   },
 ];
 
-const demoDisk = {
+const game_disk = {
   intro_screen: intro_screen,
   roomId: 'start', // Set this to the ID of the room you want the player to start in.
   characters: characters,

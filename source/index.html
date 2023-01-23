@@ -1,9 +1,11 @@
+<meta charset="utf-8">
+
 <!-- Game content -->
 <div id="output"></div>
 
 <!-- Player input -->
 <div class="input">
-  <span class="ml-2">> </span><input id="input" autofocus spellcheck="false">
+  <span class="ml-2"></span><input id="input" autofocus spellcheck="false">
 </div>
 
 <!-- CSS styles -->
@@ -13,10 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding:wght@700&family=Work+Sans&display=swap" rel="stylesheet">
 
 <!-- Include game engine -->
-<script src="index.js"></script>
-
 <!-- Include game data ('disk') -->
-<script src="game-disks/buck-passer-game-disk.js"></script>
+<script src="out.js"></script>
 
 <!-- Load disk into engine -->
-<script>loadDisk(demoDisk);</script>
+<script>loadDisk(game_disk);</script>
